@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  namespace: sentinelrisk
+data:
+  POSTGRES_DB: sentinelrisk
+  POSTGRES_USER: postgres
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-secret
+  namespace: sentinelrisk
+type: Opaque
+data:
+  POSTGRES_PASSWORD: cG9zdGdyZXM=  # 'postgres' encoded in base64 
