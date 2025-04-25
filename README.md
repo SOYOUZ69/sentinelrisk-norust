@@ -30,6 +30,7 @@ sentinelrisk/
 - Docker Compose
 - PostgreSQL
 - Maven
+- Angular CLI (version 17.2.0+) : `npm install -g @angular/cli`
 
 ## Installation
 
@@ -125,11 +126,54 @@ Les services suivants devraient être opérationnels :
 
 1. [x] Configuration du realm Keycloak
 2. [x] Mise en place des clients Keycloak
-3. [ ] Développement du backend Spring Boot
+3. [x] Développement du backend Spring Boot
    - [x] Configuration de Spring Security avec Keycloak
    - [x] Mise en place des entités de base
-   - [ ] Développement des APIs REST
+   - [x] Développement des APIs REST
 4. [ ] Développement du frontend Angular
+   - [ ] Initialisation du projet Angular
+     - [ ] Création avec routing activé et SCSS
+     - [ ] Structure initiale (`pages`, `components`, `services`, etc.)
+   - [ ] Installation des dépendances
+     - [ ] Angular Material
+     - [ ] ngx-translate (traduction)
+     - [ ] keycloak-js (authentification)
+     - [ ] Autres utilitaires (lodash, date-fns...)
+   - [ ] Setup du thème et layout
+     - [ ] Configuration Angular Material (couleurs, typographie)
+     - [ ] Mise en place d'un layout de base : Header / Sidebar / Footer
+     - [ ] Responsive design
+   - [ ] Intégration de Keycloak
+     - [ ] Configuration du service d'authentification
+     - [ ] AuthGuard pour les routes sécurisées
+     - [ ] Login / Logout / Refresh token
+   - [ ] Mise en place de la navigation
+     - [ ] Configuration des routes et modules
+     - [ ] Routes publiques vs privées
+     - [ ] Redirections et fallback
+   - [ ] Définition des modèles TypeScript
+     - [ ] User, Risk, Control, Category, Assessment
+   - [ ] Services pour communication API
+     - [ ] ApiService générique
+     - [ ] Services spécifiques : UserService, RiskService, etc.
+     - [ ] Gestion automatique des tokens
+   - [ ] Développement des pages
+     - [ ] Dashboard
+     - [ ] Utilisateurs (liste, détails, création, édition, suppression)
+     - [ ] Risques (liste, fiche, création, édition, suppression)
+     - [ ] Contrôles
+     - [ ] Catégories
+     - [ ] Évaluations
+   - [ ] Gestion des rôles côté UI
+     - [ ] Lecture des rôles depuis le token JWT
+     - [ ] Affichage conditionnel selon rôle
+   - [ ] Améliorations UX/UI
+     - [ ] Notifications (snackbar)
+     - [ ] Spinners de chargement
+     - [ ] Gestion des erreurs serveur
+   - [ ] Tests et vérifications
+     - [ ] Tests unitaires des services
+     - [ ] Vérification de la navigation et des accès protégés
 5. [ ] Configuration des rôles et permissions
 6. [ ] Mise en place des tests
 7. [ ] Configuration du déploiement Kubernetes
@@ -283,11 +327,11 @@ Les contrôleurs REST suivants doivent être implémentés pour exposer les serv
 - PUT `/{id}` : Modifier un risque
 - DELETE `/{id}` : Supprimer un risque
 - GET `/high-score` : Lister les risques à score élevé
-- GET `/category/{id}` : Risques d’une catégorie donnée
+- GET `/category/{id}` : Risques d'une catégorie donnée
 
 ### ControlController – `/api/controls`
 - GET `/` : Lister tous les contrôles
-- GET `/{id}` : Détails d’un contrôle
+- GET `/{id}` : Détails d'un contrôle
 - POST `/` : Créer un contrôle
 - PUT `/{id}` : Modifier un contrôle
 - DELETE `/{id}` : Supprimer un contrôle
@@ -295,14 +339,14 @@ Les contrôleurs REST suivants doivent être implémentés pour exposer les serv
 
 ### CategoryController – `/api/categories`
 - GET `/` : Lister les catégories
-- GET `/{id}` : Détails d’une catégorie
+- GET `/{id}` : Détails d'une catégorie
 - POST `/` : Créer une catégorie
 - PUT `/{id}` : Modifier une catégorie
 - DELETE `/{id}` : Supprimer une catégorie
 
 ### AssessmentController – `/api/assessments`
 - GET `/` : Lister toutes les évaluations
-- GET `/{id}` : Détails d’une évaluation
+- GET `/{id}` : Détails d'une évaluation
 - POST `/` : Créer une évaluation
 - PUT `/{id}` : Modifier une évaluation
 - DELETE `/{id}` : Supprimer une évaluation
@@ -319,3 +363,333 @@ Instructions de déploiement seront ajoutées une fois l'application prête pour
 ## Licence
 
 Propriétaire - Tous droits réservés
+
+## Structure du Frontend Angular
+
+### Structure des Dossiers 
+
+```
+frontend/
+├── src/
+│   ├── app/
+│   │   ├── core/                   # Services et fonctionnalités essentiels
+│   │   │   ├── auth/               # Services d'authentification Keycloak
+│   │   │   ├── guards/             # Protection des routes
+│   │   │   ├── http/               # Intercepteurs HTTP
+│   │   │   ├── models/             # Interfaces et classes de base
+│   │   │   └── services/           # Services de base (connexion API, etc.)
+│   │   ├── shared/                 # Composants, directives et pipes partagés
+│   │   │   ├── components/         # Composants réutilisables
+│   │   │   ├── directives/         # Directives personnalisées
+│   │   │   ├── pipes/              # Pipes personnalisés
+│   │   │   └── utils/              # Fonctions utilitaires
+│   │   ├── features/               # Modules de fonctionnalités
+│   │   │   ├── dashboard/          # Module de tableau de bord
+│   │   │   ├── risks/              # Module de gestion des risques
+│   │   │   ├── controls/           # Module de gestion des contrôles
+│   │   │   ├── assessments/        # Module d'évaluations
+│   │   │   ├── categories/         # Module de catégories
+│   │   │   └── users/              # Module de gestion des utilisateurs
+│   │   ├── layout/                 # Composants de mise en page
+│   │   │   ├── header/             # En-tête de l'application
+│   │   │   ├── sidebar/            # Barre latérale de navigation
+│   │   │   ├── footer/             # Pied de page
+│   │   │   └── layouts/            # Layouts réutilisables
+│   │   ├── app.component.*         # Composant racine de l'application 
+│   │   ├── app.module.ts           # Module principal de l'application
+│   │   └── app.routes.ts           # Configuration des routes
+│   ├── assets/                     # Ressources statiques (images, logos, etc.)
+│   ├── environments/               # Configurations d'environnement
+│   ├── styles/                     # Fichiers de styles globaux
+│   ├── index.html                  # Point d'entrée HTML
+│   └── main.ts                     # Point d'entrée TypeScript
+├── angular.json                    # Configuration du projet Angular
+├── package.json                    # Dépendances et scripts npm
+└── tsconfig.json                   # Configuration TypeScript
+```
+
+## Frontend - Structure et Lancement
+
+### Dépendances Principales
+- **Angular 17.2.0** : Framework frontend moderne avec support des dernières fonctionnalités
+- **Angular Material 17.2.0** : Bibliothèque de composants Material Design
+- **Keycloak Angular 15.0.0** : Intégration avec Keycloak pour l'authentification
+- **RxJS 7.8.0** : Bibliothèque de programmation réactive
+
+### Technologies Utilisées
+- **TypeScript** : Langage de programmation typé
+- **HTML/CSS** : Standards web pour la structure et le style
+- **Angular Material** : Design system complet pour l'interface utilisateur
+- **JWT** : Jetons d'authentification sécurisés via Keycloak
+
+### Installation et Lancement
+
+1. **Installer les dépendances**
+```bash
+cd frontend
+npm install
+```
+
+2. **Lancer le serveur de développement**
+```bash
+npm start
+# ou
+ng serve
+```
+
+L'application sera accessible à l'adresse : http://localhost:4200
+
+### Ordre de démarrage recommandé
+
+Pour assurer un démarrage correct de l'ensemble de l'application, suivez l'ordre de lancement suivant :
+
+1. **Démarrer les services Docker (Keycloak et PostgreSQL)**
+```bash
+cd /chemin/vers/sentinelrisk-norust
+docker compose -f docker/docker-compose.yml up -d
+```
+Vérification : 
+- PostgreSQL doit être accessible sur le port 5432
+- Keycloak doit être accessible sur http://localhost:8081
+- Vous pouvez vous connecter à l'interface d'administration Keycloak : http://localhost:8081/admin (admin/admin)
+
+2. **Lancer le backend Spring Boot**
+```bash
+cd backend
+./mvnw spring-boot:run
+```
+Vérification :
+- Le backend doit être accessible sur http://localhost:8080
+- Swagger UI doit être accessible sur http://localhost:8080/swagger-ui.html
+- Note : Si Swagger renvoie une erreur 401 Unauthorized, vous devez d'abord obtenir un token JWT et l'inclure dans les requêtes (voir section "Données de test initiales")
+
+3. **Lancer le frontend Angular**
+```bash
+cd frontend
+npm start
+```
+Vérification :
+- Le frontend doit être accessible sur http://localhost:4200
+- Vous devriez pouvoir vous connecter avec l'utilisateur créé dans Keycloak
+
+### Notes sur le Développement
+
+- **Mode développement** : L'application est configurée pour communiquer avec le backend sur http://localhost:8080
+- **Intégration Keycloak** : L'authentification est gérée via Keycloak (http://localhost:8081)
+- **Accès aux API** : Les tokens d'authentification sont automatiquement inclus dans les requêtes HTTP
+- **Styles** : L'application utilise le thème indigo-pink de Material Design avec des personnalisations
+- **Responsive** : L'interface s'adapte aux différentes tailles d'écran (desktop, tablette, mobile)
+
+### Commandes Utiles
+
+```bash
+# Lancer les tests unitaires
+npm test
+
+# Créer une version de production
+npm run build
+
+# Linting du code
+npm run lint
+```
+
+### Données de test initiales
+
+Pour faciliter les tests initiaux, suivez ces étapes pour créer des données de base :
+
+#### Création d'un utilisateur Keycloak
+
+1. Connectez-vous à l'interface admin de Keycloak (http://localhost:8081/admin) avec admin/admin
+2. Sélectionnez le realm "sentinelrisk"
+3. Dans le menu de gauche, cliquez sur "Users" puis "Add user"
+4. Remplissez les champs :
+   - Username: testuser
+   - Email: testuser@example.com
+   - First name: Test
+   - Last name: User
+   - Activez "Email verified"
+5. Cliquez sur "Create"
+6. Dans l'onglet "Credentials", cliquez sur "Set password"
+7. Définissez un mot de passe (ex: password123)
+8. Désactivez "Temporary" et cliquez sur "Save"
+9. Dans l'onglet "Role mappings", ajoutez les rôles souhaités (ex: user, risk_manager)
+
+#### Génération d'un token d'accès
+
+**Via Postman/curl :**
+```bash
+curl -X POST \
+  http://localhost:8081/realms/sentinelrisk/protocol/openid-connect/token \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -d 'grant_type=password&client_id=sentinelrisk-frontend&username=testuser&password=password123'
+```
+
+**Via Swagger UI :**
+1. Accédez à http://localhost:8080/swagger-ui.html
+2. Cliquez sur "Authorize" en haut à droite
+3. Entrez les informations d'identification de l'utilisateur créé
+4. Une fois authentifié, le token sera automatiquement inclus dans toutes les requêtes
+
+#### Exemples de Request Body (JSON)
+
+**Créer un utilisateur :**
+```json
+{
+  "username": "jdupont",
+  "email": "jean.dupont@example.com",
+  "fullName": "Jean Dupont",
+  "phoneNumber": "+33612345678",
+  "department": "IT",
+  "active": true
+}
+```
+
+**Créer une catégorie :**
+```json
+{
+  "name": "Sécurité des données",
+  "description": "Risques liés à la sécurité et à la confidentialité des données"
+}
+```
+
+**Créer un risque :**
+```json
+{
+  "name": "Fuite de données personnelles",
+  "description": "Risque de divulgation non autorisée de données personnelles",
+  "categoryId": 1,
+  "impactLevel": "HIGH",
+  "probabilityLevel": "MEDIUM",
+  "status": "IDENTIFIED",
+  "mitigationPlan": "Mettre en place un chiffrement de bout en bout"
+}
+```
+
+**Créer un contrôle :**
+```json
+{
+  "name": "Chiffrement des données sensibles",
+  "description": "Mise en place d'un chiffrement AES-256 pour toutes les données sensibles",
+  "type": "PREVENTIVE",
+  "frequency": "CONTINUOUS",
+  "status": "IMPLEMENTED",
+  "implementationDetails": "Utilisation de l'API de chiffrement native",
+  "riskIds": [1]
+}
+```
+
+## Mapping des rôles
+
+Le système utilise différents rôles pour gérer les accès et les permissions. Voici le mapping détaillé des rôles :
+
+| Nom du rôle          | Rôle dans Keycloak    | Droits dans l'application                                                             |
+|----------------------|-----------------------|--------------------------------------------------------------------------------------|
+| admin                | admin                 | Accès complet à toutes les fonctionnalités, gestion des utilisateurs et des paramètres système |
+| risk_manager         | risk_manager          | Création/modification/suppression des risques et contrôles, accès au tableau de bord  |
+| compliance_officer   | compliance_officer    | Création/modification des évaluations, suivi de la conformité, rapports              |
+| auditor              | auditor               | Lecture seule sur tous les modules, génération de rapports d'audit                    |
+| user                 | user                  | Accès en lecture aux risques, participation aux évaluations assignées                 |
+
+### Détails des permissions par module
+
+#### Dashboard
+- **admin**: Accès complet (métriques administratives)
+- **risk_manager**: Accès complet (métriques des risques)
+- **compliance_officer**: Accès complet (métriques de conformité)
+- **auditor**: Accès en lecture seule
+- **user**: Accès limité (uniquement métriques personnelles)
+
+#### Gestion des utilisateurs
+- **admin**: CRUD complet
+- **Autres rôles**: Lecture seule de leur profil
+
+#### Gestion des risques
+- **admin**, **risk_manager**: CRUD complet
+- **compliance_officer**: Lecture et mise à jour
+- **auditor**, **user**: Lecture seule
+
+#### Gestion des contrôles
+- **admin**, **risk_manager**: CRUD complet
+- **compliance_officer**: Lecture et mise à jour
+- **auditor**, **user**: Lecture seule
+
+#### Gestion des évaluations
+- **admin**, **compliance_officer**: CRUD complet
+- **risk_manager**: Création et lecture
+- **auditor**: Lecture seule
+- **user**: Lecture des évaluations assignées
+
+## Guide rapide de contribution Angular
+
+Ce guide présente les conventions et pratiques à suivre pour contribuer au développement du frontend Angular.
+
+### Commandes de génération
+
+```bash
+# Générer un nouveau composant
+ng generate component features/module-name/component-name
+
+# Générer un nouveau module
+ng generate module features/module-name --routing
+
+# Générer un nouveau service
+ng generate service core/services/service-name
+
+# Générer un nouveau modèle
+ng generate interface core/models/model-name
+```
+
+### Conventions de nommage
+
+- **Dossiers et fichiers**: kebab-case (ex: `user-profile`, `risk-assessment`)
+- **Classes**: PascalCase (ex: `UserService`, `RiskComponent`)
+- **Interfaces**: PascalCase avec préfixe "I" pour clarté (ex: `IUser`, `IRisk`)
+- **Méthodes et variables**: camelCase (ex: `getUserById()`, `currentUser`)
+- **Constantes**: SNAKE_CASE_MAJUSCULE (ex: `API_BASE_URL`)
+
+### Structure des nouveaux modules
+
+Tous les nouveaux modules de fonctionnalité doivent être créés dans le dossier `src/app/features/` avec la structure suivante :
+
+```
+features/
+└── nom-module/
+    ├── components/         # Composants spécifiques au module
+    ├── services/           # Services spécifiques au module 
+    ├── models/             # Interfaces/types spécifiques au module
+    ├── pages/              # Pages principales du module
+    ├── nom-module.module.ts
+    └── nom-module-routing.module.ts
+```
+
+### Bonnes pratiques à respecter
+
+1. **State Management**:
+   - Utilisez les services Angular pour la gestion d'état simple
+   - Pour une gestion d'état plus complexe, utilisez RxJS BehaviorSubject/Observable
+
+2. **Performance**:
+   - Utilisez OnPush ChangeDetectionStrategy quand c'est possible
+   - Implémentez ngOnDestroy pour nettoyer les subscriptions RxJS
+   - Utilisez trackBy dans les ngFor pour optimiser les rendus de listes
+
+3. **Sécurité**:
+   - Utilisez les pipes Angular pour sanitizer le contenu (ex: | async, | safe)
+   - N'utilisez jamais innerHTML sans sanitizer
+   - Validez toutes les entrées utilisateur côté client ET côté serveur
+
+4. **UX/Accessibilité**:
+   - Suivez les directives WCAG pour l'accessibilité
+   - Utilisez les composants Material avec aria-labels appropriés
+   - Assurez-vous que l'application est utilisable au clavier
+
+5. **Tests**:
+   - Écrivez des tests unitaires pour tous les services
+   - Testez les scénarios critiques dans les composants
+   - Maintenez une couverture de test minimale de 70%
+
+6. **Commits**:
+   - Suivez le format: `type(scope): description` (ex: `feat(auth): add login component`)
+   - Types communs: feat, fix, docs, style, refactor, test, chore
+
+Pour plus de détails, consultez le fichier CONTRIBUTING.md à la racine du projet.
