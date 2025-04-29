@@ -1,0 +1,206 @@
+.risks-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 500;
+    }
+  }
+
+  .table-container {
+    overflow-x: auto;
+    position: relative;
+    min-height: 200px;
+    
+    .loading-shade {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.05);
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+    }
+    
+    table {
+      width: 100%;
+      
+      th {
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.87);
+      }
+
+      td {
+        color: rgba(0, 0, 0, 0.87);
+      }
+
+      .mat-column-actions {
+        width: 120px;
+        text-align: center;
+      }
+    }
+    
+    .no-data {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      text-align: center;
+      
+      p {
+        margin-bottom: 20px;
+        font-size: 16px;
+        color: rgba(0, 0, 0, 0.54);
+      }
+    }
+  }
+
+  // Badges pour les niveaux d'impact
+  .impact-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    
+    &.negligible {
+      background-color: #e8eaf6;
+      color: #3949ab;
+    }
+    
+    &.low {
+      background-color: #e3f2fd;
+      color: #1976d2;
+    }
+    
+    &.medium {
+      background-color: #fff8e1;
+      color: #ffa000;
+    }
+    
+    &.high {
+      background-color: #fff3e0;
+      color: #f57c00;
+    }
+    
+    &.severe {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+  }
+
+  // Badges pour les niveaux de probabilité
+  .probability-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    
+    &.rare {
+      background-color: #e8eaf6;
+      color: #3949ab;
+    }
+    
+    &.unlikely {
+      background-color: #e3f2fd;
+      color: #1976d2;
+    }
+    
+    &.possible {
+      background-color: #fff8e1;
+      color: #ffa000;
+    }
+    
+    &.likely {
+      background-color: #fff3e0;
+      color: #f57c00;
+    }
+    
+    &.almost_certain {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+  }
+
+  // Badges pour les scores de risque
+  .score-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    
+    &.very-low {
+      background-color: #e8eaf6;
+      color: #3949ab;
+    }
+    
+    &.low {
+      background-color: #e3f2fd;
+      color: #1976d2;
+    }
+    
+    &.medium {
+      background-color: #fff8e1;
+      color: #ffa000;
+    }
+    
+    &.high {
+      background-color: #fff3e0;
+      color: #f57c00;
+    }
+    
+    &.very-high {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+  }
+
+  // Badges pour les statuts
+  .status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    
+    &.identified {
+      background-color: #e0f7fa;
+      color: #0097a7;
+    }
+    
+    &.in_assessment {
+      background-color: #e0f2f1;
+      color: #00796b;
+    }
+    
+    &.mitigated {
+      background-color: #e8f5e9;
+      color: #388e3c;
+    }
+    
+    &.accepted {
+      background-color: #f3e5f5;
+      color: #7b1fa2;
+    }
+    
+    &.closed {
+      background-color: #f5f5f5;
+      color: #616161;
+    }
+  }
+} 

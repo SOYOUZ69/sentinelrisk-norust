@@ -1,0 +1,82 @@
+<h2 mat-dialog-title>{{ dialogTitle }}</h2>
+
+<form [formGroup]="riskForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <!-- Nom du risque -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nom du risque</mat-label>
+      <input matInput formControlName="name" placeholder="Fuite de données personnelles">
+      <mat-error *ngIf="riskForm.get('name')?.invalid">{{ getErrorMessage('name') }}</mat-error>
+    </mat-form-field>
+    
+    <!-- Description -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" placeholder="Description détaillée du risque" rows="3"></textarea>
+      <mat-error *ngIf="riskForm.get('description')?.invalid">{{ getErrorMessage('description') }}</mat-error>
+    </mat-form-field>
+    
+    <!-- Catégorie -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Catégorie</mat-label>
+      <mat-select formControlName="categoryId">
+        <mat-option *ngFor="let category of categories" [value]="category.id">
+          {{ category.name }}
+        </mat-option>
+        <mat-option *ngIf="isLoadingCategories" disabled>Chargement...</mat-option>
+        <mat-option *ngIf="!isLoadingCategories && categories.length === 0" disabled>
+          Aucune catégorie disponible
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="riskForm.get('categoryId')?.invalid">{{ getErrorMessage('categoryId') }}</mat-error>
+    </mat-form-field>
+    
+    <div class="form-row">
+      <!-- Niveau d'impact -->
+      <mat-form-field appearance="outline">
+        <mat-label>Niveau d'impact</mat-label>
+        <mat-select formControlName="impactLevel">
+          <mat-option *ngFor="let impact of impactLevels" [value]="impact">
+            {{ impactTranslations[impact] }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="riskForm.get('impactLevel')?.invalid">{{ getErrorMessage('impactLevel') }}</mat-error>
+      </mat-form-field>
+      
+      <!-- Niveau de probabilité -->
+      <mat-form-field appearance="outline">
+        <mat-label>Niveau de probabilité</mat-label>
+        <mat-select formControlName="probabilityLevel">
+          <mat-option *ngFor="let probability of probabilityLevels" [value]="probability">
+            {{ probabilityTranslations[probability] }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="riskForm.get('probabilityLevel')?.invalid">{{ getErrorMessage('probabilityLevel') }}</mat-error>
+      </mat-form-field>
+    </div>
+    
+    <!-- Statut -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Statut</mat-label>
+      <mat-select formControlName="status">
+        <mat-option *ngFor="let status of statuses" [value]="status">
+          {{ statusTranslations[status] }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="riskForm.get('status')?.invalid">{{ getErrorMessage('status') }}</mat-error>
+    </mat-form-field>
+    
+    <!-- Plan de mitigation -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Plan de mitigation</mat-label>
+      <textarea matInput formControlName="mitigationPlan" placeholder="Détails des mesures à prendre pour atténuer ce risque" rows="3"></textarea>
+    </mat-form-field>
+  </mat-dialog-content>
+  
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">Annuler</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="riskForm.invalid">
+      {{ isEdit ? 'Mettre à jour' : 'Créer' }}
+    </button>
+  </mat-dialog-actions>
+</form> 

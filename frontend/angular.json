@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "sentinelrisk-frontend-temp": {
+    "sentinelrisk-frontend": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/sentinelrisk-frontend-temp",
+            "outputPath": "dist/sentinelrisk-frontend",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -21,11 +21,8 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "public",
-                "output": "assets"
-              }
+              "src/favicon.ico",
+              "src/assets"
             ],
             "styles": [
               "src/styles.css"
@@ -60,10 +57,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "sentinelrisk-frontend-temp:build:production"
+              "buildTarget": "sentinelrisk-frontend:build:production"
             },
             "development": {
-              "buildTarget": "sentinelrisk-frontend-temp:build:development"
+              "buildTarget": "sentinelrisk-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -80,11 +77,8 @@
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "public",
-                "output": "assets"
-              }
+              "src/favicon.ico",
+              "src/assets"
             ],
             "styles": [
               "src/styles.css"

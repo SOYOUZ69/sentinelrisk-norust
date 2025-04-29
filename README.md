@@ -131,35 +131,36 @@ Les services suivants devraient être opérationnels :
    - [x] Mise en place des entités de base
    - [x] Développement des APIs REST
 4. [ ] Développement du frontend Angular
-   - [ ] Initialisation du projet Angular
-     - [ ] Création avec routing activé et SCSS
-     - [ ] Structure initiale (`pages`, `components`, `services`, etc.)
-   - [ ] Installation des dépendances
-     - [ ] Angular Material
+   - [x] Initialisation du projet Angular
+     - [x] Création avec routing activé et SCSS
+     - [x] Structure initiale (`pages`, `components`, `services`, etc.)
+   - [x] Installation des dépendances
+     - [x] Angular Material
      - [ ] ngx-translate (traduction)
-     - [ ] keycloak-js (authentification)
+     - [x] keycloak-js (authentification)
      - [ ] Autres utilitaires (lodash, date-fns...)
-   - [ ] Setup du thème et layout
-     - [ ] Configuration Angular Material (couleurs, typographie)
-     - [ ] Mise en place d'un layout de base : Header / Sidebar / Footer
-     - [ ] Responsive design
-   - [ ] Intégration de Keycloak
-     - [ ] Configuration du service d'authentification
-     - [ ] AuthGuard pour les routes sécurisées
-     - [ ] Login / Logout / Refresh token
-   - [ ] Mise en place de la navigation
-     - [ ] Configuration des routes et modules
-     - [ ] Routes publiques vs privées
-     - [ ] Redirections et fallback
-   - [ ] Définition des modèles TypeScript
-     - [ ] User, Risk, Control, Category, Assessment
-   - [ ] Services pour communication API
-     - [ ] ApiService générique
-     - [ ] Services spécifiques : UserService, RiskService, etc.
-     - [ ] Gestion automatique des tokens
+   - [x] Setup du thème et layout
+     - [x] Configuration Angular Material (couleurs, typographie)
+     - [x] Mise en place d'un layout de base : Header / Sidebar / Footer
+     - [x] Responsive design
+   - [x] Intégration de Keycloak
+     - [x] Configuration du service d'authentification
+     - [x] AuthGuard pour les routes sécurisées
+     - [x] Login / Logout / Refresh token
+   - [x] Mise en place de la navigation
+     - [x] Configuration des routes et modules
+     - [x] Routes publiques vs privées
+     - [x] Redirections et fallback
+   - [x] Définition des modèles TypeScript
+     - [x] User, Risk, Control, Category, Assessment
+   - [x] Services pour communication API
+     - [x] ApiService générique
+     - [x] Services spécifiques : UserService, RiskService, etc.
+     - [x] Gestion automatique des tokens
    - [ ] Développement des pages
      - [ ] Dashboard
-     - [ ] Utilisateurs (liste, détails, création, édition, suppression)
+     - [x] Utilisateurs (liste)
+     - [ ] Utilisateurs (détails, création, édition, suppression)
      - [ ] Risques (liste, fiche, création, édition, suppression)
      - [ ] Contrôles
      - [ ] Catégories
@@ -618,7 +619,6 @@ Le système utilise différents rôles pour gérer les accès et les permissions
 - **risk_manager**: Création et lecture
 - **auditor**: Lecture seule
 - **user**: Lecture des évaluations assignées
-
 ## Guide rapide de contribution Angular
 
 Ce guide présente les conventions et pratiques à suivre pour contribuer au développement du frontend Angular.
@@ -693,3 +693,417 @@ features/
    - Types communs: feat, fix, docs, style, refactor, test, chore
 
 Pour plus de détails, consultez le fichier CONTRIBUTING.md à la racine du projet.
+
+## Structure du Backend Spring Boot
+
+### Arborescence des packages
+
+```
+backend/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/
+│   │   │       └── sentinelrisk/
+│   │   │           ├── config/               # Configuration Spring Boot
+│   │   │           │   ├── SecurityConfig.java    # Configuration de Spring Security
+│   │   │           │   └── OpenApiConfig.java     # Configuration de Swagger/OpenAPI
+│   │   │           ├── controller/           # Contrôleurs REST
+│   │   │           │   ├── RiskController.java
+│   │   │           │   ├── CategoryController.java
+│   │   │           │   ├── ControlController.java
+│   │   │           │   ├── AssessmentController.java
+│   │   │           │   └── UserController.java
+│   │   │           ├── model/                # Entités JPA
+│   │   │           │   ├── Risk.java
+│   │   │           │   ├── Category.java
+│   │   │           │   ├── Control.java
+│   │   │           │   ├── Assessment.java
+│   │   │           │   └── User.java
+│   │   │           ├── repository/           # Repositories JPA
+│   │   │           │   ├── RiskRepository.java
+│   │   │           │   ├── CategoryRepository.java
+│   │   │           │   ├── ControlRepository.java
+│   │   │           │   ├── AssessmentRepository.java
+│   │   │           │   └── UserRepository.java
+│   │   │           ├── service/              # Services métier
+│   │   │           │   ├── RiskService.java
+│   │   │           │   ├── CategoryService.java
+│   │   │           │   ├── ControlService.java
+│   │   │           │   ├── AssessmentService.java
+│   │   │           │   └── UserService.java
+│   │   │           └── exception/            # Gestion des exceptions
+│   │   │               └── GlobalExceptionHandler.java
+│   │   └── resources/
+│   │       └── application.yml               # Configuration de l'application
+│   └── test/                                 # Tests unitaires et d'intégration
+└── pom.xml                                   # Dépendances Maven
+```
+
+### Exemples de réponses JSON des APIs
+
+#### GET /api/users - Liste des utilisateurs
+
+```json
+[
+  {
+    "id": "1a2b3c4d-5e6f-7890-abcd-ef1234567890",
+    "username": "jdupont",
+    "email": "jean.dupont@example.com",
+    "firstName": "Jean",
+    "lastName": "Dupont",
+    "department": "IT",
+    "role": "RISK_MANAGER",
+    "active": true,
+    "lastLogin": "2023-12-15T14:30:45",
+    "createdAt": "2023-11-01T09:22:33",
+    "updatedAt": "2023-12-15T14:30:45"
+  },
+  {
+    "id": "2b3c4d5e-6f78-90ab-cdef-123456789012",
+    "username": "mmartin",
+    "email": "marie.martin@example.com",
+    "firstName": "Marie",
+    "lastName": "Martin",
+    "department": "Compliance",
+    "role": "COMPLIANCE_OFFICER",
+    "active": true,
+    "lastLogin": "2023-12-14T10:15:22",
+    "createdAt": "2023-11-05T11:08:45",
+    "updatedAt": "2023-12-14T10:15:22"
+  }
+]
+```
+
+#### GET /api/risks/{id} - Détail d'un risque
+
+```json
+{
+  "id": 42,
+  "name": "Fuite de données personnelles",
+  "description": "Risque de divulgation non autorisée de données personnelles clients",
+  "category": {
+    "id": 3,
+    "name": "Sécurité des données",
+    "description": "Risques liés à la sécurité des données"
+  },
+  "impactLevel": "HIGH",
+  "probabilityLevel": "MEDIUM",
+  "status": "MITIGATED",
+  "score": 12,
+  "mitigationPlan": "Mise en place d'un chiffrement de bout en bout et formation du personnel",
+  "controls": [
+    {
+      "id": 15,
+      "name": "Chiffrement des données sensibles",
+      "type": "PREVENTIVE",
+      "status": "IMPLEMENTED"
+    },
+    {
+      "id": 16,
+      "name": "Formation sensibilisation RGPD",
+      "type": "DETECTIVE",
+      "status": "IMPLEMENTED"
+    }
+  ],
+  "createdAt": "2023-10-15T09:45:00",
+  "updatedAt": "2023-12-10T14:30:22"
+}
+```
+
+#### GET /api/categories - Liste des catégories
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Risques opérationnels",
+    "description": "Risques liés aux opérations et processus internes"
+  },
+  {
+    "id": 2,
+    "name": "Risques financiers",
+    "description": "Risques liés aux aspects financiers"
+  },
+  {
+    "id": 3,
+    "name": "Sécurité des données",
+    "description": "Risques liés à la sécurité des données"
+  }
+]
+```
+
+### Gestion des erreurs
+
+Le backend utilise un système centralisé de gestion des erreurs via la classe `GlobalExceptionHandler`. Les exceptions sont capturées et transformées en réponses HTTP avec le code d'état approprié.
+
+#### Types d'erreurs gérées :
+
+- **EntityNotFoundException** : Renvoie un code HTTP 404 (Not Found)
+- **MethodArgumentNotValidException** : Renvoie un code HTTP 400 (Bad Request) avec les détails des erreurs de validation
+- **AccessDeniedException** : Renvoie un code HTTP 403 (Forbidden)
+- **Exceptions génériques** : Renvoie un code HTTP 500 (Internal Server Error)
+
+#### Format des réponses d'erreur :
+
+```json
+// Exemple d'erreur 404 (Not Found)
+{
+  "status": 404,
+  "message": "Risk not found with id: 999",
+  "timestamp": "2023-12-15T10:30:45.123"
+}
+
+// Exemple d'erreur 400 (Bad Request) - validation
+{
+  "name": "Le nom ne peut pas être vide",
+  "email": "Doit être une adresse email valide",
+  "impactLevel": "La valeur doit être l'une des suivantes : LOW, MEDIUM, HIGH, SEVERE"
+}
+
+// Exemple d'erreur 403 (Forbidden)
+{
+  "status": 403,
+  "message": "Access is denied",
+  "timestamp": "2023-12-15T10:35:12.456"
+}
+```
+
+### Sécurité Backend
+
+Le backend utilise Spring Security intégré avec Keycloak pour l'authentification et l'autorisation.
+
+#### Configuration de la sécurité
+
+- **SecurityConfig.java** : Configure les règles de sécurité et l'intégration avec Keycloak
+- **JwtAuthenticationConverter** : Convertit les claims JWT de Keycloak en autorités Spring Security
+
+#### Vérification des rôles
+
+Les contrôleurs utilisent l'annotation `@PreAuthorize` pour vérifier les autorisations :
+
+```java
+// Exemple d'accès restreint aux utilisateurs ayant le rôle RISK_MANAGER
+@PostMapping
+@PreAuthorize("hasRole('RISK_MANAGER')")
+public ResponseEntity<Risk> createRisk(@Valid @RequestBody Risk risk) {
+    return ResponseEntity.ok(riskService.createRisk(risk));
+}
+
+// Exemple d'accès pour plusieurs rôles
+@GetMapping("/{id}")
+@PreAuthorize("hasAnyRole('RISK_MANAGER', 'COMPLIANCE_OFFICER', 'AUDITOR')")
+public ResponseEntity<Risk> getRisk(@PathVariable Long id) {
+    return ResponseEntity.ok(riskService.getRiskById(id));
+}
+```
+
+#### Interaction entre Keycloak et Spring Security
+
+1. **Authentification** : L'utilisateur s'authentifie auprès de Keycloak et obtient un JWT
+2. **Requête API** : Le client envoie ce JWT dans l'en-tête Authorization (Bearer)
+3. **Validation** : Spring Security valide le JWT auprès de Keycloak
+4. **Extraction des rôles** : Les rôles sont extraits du claim "realm_access.roles" du JWT
+5. **Autorisation** : Spring Security vérifie les rôles requis pour l'accès à la ressource
+6. **Accès** : Si les rôles sont suffisants, l'accès est accordé, sinon une erreur 403 est renvoyée
+
+### Logs et débogage
+
+#### Configuration des logs
+
+Les logs sont configurés dans le fichier `application.yml` :
+
+```yaml
+logging:
+  level:
+    root: INFO
+    com.sentinelrisk: DEBUG
+    org.springframework.security: DEBUG
+    org.springdoc: DEBUG
+```
+
+#### Emplacement des logs
+
+Par défaut, les logs sont affichés sur la console. Dans un environnement de production, ils peuvent être configurés pour être écrits dans un fichier.
+
+#### Modification du niveau de log
+
+Pour modifier temporairement le niveau de log (par exemple pour du débogage), utilisez l'API Actuator (si activée) ou modifiez le fichier `application.yml`.
+
+Pour activer des logs plus détaillés, modifiez les niveaux comme suit :
+
+```yaml
+logging:
+  level:
+    root: DEBUG                         # Logs détaillés pour toute l'application
+    com.sentinelrisk: TRACE             # Logs très détaillés pour le package sentinelrisk
+    org.springframework.security: DEBUG # Logs détaillés pour Spring Security
+```
+
+## 📄 Navigation et Routage Angular
+
+### Structure des Routes
+- `/auth/login`        => LoginComponent (public)
+- `/auth/logout`       => LogoutComponent (public)
+- `/auth/home`         => HomeComponent (protégé)
+- `/dashboard`         => DashboardModule (lazy loaded, protégé)
+- `/users`             => UsersModule (lazy loaded, protégé)
+- `/risks`             => RisksModule (lazy loaded, protégé)
+- `/controls`          => ControlsModule (lazy loaded, protégé)
+- `/categories`        => CategoriesModule (lazy loaded, protégé)
+- `/assessments`       => AssessmentsModule (lazy loaded, protégé)
+- `/404`               => PageNotFoundComponent (public, fallback)
+- `/**`                => Redirection vers `/404` (public, fallback)
+
+### Organisation des Modules
+```
+frontend/src/app/
+├── app-routing.module.ts      # Configuration globale des routes
+├── features/
+│   ├── admin/
+│   │   └── users/             # UsersModule avec ses propres routes
+│   ├── auth/                  # AuthModule pour login/logout
+│   ├── risks/                 # RisksModule
+│   ├── controls/              # ControlsModule
+│   ├── categories/            # CategoriesModule
+│   └── assessments/           # AssessmentsModule
+├── layout/
+│   ├── layout.component.ts    # Composant de mise en page principal
+│   ├── layout-routing.module.ts # Routes sous le Layout
+│   ├── header/                # En-tête de l'application
+│   └── sidebar/               # Barre latérale de navigation
+├── pages/
+│   └── dashboard/             # DashboardModule
+└── core/
+    └── guards/auth.guard.ts   # Protection des routes
+```
+
+### Bonnes pratiques appliquées
+- Lazy Loading pour tous les modules de fonctionnalités
+- AuthGuard appliqué sur toutes les routes privées
+- Route fallback mise en place (PageNotFoundComponent) pour les routes inconnues
+- Navigation sécurisée : accès protégé selon l'authentification
+- Conventions de nommage respectées (kebab-case pour les chemins de route)
+
+### Notes complémentaires
+- Les routes sont déclarées dans layout-routing.module.ts sous LayoutComponent
+- Les modules de fonctionnalités sont autonomes et encapsulent leurs propres sous-routes
+- Le RouterOutlet principal est situé dans app.component.html
+- L'authentification est gérée via Keycloak
+
+## 📡 Services API et Communication avec le Backend
+
+### ApiService Générique
+L'application utilise un service API central pour toutes les communications HTTP avec le backend.
+
+```typescript
+// core/services/api.service.ts
+@Injectable({
+  providedIn: 'root'
+})
+export class ApiService {
+  private apiUrl = environment.apiUrl;
+
+  constructor(private http: HttpClient) {}
+
+  get<T>(path: string, params: HttpParams = new HttpParams()): Observable<T> {
+    return this.http.get<T>(`${this.apiUrl}${path}`, { params });
+  }
+
+  post<T>(path: string, body: any): Observable<T> {
+    return this.http.post<T>(`${this.apiUrl}${path}`, body);
+  }
+
+  // ... autres méthodes HTTP
+}
+```
+
+### Architecture des Services
+Le projet organise les services en deux niveaux :
+1. **ApiService** : service générique au niveau du core qui encapsule les appels HTTP bruts
+2. **Services spécifiques** : services par entité qui utilisent l'ApiService pour des opérations métier
+
+### Services Spécifiques Implémentés
+
+| Service | Chemin | Fonctionnalités |
+|---------|--------|-----------------|
+| UserService | `features/admin/users/services/user.service.ts` | Gestion des utilisateurs (CRUD, filtres) |
+| RiskService | `features/risks/services/risk.service.ts` | Gestion des risques (CRUD, filtres par catégorie/statut) |
+| ControlService | `features/controls/services/control.service.ts` | Gestion des contrôles (CRUD, filtres par type/statut) |
+| CategoryService | `features/categories/services/category.service.ts` | Gestion des catégories de risque (CRUD) |
+| AssessmentService | `features/assessments/services/assessment.service.ts` | Gestion des évaluations (CRUD, filtres) |
+
+### Utilisation des Services dans les Composants
+
+```typescript
+// Injection du service
+constructor(private userService: UserService) {}
+
+// Récupération de données
+ngOnInit() {
+  this.userService.getUsers().subscribe({
+    next: (users) => {
+      this.users = users;
+      console.log('Utilisateurs récupérés:', users);
+    },
+    error: (error) => {
+      console.error('Erreur:', error);
+      // Gestion des erreurs appropriée
+    }
+  });
+}
+
+// Création d'un nouvel élément
+createUser(userData: Partial<User>) {
+  this.userService.createUser(userData).subscribe({
+    next: (createdUser) => {
+      // Gestion du succès
+      this.loadUsers(); // Rafraîchir la liste
+    },
+    error: (error) => {
+      // Gestion des erreurs
+    }
+  });
+}
+```
+
+### Gestion des Erreurs et Tokens
+
+- L'authentification par token JWT est automatiquement gérée via un intercepteur HTTP
+- Les tokens sont automatiquement ajoutés aux en-têtes de requête
+- Les erreurs 401 (non autorisé) déclenchent un refresh du token ou une redirection vers la page de login
+- Les erreurs 403 (interdit) sont gérées au niveau des composants
+
+### Modèles de Données TypeScript
+
+Des interfaces TypeScript complètes ont été créées pour chaque entité:
+
+```typescript
+// exemple pour les risques
+export interface Risk {
+  id: string;
+  name: string;
+  description: string;
+  category: Category;
+  impactLevel: ImpactLevel;
+  probabilityLevel: ProbabilityLevel;
+  score: number;
+  status: RiskStatus;
+  mitigationPlan?: string;
+  controls?: Control[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+```
+
+Des énumérations sont également définies pour les valeurs fixes :
+
+```typescript
+export enum RiskStatus {
+  IDENTIFIED = 'IDENTIFIED',
+  IN_ASSESSMENT = 'IN_ASSESSMENT',
+  MITIGATED = 'MITIGATED',
+  ACCEPTED = 'ACCEPTED',
+  CLOSED = 'CLOSED'
+}
+```

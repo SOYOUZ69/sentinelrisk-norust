@@ -1,0 +1,99 @@
+<div class="risks-container">
+  <div class="header">
+    <h1>Gestion des risques</h1>
+    <button mat-raised-button color="primary" (click)="openRiskForm()">
+      <mat-icon>add</mat-icon>
+      Nouveau risque
+    </button>
+  </div>
+
+  <div class="table-container">
+    <div class="loading-shade" *ngIf="isLoading">
+      <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+    </div>
+
+    <table mat-table [dataSource]="risks" class="mat-elevation-z8">
+      <!-- Colonne Nom -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Nom</th>
+        <td mat-cell *matCellDef="let risk">{{ risk.name }}</td>
+      </ng-container>
+
+      <!-- Colonne Catégorie -->
+      <ng-container matColumnDef="category">
+        <th mat-header-cell *matHeaderCellDef>Catégorie</th>
+        <td mat-cell *matCellDef="let risk">{{ risk.category?.name }}</td>
+      </ng-container>
+
+      <!-- Colonne Niveau d'impact -->
+      <ng-container matColumnDef="impactLevel">
+        <th mat-header-cell *matHeaderCellDef>Impact</th>
+        <td mat-cell *matCellDef="let risk">
+          <span class="impact-badge" [class]="getImpactClass(risk.impactLevel)">
+            {{ impactTranslations[risk.impactLevel] }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Colonne Niveau de probabilité -->
+      <ng-container matColumnDef="probabilityLevel">
+        <th mat-header-cell *matHeaderCellDef>Probabilité</th>
+        <td mat-cell *matCellDef="let risk">
+          <span class="probability-badge" [class]="getProbabilityClass(risk.probabilityLevel)">
+            {{ probabilityTranslations[risk.probabilityLevel] }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Colonne Score -->
+      <ng-container matColumnDef="score">
+        <th mat-header-cell *matHeaderCellDef>Score</th>
+        <td mat-cell *matCellDef="let risk">
+          <span class="score-badge" [class]="getScoreClass(risk.score)">
+            {{ risk.score }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Colonne Statut -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Statut</th>
+        <td mat-cell *matCellDef="let risk">
+          <span class="status-badge" [class]="getStatusClass(risk.status)">
+            {{ statusTranslations[risk.status] }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Colonne Date de création -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef>Date de création</th>
+        <td mat-cell *matCellDef="let risk">{{ risk.createdAt | date:'dd/MM/yyyy' }}</td>
+      </ng-container>
+
+      <!-- Colonne Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let risk">
+          <button mat-icon-button color="primary" (click)="openRiskForm(risk)" matTooltip="Modifier">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteRisk(risk)" matTooltip="Supprimer">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <!-- Message si aucune donnée -->
+    <div class="no-data" *ngIf="!isLoading && risks.length === 0">
+      <p>Aucun risque trouvé</p>
+      <button mat-raised-button color="primary" (click)="openRiskForm()">
+        Ajouter un risque
+      </button>
+    </div>
+  </div>
+</div> 

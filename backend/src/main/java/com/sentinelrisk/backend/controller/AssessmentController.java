@@ -19,7 +19,7 @@ import java.util.List;
 @Tag(name = "Assessment Management", description = "Endpoints pour la gestion des évaluations de risque")
 public class AssessmentController {
 
-    private final AssessmentService assessmentService;
+        private final AssessmentService assessmentService;
 
     @GetMapping
     @Operation(summary = "Lister toutes les évaluations",

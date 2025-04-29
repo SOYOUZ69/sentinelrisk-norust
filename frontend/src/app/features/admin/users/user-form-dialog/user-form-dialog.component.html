@@ -1,0 +1,63 @@
+<h2 mat-dialog-title>{{ dialogTitle }}</h2>
+
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Nom d'utilisateur</mat-label>
+        <input matInput formControlName="username" placeholder="john.doe">
+        <mat-error *ngIf="userForm.get('username')?.invalid">{{ getErrorMessage('username') }}</mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" placeholder="john.doe@example.com" type="email">
+        <mat-error *ngIf="userForm.get('email')?.invalid">{{ getErrorMessage('email') }}</mat-error>
+      </mat-form-field>
+    </div>
+    
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Prénom</mat-label>
+        <input matInput formControlName="firstName" placeholder="John">
+        <mat-error *ngIf="userForm.get('firstName')?.invalid">{{ getErrorMessage('firstName') }}</mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Nom</mat-label>
+        <input matInput formControlName="lastName" placeholder="Doe">
+        <mat-error *ngIf="userForm.get('lastName')?.invalid">{{ getErrorMessage('lastName') }}</mat-error>
+      </mat-form-field>
+    </div>
+    
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Département</mat-label>
+        <input matInput formControlName="department" placeholder="IT">
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Rôle</mat-label>
+        <mat-select formControlName="role">
+          <mat-option *ngFor="let role of roles" [value]="role">
+            {{ role }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="userForm.get('role')?.invalid">{{ getErrorMessage('role') }}</mat-error>
+      </mat-form-field>
+    </div>
+    
+    <div class="form-row active-row">
+      <mat-slide-toggle formControlName="active">
+        Utilisateur actif
+      </mat-slide-toggle>
+    </div>
+  </mat-dialog-content>
+  
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">Annuler</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">
+      {{ isEdit ? 'Mettre à jour' : 'Créer' }}
+    </button>
+  </mat-dialog-actions>
+</form> 
