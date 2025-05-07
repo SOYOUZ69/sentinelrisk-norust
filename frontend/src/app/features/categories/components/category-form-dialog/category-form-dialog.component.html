@@ -1,0 +1,41 @@
+<div [ngClass]="{'dialog-content': isDialogMode, 'page-content': !isDialogMode}">
+  <h2 *ngIf="!isDialogMode" class="page-title">
+    {{ isEdit ? 'Modifier la catégorie' : 'Créer une nouvelle catégorie' }}
+  </h2>
+
+  <h2 *ngIf="isDialogMode" mat-dialog-title>
+    {{ isEdit ? 'Modifier la catégorie' : 'Créer une nouvelle catégorie' }}
+  </h2>
+
+  <div [ngClass]="{'mat-dialog-content': isDialogMode}">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-content">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nom</mat-label>
+          <input matInput formControlName="name" placeholder="Entrez le nom de la catégorie" required>
+          <mat-error *ngIf="form.get('name')?.hasError('required')">Le nom est requis</mat-error>
+          <mat-error *ngIf="form.get('name')?.hasError('maxlength')">
+            Le nom ne peut pas dépasser 100 caractères
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="5" 
+                    placeholder="Entrez une description de la catégorie"></textarea>
+          <mat-error *ngIf="form.get('description')?.hasError('maxlength')">
+            La description ne peut pas dépasser 1000 caractères
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div [ngClass]="{'mat-dialog-actions': isDialogMode, 'form-actions': !isDialogMode}">
+        <button type="button" mat-button (click)="onCancel()">Annuler</button>
+        <button type="submit" mat-raised-button color="primary" [disabled]="form.invalid || isLoading">
+          <mat-spinner *ngIf="isLoading" diameter="20" class="spinner"></mat-spinner>
+          <span *ngIf="!isLoading">{{ isEdit ? 'Mettre à jour' : 'Créer' }}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div> 

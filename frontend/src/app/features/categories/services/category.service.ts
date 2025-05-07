@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../../../core/services/api.service';
 import { HttpParams } from '@angular/common/http';
-import { Category, CategoryRequest, Page } from '../models/category.model';
+import { Category, CategoryRequest } from '../models/category.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,11 +14,9 @@ export class CategoryService {
    * Récupère la liste de toutes les catégories
    * @returns Observable contenant un tableau de catégories
    */
-  getCategories(page: number, size: number, filters?: { name?: string; description?: string }): Observable<Page<Category>> {
-    let params = new HttpParams().set('page', page).set('size', size);
-    if (filters?.name) params = params.set('name', filters.name);
-    if (filters?.description) params = params.set('description', filters.description);
-    return this.api.get<Page<Category>>('/categories', params);
+  getCategories(): Observable<Category[]> {
+    console.log('Appel API pour récupérer toutes les catégories');
+    return this.api.get<Category[]>('/categories');
   }
 
   /**

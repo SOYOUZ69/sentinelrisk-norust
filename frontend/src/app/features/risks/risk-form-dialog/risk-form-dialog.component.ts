@@ -3,7 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Risk, RiskStatus, ImpactLevel, ProbabilityLevel } from '../../../core/models/risk.model';
 import { CategoryService } from '../../categories/services/category.service';
-import { Category } from '../../../core/models/risk.model';
+import { Category as CoreCategory } from '../../../core/models/risk.model';
+import { Category as FeatureCategory } from '../../categories/models/category.model';
 
 export interface RiskFormDialogData {
   risk?: Risk;
@@ -19,7 +20,7 @@ export class RiskFormDialogComponent implements OnInit {
   riskForm: FormGroup;
   isEdit = false;
   dialogTitle: string;
-  categories: Category[] = [];
+  categories: CoreCategory[] = [];
   isLoadingCategories = false;
   
   // Options pour les selects
@@ -85,47 +86,74 @@ export class RiskFormDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.categories = [];
     this.loadCategories();
   }
 
   loadCategories(): void {
     this.isLoadingCategories = true;
+    console.log('Chargement des catégories pour le formulaire de risque...');
+    
     this.categoryService.getCategories().subscribe({
       next: (categories) => {
-        this.categories = categories;
+        console.log('Catégories reçues pour le formulaire de risque:', categories);
+        
+        // Garde pour éviter les erreurs si la réponse n'est pas un tableau
+        if (!Array.isArray(categories)) {
+          console.error('La réponse API n\'est pas un tableau valide:', categories);
+          this.isLoadingCategories = false;
+          this.categories = []; // Initialiser à un tableau vide pour éviter les erreurs
+          return;
+        }
+        
+        try {
+          // Conversion du type FeatureCategory[] vers CoreCategory[]
+          this.categories = categories.map(cat => {
+            if (!cat) return null; // Garde supplémentaire
+            return {
+              id: String(cat.id),
+              name: cat.name || '(Sans nom)',
+              description: cat.description
+            };
+          }).filter(cat => cat !== null) as CoreCategory[]; // Filtrer les valeurs null
+          
+          console.log('Catégories converties et prêtes pour le select:', this.categories);
+        } catch (err) {
+          console.error('Erreur lors de la conversion des catégories:', err);
+          this.categories = []; // Fallback à un tableau vide en cas d'erreur
+        }
+        
         this.isLoadingCategories = false;
       },
       error: (error) => {
         console.error('Erreur lors du chargement des catégories:', error);
         this.isLoadingCategories = false;
+        this.categories = []; // Fallback à un tableau vide en cas d'erreur
       }
     });
   }
 
   onSubmit(): void {
     if (this.riskForm.valid) {
-      // Récupérer les valeurs brutes du formulaire
       const formValues = this.riskForm.getRawValue();
       
-      // Trouver la catégorie sélectionnée pour avoir son nom
-      const selectedCategory = this.categories.find(cat => cat.id === formValues.categoryId);
+      const selectedCategory = this.categories ? 
+        this.categories.find(cat => cat && cat.id === formValues.categoryId) : undefined;
       
-      // Construire l'objet correctement formaté
       const riskData: Partial<Risk> = {
         name: formValues.name,
         description: formValues.description,
         category: { 
           id: formValues.categoryId,
-          name: selectedCategory?.name || '' // Ajouter le nom requis pour Category
+          name: selectedCategory?.name || '(Catégorie inconnue)'
         },
         impactLevel: formValues.impactLevel,
         probabilityLevel: formValues.probabilityLevel,
         status: formValues.status,
         mitigationPlan: formValues.mitigationPlan
-        // Note: Si ownerId est nécessaire, il faudrait l'ajouter ici
-        // ownerId: this.authService.getCurrentUserId()
       };
       
+      console.log('Données du risque à soumettre:', riskData);
       this.dialogRef.close(riskData);
     }
   }

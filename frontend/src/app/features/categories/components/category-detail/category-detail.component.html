@@ -1,0 +1,53 @@
+<div class="container">
+  <mat-card class="category-card mat-elevation-z2" *ngIf="category">
+    <mat-card-header>
+      <mat-card-title>{{ category.name }}</mat-card-title>
+      <mat-card-subtitle *ngIf="category.description">{{ category.description }}</mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <div class="detail-section">
+        <h3>Informations</h3>
+        <div class="detail-item">
+          <span class="label">Nom:</span>
+          <span class="value">{{ category.name }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Description:</span>
+          <span class="value">{{ category.description || 'Aucune description' }}</span>
+        </div>
+      </div>
+      
+      <div class="detail-section">
+        <h3>Dates</h3>
+        <div class="detail-item">
+          <span class="label">Créé le:</span>
+          <span class="value">{{ category.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Dernière mise à jour:</span>
+          <span class="value">{{ category.updatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+      </div>
+    </mat-card-content>
+    
+    <mat-card-actions>
+      <button mat-button (click)="navigateToList()">
+        <mat-icon>arrow_back</mat-icon> Retour à la liste
+      </button>
+      <button mat-button color="primary" (click)="editCategory()">
+        <mat-icon>edit</mat-icon> Éditer
+      </button>
+      <button mat-button color="warn" (click)="deleteCategory()">
+        <mat-icon>delete</mat-icon> Supprimer
+      </button>
+    </mat-card-actions>
+  </mat-card>
+  
+  <mat-progress-spinner 
+    *ngIf="isLoading" 
+    mode="indeterminate" 
+    diameter="50"
+    class="loading-spinner">
+  </mat-progress-spinner>
+</div> 

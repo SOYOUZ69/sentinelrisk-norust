@@ -18,7 +18,9 @@ export class ApiService {
    * @returns Observable avec les données
    */
   get<T>(path: string, params: HttpParams = new HttpParams()): Observable<T> {
-    return this.http.get<T>(`${this.apiUrl}${path}`, { params });
+    const url = `${this.apiUrl}${path}`;
+    console.log(`ApiService GET: ${url} avec params:`, params.toString());
+    return this.http.get<T>(url, { params });
   }
 
   /**

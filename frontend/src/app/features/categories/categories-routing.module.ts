@@ -6,7 +6,6 @@ import { CategoryDetailComponent } from './components/category-detail/category-d
 
 const routes: Routes = [
   { path: '', component: CategoryListComponent },
-  { path: 'new', component: CategoryFormDialogComponent },
   { path: ':id', component: CategoryDetailComponent },
   { path: ':id/edit', component: CategoryFormDialogComponent }
 ];

@@ -1,0 +1,112 @@
+<div class="container">
+  <div class="filters mat-elevation-z1">
+    <h1>Gestion des catégories</h1>
+    
+    <div class="filter-controls">
+      <mat-form-field appearance="outline">
+        <mat-label>Nom</mat-label>
+        <input matInput [(ngModel)]="filters.name" placeholder="Filtrer par nom">
+        <button *ngIf="filters.name" matSuffix mat-icon-button aria-label="Effacer" (click)="filters.name=''; applyFilters()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <input matInput [(ngModel)]="filters.description" placeholder="Filtrer par description">
+        <button *ngIf="filters.description" matSuffix mat-icon-button aria-label="Effacer" (click)="filters.description=''; applyFilters()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      
+      <div class="buttons">
+        <button mat-raised-button color="primary" (click)="applyFilters()">
+          <mat-icon>search</mat-icon> Rechercher
+        </button>
+        <button mat-raised-button color="basic" (click)="clearFilters()" [disabled]="!filters.name && !filters.description">
+          <mat-icon>clear</mat-icon> Effacer
+        </button>
+        <button mat-raised-button color="accent" (click)="openCategoryFormDialog()">
+          <mat-icon>add</mat-icon> Nouvelle catégorie
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Diagnostics -->
+  <div class="debug-info" *ngIf="categories.length > 0 && dataSource && dataSource.data.length === 0">
+    <div class="alert alert-warning">
+      <strong>Diagnostic:</strong> Catégories reçues ({{categories.length}}) mais dataSource vide.
+    </div>
+  </div>
+  
+  <div class="table-container mat-elevation-z2">
+    <div class="loading-shade" *ngIf="isLoading">
+      <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+    </div>
+    
+    <div class="results-info" *ngIf="(filters.name || filters.description) && !isLoading">
+      <span>Résultats filtrés: {{ total }} catégorie(s)</span>
+      <button mat-button color="primary" (click)="clearFilters()" *ngIf="total === 0">
+        <mat-icon>refresh</mat-icon> Réinitialiser les filtres
+      </button>
+    </div>
+    
+    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortChanged($event)">
+      <!-- Colonne Nom -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom</th>
+        <td mat-cell *matCellDef="let category">{{ category?.name || '(Sans nom)' }}</td>
+      </ng-container>
+
+      <!-- Colonne Description -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+        <td mat-cell *matCellDef="let category">{{ category?.description || '-' }}</td>
+      </ng-container>
+
+      <!-- Colonne Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let category">
+          <button mat-icon-button [routerLink]="[category.id]" matTooltip="Voir les détails">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button mat-icon-button (click)="openCategoryFormDialog(category)" matTooltip="Modifier">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="deleteCategory(category.id)" matTooltip="Supprimer" color="warn">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      
+      <!-- Ligne affichée quand il n'y a pas de données -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="3">
+          <div class="no-data-message">
+            {{ isLoading ? 'Chargement des données...' : 'Aucune catégorie ne correspond à votre recherche' }}
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator 
+      [length]="total" 
+      [pageSize]="pageSize" 
+      [pageSizeOptions]="[5, 10, 25, 50]" 
+      (page)="pageChanged($event)">
+    </mat-paginator>
+  </div>
+  
+  <!-- Affichage debug des données brutes -->
+  <div class="debug-data" *ngIf="categories && categories.length > 0">
+    <div class="mat-elevation-z1 debug-panel">
+      <h3>Données brutes ({{categories.length}} catégories):</h3>
+      <pre>{{ categories | json }}</pre>
+    </div>
+  </div>
+</div> 

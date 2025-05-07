@@ -1,0 +1,46 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.category-card {
+  margin-bottom: 20px;
+}
+
+.detail-section {
+  margin-bottom: 20px;
+  
+  h3 {
+    color: #3f51b5;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+}
+
+.detail-item {
+  display: flex;
+  margin-bottom: 8px;
+  
+  .label {
+    font-weight: 500;
+    width: 150px;
+    color: rgba(0, 0, 0, 0.7);
+  }
+  
+  .value {
+    flex: 1;
+  }
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px;
+}
+
+.loading-spinner {
+  margin: 48px auto;
+  display: block;
+} 
