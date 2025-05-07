@@ -13,6 +13,10 @@ const routes: Routes = [
     loadChildren: () => import('./layout/layout.module').then(m => m.LayoutModule),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'categories',
+    loadChildren: () => import('./features/categories/categories.module').then(m => m.CategoriesModule)
+  },
   { 
     path: '404', 
     component: PageNotFoundComponent 

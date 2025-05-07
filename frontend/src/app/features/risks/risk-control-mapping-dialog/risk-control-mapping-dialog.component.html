@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>Gestion des contrôles associés</h2>
+
+<div mat-dialog-content>
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+  </div>
+
+  <form [formGroup]="mappingForm" *ngIf="!isLoading">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Contrôles associés</mat-label>
+      <mat-select formControlName="controlIds" multiple [compareWith]="compareById">
+        <mat-option *ngFor="let control of controls" [value]="control.id">
+          {{ control.name }}
+        </mat-option>
+      </mat-select>
+      <mat-hint>Sélectionnez un ou plusieurs contrôles à associer à ce risque</mat-hint>
+    </mat-form-field>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()" [disabled]="isSaving">Annuler</button>
+  <button 
+    mat-raised-button 
+    color="primary" 
+    (click)="onSave()" 
+    [disabled]="mappingForm.invalid || isSaving">
+    <span *ngIf="!isSaving">Enregistrer</span>
+    <mat-progress-spinner *ngIf="isSaving" mode="indeterminate" diameter="20"></mat-progress-spinner>
+  </button>
+</div>

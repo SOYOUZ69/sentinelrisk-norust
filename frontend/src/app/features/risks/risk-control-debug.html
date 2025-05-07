@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug SentinelRisk API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+        .response {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 15px;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>Debug SentinelRisk API</h1>
+    
+    <div>
+        <label for="apiUrl">URL de l'API:</label>
+        <input type="text" id="apiUrl" value="http://localhost:8080/api/api/risks/1/controls" />
+        
+        <label for="altApiUrl">URL de l'API alternative:</label>
+        <input type="text" id="altApiUrl" value="http://localhost:8080/api/debug/risks/1/controls" />
+        
+        <label for="controlIds">IDs des contrôles (séparés par des virgules):</label>
+        <input type="text" id="controlIds" value="3,4" />
+        
+        <label for="token">Token JWT Keycloak (optionnel):</label>
+        <textarea id="token" rows="5" placeholder="Coller le token JWT ici..."></textarea>
+        
+        <div>
+            <button onclick="testApi('apiUrl')">Tester API normale</button>
+            <button onclick="testApi('altApiUrl')">Tester API debug</button>
+            <button onclick="testApiWithoutAuth('apiUrl')">Test sans auth</button>
+        </div>
+    </div>
+    
+    <div class="response">
+        <h2>Réponse</h2>
+        <div id="status"></div>
+        <pre id="responseData"></pre>
+    </div>
+    
+    <script>
+        async function testApi(urlField) {
+            const url = document.getElementById(urlField).value;
+            const controlIdsStr = document.getElementById('controlIds').value;
+            const token = document.getElementById('token').value;
+            
+            // Convertir les IDs en tableau de nombres
+            const controlIds = controlIdsStr.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+            
+            const status = document.getElementById('status');
+            const responseData = document.getElementById('responseData');
+            
+            status.textContent = 'Envoi de la requête...';
+            status.className = '';
+            
+            try {
+                const headers = {
+                    'Content-Type': 'application/json'
+                };
+                
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
+                
+                const response = await fetch(url, {
+                    method: 'PUT',
+                    headers: headers,
+                    body: JSON.stringify(controlIds)
+                });
+                
+                const data = await response.text();
+                
+                if (response.ok) {
+                    status.textContent = `Succès (${response.status})`;
+                    status.className = 'success';
+                } else {
+                    status.textContent = `Erreur (${response.status})`;
+                    status.className = 'error';
+                }
+                
+                try {
+                    // Essayer de formater comme du JSON
+                    responseData.textContent = JSON.stringify(JSON.parse(data), null, 2);
+                } catch (e) {
+                    // Sinon afficher le texte brut
+                    responseData.textContent = data;
+                }
+            } catch (error) {
+                status.textContent = 'Erreur: ' + error.message;
+                status.className = 'error';
+                responseData.textContent = error.stack;
+            }
+        }
+        
+        async function testApiWithoutAuth(urlField) {
+            const url = document.getElementById(urlField).value;
+            const controlIdsStr = document.getElementById('controlIds').value;
+            
+            // Convertir les IDs en tableau de nombres
+            const controlIds = controlIdsStr.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+            
+            const status = document.getElementById('status');
+            const responseData = document.getElementById('responseData');
+            
+            status.textContent = 'Envoi de la requête sans authentification...';
+            status.className = '';
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(controlIds)
+                });
+                
+                const data = await response.text();
+                
+                if (response.ok) {
+                    status.textContent = `Succès (${response.status})`;
+                    status.className = 'success';
+                } else {
+                    status.textContent = `Erreur (${response.status})`;
+                    status.className = 'error';
+                }
+                
+                try {
+                    // Essayer de formater comme du JSON
+                    responseData.textContent = JSON.stringify(JSON.parse(data), null, 2);
+                } catch (e) {
+                    // Sinon afficher le texte brut
+                    responseData.textContent = data;
+                }
+            } catch (error) {
+                status.textContent = 'Erreur: ' + error.message;
+                status.className = 'error';
+                responseData.textContent = error.stack;
+            }
+        }
+    </script>
+</body>
+</html> 

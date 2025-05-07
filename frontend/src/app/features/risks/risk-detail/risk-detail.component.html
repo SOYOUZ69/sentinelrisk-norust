@@ -1,0 +1,162 @@
+<div class="risk-detail-container">
+  <div class="loading-shade" *ngIf="isLoading">
+    <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+  </div>
+
+  <mat-card class="risk-card" *ngIf="risk">
+    <mat-card-header>
+      <button mat-icon-button [routerLink]="['/risks']" matTooltip="Retour à la liste" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="header-content">
+        <mat-card-title>{{ risk.name }}</mat-card-title>
+        <mat-card-subtitle class="risk-metadata">
+          <mat-chip-set>
+            <mat-chip class="category-chip">{{ risk.category?.name || 'Sans catégorie' }}</mat-chip>
+            <mat-chip [class]="getStatusClass(risk.status)" class="status-chip">
+              {{ statusTranslations[risk.status] }}
+            </mat-chip>
+          </mat-chip-set>
+        </mat-card-subtitle>
+      </div>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <!-- Section Description -->
+      <mat-expansion-panel expanded="true" class="section-panel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>description</mat-icon>
+            <span>Description</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p class="section-content">{{ risk.description || 'Aucune description fournie' }}</p>
+      </mat-expansion-panel>
+
+      <!-- Détails du risque -->
+      <mat-expansion-panel expanded="true" class="section-panel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>assessment</mat-icon>
+            <span>Évaluation du risque</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="risk-metrics-grid">
+          <div class="metric-item">
+            <span class="label mat-caption">Impact</span>
+            <mat-chip [class]="getImpactLevelClass(risk.impactLevel)" class="value-chip">
+              {{ impactLevelTranslations[risk.impactLevel] }}
+            </mat-chip>
+          </div>
+          
+          <div class="metric-item">
+            <span class="label mat-caption">Probabilité</span>
+            <mat-chip [class]="getProbabilityLevelClass(risk.probabilityLevel)" class="value-chip">
+              {{ probabilityLevelTranslations[risk.probabilityLevel] }}
+            </mat-chip>
+          </div>
+          
+          <div class="metric-item">
+            <span class="label mat-caption">Score</span>
+            <mat-chip [class]="getScoreClass(risk.score)" class="value-chip score-chip">
+              {{ risk.score }}
+            </mat-chip>
+          </div>
+          
+          <div class="metric-item">
+            <span class="label mat-caption">Statut</span>
+            <mat-chip [class]="getStatusClass(risk.status)" class="value-chip">
+              {{ statusTranslations[risk.status] }}
+            </mat-chip>
+          </div>
+        </div>
+      </mat-expansion-panel>
+      
+      <!-- Plan d'atténuation -->
+      <mat-expansion-panel expanded="true" *ngIf="risk.mitigationPlan" class="section-panel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>security</mat-icon>
+            <span>Plan d'atténuation</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p class="section-content">{{ risk.mitigationPlan }}</p>
+      </mat-expansion-panel>
+      
+      <!-- Contrôles associés -->
+      <mat-expansion-panel expanded="true" class="section-panel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>verified</mat-icon>
+            <span>Contrôles associés</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        
+        <div class="controls-content">
+          <div *ngIf="risk.controls && risk.controls.length > 0; else noControls">
+            <mat-chip-set class="controls-chip-list">
+              <mat-chip *ngFor="let control of risk.controls" 
+                      [routerLink]="['/controls', control.id]" 
+                      color="accent" 
+                      [matTooltip]="control.description || 'Aucune description disponible'"
+                      class="control-chip">
+                {{ control.name }}
+              </mat-chip>
+            </mat-chip-set>
+          </div>
+          <ng-template #noControls>
+            <p class="no-data-message">Aucun contrôle n'est associé à ce risque.</p>
+          </ng-template>
+          
+          <div class="actions-container">
+            <button mat-raised-button color="primary" (click)="openAssociationDialog()">
+              <mat-icon>edit</mat-icon>
+              Modifier les associations
+            </button>
+          </div>
+        </div>
+      </mat-expansion-panel>
+      
+      <!-- Métadonnées -->
+      <mat-expansion-panel class="section-panel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>info</mat-icon>
+            <span>Métadonnées</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        
+        <div class="metadata-grid">
+          <div class="metadata-item">
+            <span class="label mat-caption">Créé le</span>
+            <span class="value mat-body-1">{{ risk.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          
+          <div class="metadata-item">
+            <span class="label mat-caption">Dernière mise à jour</span>
+            <span class="value mat-body-1">{{ risk.updatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          
+          <div class="metadata-item">
+            <span class="label mat-caption">Catégorie</span>
+            <span class="value mat-body-1">{{ risk.category?.name || 'Non catégorisé' }}</span>
+          </div>
+          
+          <div class="metadata-item">
+            <span class="label mat-caption">ID</span>
+            <span class="value mat-body-1">{{ risk.id }}</span>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="not-found" *ngIf="!risk && !isLoading">
+    <mat-icon>error_outline</mat-icon>
+    <h2>Risque non trouvé</h2>
+    <p>Le risque demandé n'existe pas ou a été supprimé.</p>
+    <button mat-raised-button color="primary" [routerLink]="['/risks']">
+      Retour à la liste
+    </button>
+  </div>
+</div>

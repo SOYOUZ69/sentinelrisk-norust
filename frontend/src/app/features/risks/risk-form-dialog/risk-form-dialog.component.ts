@@ -104,8 +104,26 @@ export class RiskFormDialogComponent implements OnInit {
 
   onSubmit(): void {
     if (this.riskForm.valid) {
+      // Récupérer les valeurs brutes du formulaire
+      const formValues = this.riskForm.getRawValue();
+      
+      // Trouver la catégorie sélectionnée pour avoir son nom
+      const selectedCategory = this.categories.find(cat => cat.id === formValues.categoryId);
+      
+      // Construire l'objet correctement formaté
       const riskData: Partial<Risk> = {
-        ...this.riskForm.value
+        name: formValues.name,
+        description: formValues.description,
+        category: { 
+          id: formValues.categoryId,
+          name: selectedCategory?.name || '' // Ajouter le nom requis pour Category
+        },
+        impactLevel: formValues.impactLevel,
+        probabilityLevel: formValues.probabilityLevel,
+        status: formValues.status,
+        mitigationPlan: formValues.mitigationPlan
+        // Note: Si ownerId est nécessaire, il faudrait l'ajouter ici
+        // ownerId: this.authService.getCurrentUserId()
       };
       
       this.dialogRef.close(riskData);

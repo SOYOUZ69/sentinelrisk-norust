@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "controls")
@@ -42,6 +43,21 @@ public class Control {
     @Column(name = "implementation_details")
     @Size(max = 2000)
     private String implementationDetails;
+    
+    @Column(name = "implementation_date")
+    private LocalDate implementationDate;
+    
+    @Column(name = "last_tested_date")
+    private LocalDate lastTestedDate;
+    
+    @Column(name = "effectiveness_score")
+    private Integer effectivenessScore;
+    
+    @Column(name = "owner")
+    private String owner;
+    
+    @Column(name = "documentation")
+    private String documentation;
 
     @ManyToMany(mappedBy = "controls")
     private Set<Risk> risks = new HashSet<>();

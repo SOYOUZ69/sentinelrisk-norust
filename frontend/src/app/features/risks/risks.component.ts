@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { Risk, ImpactLevel, ProbabilityLevel, RiskStatus } from '../../core/models/risk.model';
 import { RiskService } from './services/risk.service';
 import { RiskFormDialogComponent, RiskFormDialogData } from './risk-form-dialog/risk-form-dialog.component';
@@ -17,7 +18,7 @@ export class RisksComponent implements OnInit {
   isLoading = false;
   
   // Mappage pour les traductions des statuts et niveaux
-  statusTranslations = {
+  statusTranslations: Record<string, string> = {
     [RiskStatus.IDENTIFIED]: 'Identifié',
     [RiskStatus.IN_ASSESSMENT]: 'En évaluation',
     [RiskStatus.MITIGATED]: 'Atténué',
@@ -25,7 +26,7 @@ export class RisksComponent implements OnInit {
     [RiskStatus.CLOSED]: 'Clôturé'
   };
   
-  impactTranslations = {
+  impactTranslations: Record<string, string> = {
     [ImpactLevel.NEGLIGIBLE]: 'Négligeable',
     [ImpactLevel.LOW]: 'Faible',
     [ImpactLevel.MEDIUM]: 'Moyen',
@@ -33,7 +34,7 @@ export class RisksComponent implements OnInit {
     [ImpactLevel.SEVERE]: 'Sévère'
   };
   
-  probabilityTranslations = {
+  probabilityTranslations: Record<string, string> = {
     [ProbabilityLevel.RARE]: 'Rare',
     [ProbabilityLevel.UNLIKELY]: 'Peu probable',
     [ProbabilityLevel.POSSIBLE]: 'Possible',
@@ -44,7 +45,8 @@ export class RisksComponent implements OnInit {
   constructor(
     private riskService: RiskService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -65,6 +67,14 @@ export class RisksComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  viewRisk(risk: Risk): void {
+    if (risk && risk.id) {
+      this.router.navigate(['/risks', risk.id]);
+    } else {
+      this.showError('Impossible d\'accéder aux détails du risque: identifiant manquant');
+    }
   }
 
   openRiskForm(risk?: Risk): void {
@@ -147,14 +157,29 @@ export class RisksComponent implements OnInit {
 
   private createRisk(riskData: Partial<Risk>): void {
     this.isLoading = true;
+    console.log('Données du risque envoyées au backend:', riskData);
     this.riskService.createRisk(riskData).subscribe({
-      next: () => {
+      next: (createdRisk) => {
+        console.log('Risque créé avec succès:', createdRisk);
         this.loadRisks();
         this.showSuccess('Risque créé avec succès');
       },
       error: (error) => {
-        console.error('Erreur lors de la création du risque:', error);
-        this.showError('Erreur lors de la création du risque');
+        console.error('Erreur détaillée lors de la création du risque:', error);
+        let errorMessage = 'Erreur lors de la création du risque';
+        
+        // Tenter d'extraire un message d'erreur plus précis
+        if (error.error && typeof error.error === 'object') {
+          if (error.error.message) {
+            errorMessage += ': ' + error.error.message;
+          } else if (error.error.detail) {
+            errorMessage += ': ' + error.error.detail;
+          }
+          // Afficher les champs en erreur s'il y en a
+          console.log('Champs en erreur:', error.error);
+        }
+        
+        this.showError(errorMessage);
         this.isLoading = false;
       }
     });

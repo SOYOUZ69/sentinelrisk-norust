@@ -1,0 +1,133 @@
+<h2 mat-dialog-title>{{ isEditing ? 'Modifier le contrôle' : 'Nouveau contrôle' }}</h2>
+
+<form [formGroup]="controlForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="form-container">
+      <!-- Nom -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nom</mat-label>
+        <input matInput formControlName="name" placeholder="Nom du contrôle" required>
+        <mat-error *ngIf="controlForm.get('name')?.hasError('required')">
+          Le nom est requis
+        </mat-error>
+        <mat-error *ngIf="controlForm.get('name')?.hasError('maxlength')">
+          Le nom ne doit pas dépasser 100 caractères
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Description -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" placeholder="Description du contrôle" rows="3"></textarea>
+        <mat-error *ngIf="controlForm.get('description')?.hasError('maxlength')">
+          La description ne doit pas dépasser 1000 caractères
+        </mat-error>
+      </mat-form-field>
+
+      <div class="form-row">
+        <!-- Type -->
+        <mat-form-field appearance="outline">
+          <mat-label>Type</mat-label>
+          <mat-select formControlName="type" required>
+            <mat-option *ngFor="let type of controlTypes" [value]="type">
+              {{ typeTranslations[type] }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="controlForm.get('type')?.hasError('required')">
+            Le type est requis
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Statut -->
+        <mat-form-field appearance="outline">
+          <mat-label>Statut</mat-label>
+          <mat-select formControlName="status" required>
+            <mat-option *ngFor="let status of controlStatuses" [value]="status">
+              {{ statusTranslations[status] }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="controlForm.get('status')?.hasError('required')">
+            Le statut est requis
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <!-- Fréquence -->
+        <mat-form-field appearance="outline">
+          <mat-label>Fréquence</mat-label>
+          <mat-select formControlName="frequency">
+            <mat-option [value]="null">Non applicable</mat-option>
+            <mat-option *ngFor="let frequency of controlFrequencies" [value]="frequency">
+              {{ frequencyTranslations[frequency] }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Propriétaire -->
+        <mat-form-field appearance="outline">
+          <mat-label>Propriétaire</mat-label>
+          <input matInput formControlName="owner" placeholder="Responsable du contrôle">
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <!-- Date d'implémentation -->
+        <mat-form-field appearance="outline">
+          <mat-label>Date d'implémentation</mat-label>
+          <input matInput [matDatepicker]="implementationPicker" formControlName="implementationDate">
+          <mat-datepicker-toggle matSuffix [for]="implementationPicker"></mat-datepicker-toggle>
+          <mat-datepicker #implementationPicker></mat-datepicker>
+        </mat-form-field>
+
+        <!-- Date du dernier test -->
+        <mat-form-field appearance="outline">
+          <mat-label>Date du dernier test</mat-label>
+          <input matInput [matDatepicker]="testPicker" formControlName="lastTestedDate">
+          <mat-datepicker-toggle matSuffix [for]="testPicker"></mat-datepicker-toggle>
+          <mat-datepicker #testPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <!-- Score d'efficacité -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Score d'efficacité (%)</mat-label>
+        <input matInput type="number" formControlName="effectivenessScore" min="0" max="100" placeholder="Score entre 0 et 100">
+        <mat-error *ngIf="controlForm.get('effectivenessScore')?.hasError('min')">
+          Le score doit être supérieur ou égal à 0
+        </mat-error>
+        <mat-error *ngIf="controlForm.get('effectivenessScore')?.hasError('max')">
+          Le score doit être inférieur ou égal à 100
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Documentation -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Documentation</mat-label>
+        <textarea matInput formControlName="documentation" placeholder="Lien ou référence vers la documentation" rows="2"></textarea>
+      </mat-form-field>
+      
+      <!-- Risques associés -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Risques associés</mat-label>
+        <mat-select formControlName="riskIds" multiple>
+          <mat-option *ngIf="isLoadingRisks" disabled>Chargement des risques...</mat-option>
+          <mat-option *ngFor="let risk of risks" [value]="risk.id">
+            {{ risk.name }}
+          </mat-option>
+        </mat-select>
+        <mat-hint>Sélectionnez les risques gérés par ce contrôle</mat-hint>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" [disabled]="isSubmitting" (click)="onCancel()">Annuler</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="isSubmitting">
+      <span *ngIf="isSubmitting">
+        <mat-spinner diameter="20" style="display: inline-block; margin-right: 8px;"></mat-spinner>
+      </span>
+      {{ isEditing ? 'Mettre à jour' : 'Créer' }}
+    </button>
+  </mat-dialog-actions>
+</form> 

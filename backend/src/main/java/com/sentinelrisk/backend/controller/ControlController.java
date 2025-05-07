@@ -1,5 +1,7 @@
 package com.sentinelrisk.backend.controller;
 
+import com.sentinelrisk.backend.dto.ControlRequest;
+import com.sentinelrisk.backend.dto.ControlResponse;
 import com.sentinelrisk.backend.model.Control;
 import com.sentinelrisk.backend.service.ControlService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,7 +27,7 @@ public class ControlController {
     @Operation(summary = "Lister tous les contrôles",
             description = "Récupère la liste complète des contrôles de risque")
     @ApiResponse(responseCode = "200", description = "Liste des contrôles récupérée avec succès")
-    public List<Control> getAllControls() {
+    public List<ControlResponse> getAllControls() {
         return controlService.getAllControls();
     }
 
@@ -34,7 +36,7 @@ public class ControlController {
             description = "Récupère les détails d'un contrôle spécifique via son ID")
     @ApiResponse(responseCode = "200", description = "Contrôle trouvé")
     @ApiResponse(responseCode = "404", description = "Contrôle non trouvé")
-    public ResponseEntity<Control> getControlById(
+    public ResponseEntity<ControlResponse> getControlById(
             @Parameter(description = "ID du contrôle à récupérer") 
             @PathVariable Long id) {
         return ResponseEntity.ok(controlService.getControlById(id));
@@ -45,10 +47,10 @@ public class ControlController {
             description = "Crée un nouveau contrôle de risque")
     @ApiResponse(responseCode = "201", description = "Contrôle créé avec succès")
     @ApiResponse(responseCode = "400", description = "Données du contrôle invalides")
-    public ResponseEntity<Control> createControl(
+    public ResponseEntity<ControlResponse> createControl(
             @Parameter(description = "Données du contrôle à créer") 
-            @Valid @RequestBody Control control) {
-        return ResponseEntity.ok(controlService.createControl(control));
+            @Valid @RequestBody ControlRequest controlRequest) {
+        return ResponseEntity.ok(controlService.createControl(controlRequest));
     }
 
     @PutMapping("/{id}")
@@ -56,12 +58,12 @@ public class ControlController {
             description = "Met à jour les informations d'un contrôle existant")
     @ApiResponse(responseCode = "200", description = "Contrôle mis à jour avec succès")
     @ApiResponse(responseCode = "404", description = "Contrôle non trouvé")
-    public ResponseEntity<Control> updateControl(
+    public ResponseEntity<ControlResponse> updateControl(
             @Parameter(description = "ID du contrôle à mettre à jour") 
             @PathVariable Long id,
             @Parameter(description = "Nouvelles données du contrôle") 
-            @Valid @RequestBody Control control) {
-        return ResponseEntity.ok(controlService.updateControl(id, control));
+            @Valid @RequestBody ControlRequest controlRequest) {
+        return ResponseEntity.ok(controlService.updateControl(id, controlRequest));
     }
 
     @DeleteMapping("/{id}")
@@ -81,7 +83,7 @@ public class ControlController {
             description = "Récupère la liste des contrôles associés à un risque spécifique")
     @ApiResponse(responseCode = "200", description = "Liste des contrôles du risque récupérée avec succès")
     @ApiResponse(responseCode = "404", description = "Risque non trouvé")
-    public List<Control> getControlsByRisk(
+    public List<ControlResponse> getControlsByRisk(
             @Parameter(description = "ID du risque") 
             @PathVariable Long id) {
         return controlService.getControlsByRisk(id);

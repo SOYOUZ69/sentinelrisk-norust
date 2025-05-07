@@ -1,6 +1,3 @@
-import { Category } from './category.model';
-import { Control } from './control.model';
-
 export enum RiskStatus {
   IDENTIFIED = 'IDENTIFIED',
   IN_ASSESSMENT = 'IN_ASSESSMENT',

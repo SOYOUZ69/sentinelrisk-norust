@@ -1,0 +1,153 @@
+.controls-container {
+  padding: 20px;
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 500;
+    }
+  }
+  
+  .table-container {
+    position: relative;
+    min-height: 200px;
+    
+    .loading-shade {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.1);
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    table {
+      width: 100%;
+      
+      .mat-column-actions {
+        width: 120px;
+        text-align: center;
+      }
+      
+      .mat-column-type, .mat-column-status, .mat-column-frequency, .mat-column-effectivenessScore {
+        width: 150px;
+      }
+    }
+    
+    .no-data {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      text-align: center;
+      
+      p {
+        margin-bottom: 20px;
+        color: #666;
+        font-size: 16px;
+      }
+    }
+  }
+  
+  // Badges pour les types de contrôle
+  .type-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    
+    &.preventive {
+      background-color: #e3f2fd;
+      color: #1976d2;
+    }
+    
+    &.detective {
+      background-color: #e8f5e9;
+      color: #388e3c;
+    }
+    
+    &.corrective {
+      background-color: #fff8e1;
+      color: #ffa000;
+    }
+    
+    &.directive {
+      background-color: #f3e5f5;
+      color: #7b1fa2;
+    }
+  }
+  
+  // Badges pour les statuts
+  .status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    
+    &.planned {
+      background-color: #e0f7fa;
+      color: #0097a7;
+    }
+    
+    &.implemented {
+      background-color: #e8f5e9;
+      color: #388e3c;
+    }
+    
+    &.tested {
+      background-color: #f3e5f5;
+      color: #7b1fa2;
+    }
+    
+    &.ineffective {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+    
+    &.effective {
+      background-color: #e8f5e9;
+      color: #388e3c;
+    }
+    
+    &.deprecated {
+      background-color: #f5f5f5;
+      color: #616161;
+    }
+  }
+  
+  // Badges pour les scores d'efficacité
+  .effectiveness-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    
+    &.high {
+      background-color: #e8f5e9;
+      color: #388e3c;
+    }
+    
+    &.medium {
+      background-color: #fff8e1;
+      color: #ffa000;
+    }
+    
+    &.low {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+  }
+} 

@@ -20,12 +20,14 @@ import { MatCardModule } from '@angular/material/card';
 // Components
 import { RisksComponent } from './risks.component';
 import { RiskFormDialogComponent } from './risk-form-dialog/risk-form-dialog.component';
+import { RiskDetailComponent } from './risk-detail/risk-detail.component';
 
 // Shared modules
 import { AdminSharedModule } from '../admin/shared/admin-shared.module';
 
 const routes: Routes = [
-  { path: '', component: RisksComponent }
+  { path: '', component: RisksComponent },
+  { path: ':id', component: RiskDetailComponent }
 ];
 
 @NgModule({

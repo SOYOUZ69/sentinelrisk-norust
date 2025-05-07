@@ -33,6 +33,13 @@ public class SecurityConfig {
         "/webjars/**"
     };
 
+    private static final String[] DEBUG_WHITELIST = {
+        "/debug/**",
+        "/api/debug/**",
+        "/api/debug/ping",
+        "/api/debug/risks/**"
+    };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -44,6 +51,7 @@ public class SecurityConfig {
             .and()
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(SWAGGER_WHITELIST).permitAll()
+                .requestMatchers(DEBUG_WHITELIST).permitAll()
                 .anyRequest().authenticated()
             )
             .oauth2ResourceServer()

@@ -57,3 +57,10 @@ SentinelRisk provides a scalable, secure risk management and compliance platform
 high-performance backend services and Angular for a dynamic and interactive frontend experience. This modern
 architecture enables seamless integration, real-time analytics, and an exceptional user experience tailored to enterprise
 risk governance needs.
+
+//
+commandes lancement 
+//frontend :  ng serve
+//backend :  ./mvnw spring-boot:run 
+//docker :  docker-compose -f docker/docker-compose.yml down
+docker-compose -f docker/docker-compose.yml up --build -d

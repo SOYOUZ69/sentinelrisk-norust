@@ -127,6 +127,7 @@ Les services suivants devraient être opérationnels :
 1. [x] Configuration du realm Keycloak
 2. [x] Mise en place des clients Keycloak
 3. [x] Développement du backend Spring Boot
+   - [ ] Ajout du module Conformité : entités ComplianceFramework, ComplianceRequirement, RiskComplianceMapping et endpoints CRUD
    - [x] Configuration de Spring Security avec Keycloak
    - [x] Mise en place des entités de base
    - [x] Développement des APIs REST
@@ -159,12 +160,12 @@ Les services suivants devraient être opérationnels :
      - [x] Gestion automatique des tokens
    - [ ] Développement des pages
      - [ ] Dashboard
-     - [x] Utilisateurs (liste)
-     - [ ] Utilisateurs (détails, création, édition, suppression)
-     - [ ] Risques (liste, fiche, création, édition, suppression)
+     - [x] Utilisateurs (liste, création, édition, suppression)
+     - [x] Risques (liste, création, édition, suppression)
      - [ ] Contrôles
      - [ ] Catégories
      - [ ] Évaluations
+     - [ ] Conformité : module de mappings prédéfinis (ISO 27001, NIST, SOC 2, GDPR)
    - [ ] Gestion des rôles côté UI
      - [ ] Lecture des rôles depuis le token JWT
      - [ ] Affichage conditionnel selon rôle
@@ -385,17 +386,20 @@ frontend/
 │   │   │   ├── pipes/              # Pipes personnalisés
 │   │   │   └── utils/              # Fonctions utilitaires
 │   │   ├── features/               # Modules de fonctionnalités
-│   │   │   ├── dashboard/          # Module de tableau de bord
+│   │   │   ├── admin/
+│   │   │   │   └── users/          # Module de gestion des utilisateurs
+│   │   │   ├── auth/               # Module pour login/logout
 │   │   │   ├── risks/              # Module de gestion des risques
 │   │   │   ├── controls/           # Module de gestion des contrôles
 │   │   │   ├── assessments/        # Module d'évaluations
-│   │   │   ├── categories/         # Module de catégories
-│   │   │   └── users/              # Module de gestion des utilisateurs
+│   │   │   └── categories/         # Module de catégories
 │   │   ├── layout/                 # Composants de mise en page
 │   │   │   ├── header/             # En-tête de l'application
 │   │   │   ├── sidebar/            # Barre latérale de navigation
 │   │   │   ├── footer/             # Pied de page
 │   │   │   └── layouts/            # Layouts réutilisables
+│   │   ├── pages/
+│   │   │   └── dashboard/          # Module de tableau de bord
 │   │   ├── app.component.*         # Composant racine de l'application 
 │   │   ├── app.module.ts           # Module principal de l'application
 │   │   └── app.routes.ts           # Configuration des routes
@@ -579,6 +583,36 @@ curl -X POST \
 }
 ```
 
+## Modules implémentés
+
+### Module de gestion des utilisateurs
+Ce module permet la gestion complète des utilisateurs du système avec les fonctionnalités suivantes :
+- Affichage de la liste des utilisateurs
+- Création d'un nouvel utilisateur
+- Modification des informations d'un utilisateur existant
+- Suppression d'un utilisateur
+- Gestion du statut actif/inactif
+
+Le module utilise :
+- `UserService` pour interagir avec le backend
+- `MatDialog` pour les formulaires modaux
+- Composants Angular Material (tables, formulaires, badges)
+- Styles responsifs pour différentes tailles d'écran
+
+### Module de gestion des risques
+Ce module permet la gestion complète des risques avec les fonctionnalités suivantes :
+- Affichage de la liste des risques avec indication visuelle des scores et statuts
+- Création d'un nouveau risque avec sélection de la catégorie, du niveau d'impact et de probabilité
+- Modification des informations d'un risque existant
+- Suppression d'un risque
+- Visualisation du score de risque calculé
+
+Le module utilise :
+- `RiskService` pour interagir avec le backend
+- `CategoryService` pour obtenir les catégories disponibles
+- Système de badges colorés pour représenter visuellement les niveaux d'impact, de probabilité et le score
+- Formulaire complet avec validation des champs obligatoires
+
 ## Mapping des rôles
 
 Le système utilise différents rôles pour gérer les accès et les permissions. Voici le mapping détaillé des rôles :
@@ -619,6 +653,7 @@ Le système utilise différents rôles pour gérer les accès et les permissions
 - **risk_manager**: Création et lecture
 - **auditor**: Lecture seule
 - **user**: Lecture des évaluations assignées
+
 ## Guide rapide de contribution Angular
 
 Ce guide présente les conventions et pratiques à suivre pour contribuer au développement du frontend Angular.

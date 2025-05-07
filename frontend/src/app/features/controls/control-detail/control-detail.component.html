@@ -1,0 +1,131 @@
+<div class="control-detail-container">
+  <div class="loading-shade" *ngIf="isLoading">
+    <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+  </div>
+
+  <div class="header">
+    <div class="header-title">
+      <button mat-icon-button [routerLink]="['/controls']" matTooltip="Retour à la liste">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1>Détails du contrôle</h1>
+    </div>
+    <div class="header-actions" *ngIf="control">
+      <button mat-raised-button color="accent" (click)="editControl()">
+        <mat-icon>edit</mat-icon>
+        Modifier
+      </button>
+      <button mat-raised-button color="warn" (click)="deleteControl()">
+        <mat-icon>delete</mat-icon>
+        Supprimer
+      </button>
+    </div>
+  </div>
+
+  <mat-card class="control-card" *ngIf="control">
+    <mat-card-header>
+      <mat-card-title>{{ control.name }}</mat-card-title>
+      <mat-card-subtitle>
+        <span class="type-badge" [class]="getTypeClass(control.type)">
+          {{ typeTranslations[control.type] }}
+        </span>
+        <span class="status-badge" [class]="getStatusClass(control.status)">
+          {{ statusTranslations[control.status] }}
+        </span>
+      </mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <mat-tab-group>
+        <mat-tab label="Informations générales">
+          <div class="tab-content">
+            <div class="info-section">
+              <h2>Description</h2>
+              <p>{{ control.description || 'Aucune description fournie' }}</p>
+            </div>
+
+            <div class="info-row">
+              <div class="info-group">
+                <h3>Type</h3>
+                <p>{{ typeTranslations[control.type] }}</p>
+              </div>
+              <div class="info-group">
+                <h3>Statut</h3>
+                <p>{{ statusTranslations[control.status] }}</p>
+              </div>
+              <div class="info-group">
+                <h3>Fréquence</h3>
+                <p>{{ control.frequency ? frequencyTranslations[control.frequency] : 'Non applicable' }}</p>
+              </div>
+            </div>
+
+            <div class="info-row">
+              <div class="info-group">
+                <h3>Responsable</h3>
+                <p>{{ control.owner || 'Non assigné' }}</p>
+              </div>
+              <div class="info-group">
+                <h3>Date d'implémentation</h3>
+                <p>{{ control.implementationDate ? (control.implementationDate | date:'dd/MM/yyyy') : 'Non définie' }}</p>
+              </div>
+              <div class="info-group">
+                <h3>Dernier test</h3>
+                <p>{{ control.lastTestedDate ? (control.lastTestedDate | date:'dd/MM/yyyy') : 'Non testé' }}</p>
+              </div>
+            </div>
+
+            <div class="info-section">
+              <h2>Efficacité</h2>
+              <div class="effectiveness-container" *ngIf="control.effectivenessScore !== undefined; else noScore">
+                <div class="effectiveness-gauge">
+                  <div class="gauge-value" [style.width.%]="control.effectivenessScore" [class]="getEffectivenessClass(control.effectivenessScore)"></div>
+                </div>
+                <span class="effectiveness-score" [class]="getEffectivenessClass(control.effectivenessScore)">
+                  {{ control.effectivenessScore }}%
+                </span>
+              </div>
+              <ng-template #noScore>
+                <p>L'efficacité de ce contrôle n'a pas encore été évaluée.</p>
+              </ng-template>
+            </div>
+
+            <div class="info-section" *ngIf="control.documentation">
+              <h2>Documentation</h2>
+              <p>{{ control.documentation }}</p>
+            </div>
+
+            <div class="info-section dates">
+              <p><strong>Créé le:</strong> {{ control.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+              <p><strong>Dernière mise à jour:</strong> {{ control.updatedAt | date:'dd/MM/yyyy HH:mm' }}</p>
+            </div>
+          </div>
+        </mat-tab>
+        
+        <mat-tab label="Risques associés">
+          <div class="tab-content">
+            <div class="risks-section" *ngIf="associatedRisks && associatedRisks.length > 0; else noRisks">
+              <h2>Risques gérés par ce contrôle</h2>
+              <mat-chip-set>
+                <mat-chip *ngFor="let risk of associatedRisks" [routerLink]="['/risks', risk.id]" color="primary" selected>
+                  {{ risk.name }}
+                </mat-chip>
+              </mat-chip-set>
+            </div>
+            <ng-template #noRisks>
+              <p>Ce contrôle n'est associé à aucun risque pour le moment.</p>
+            </ng-template>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="not-found" *ngIf="!control && !isLoading">
+    <mat-icon>error_outline</mat-icon>
+    <h2>Contrôle non trouvé</h2>
+    <p>Le contrôle demandé n'existe pas ou a été supprimé.</p>
+    <button mat-raised-button color="primary" [routerLink]="['/controls']">
+      Retour à la liste
+    </button>
+  </div>
+</div> 

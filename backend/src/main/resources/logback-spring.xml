@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="LOGS" value="./logs" />
+
+    <appender name="Console"
+        class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %d{ISO8601} %highlight(%-5level) [%blue(%t)] %yellow(%C{1}): %msg%n%throwable
+            </Pattern>
+        </layout>
+    </appender>
+
+    <appender name="RiskApiDebug"
+        class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS}/risk-api-debug.log</file>
+        <encoder
+            class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d %p %C{1} [%t] %m%n</Pattern>
+        </encoder>
+
+        <rollingPolicy
+            class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS}/archived/risk-api-debug-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Logger pour les contrôleurs et services concernant les risques -->
+    <logger name="com.sentinelrisk.backend.controller.RiskController" level="debug" additivity="false">
+        <appender-ref ref="RiskApiDebug" />
+        <appender-ref ref="Console" />
+    </logger>
+    
+    <logger name="com.sentinelrisk.backend.service.RiskService" level="debug" additivity="false">
+        <appender-ref ref="RiskApiDebug" />
+        <appender-ref ref="Console" />
+    </logger>
+
+    <!-- Niveau de log racine -->
+    <root level="info">
+        <appender-ref ref="Console" />
+    </root>
+
+</configuration> 

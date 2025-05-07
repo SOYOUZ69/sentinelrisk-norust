@@ -2,7 +2,16 @@ export enum ControlType {
   PREVENTIVE = 'PREVENTIVE',
   DETECTIVE = 'DETECTIVE',
   CORRECTIVE = 'CORRECTIVE',
-  COMPENSATING = 'COMPENSATING'
+  DIRECTIVE = 'DIRECTIVE'
+}
+
+export enum ControlStatus {
+  PLANNED = 'PLANNED',
+  IMPLEMENTED = 'IMPLEMENTED',
+  TESTED = 'TESTED',
+  INEFFECTIVE = 'INEFFECTIVE',
+  EFFECTIVE = 'EFFECTIVE',
+  DEPRECATED = 'DEPRECATED'
 }
 
 export enum ControlFrequency {
@@ -12,16 +21,7 @@ export enum ControlFrequency {
   MONTHLY = 'MONTHLY',
   QUARTERLY = 'QUARTERLY',
   ANNUALLY = 'ANNUALLY',
-  AD_HOC = 'AD_HOC'
-}
-
-export enum ControlStatus {
-  PLANNED = 'PLANNED',
-  IN_PROGRESS = 'IN_PROGRESS',
-  IMPLEMENTED = 'IMPLEMENTED',
-  VERIFIED = 'VERIFIED',
-  INEFFECTIVE = 'INEFFECTIVE',
-  OBSOLETE = 'OBSOLETE'
+  ON_DEMAND = 'ON_DEMAND'
 }
 
 export interface Control {
@@ -29,9 +29,13 @@ export interface Control {
   name: string;
   description: string;
   type: ControlType;
-  frequency: ControlFrequency;
   status: ControlStatus;
-  implementationDetails?: string;
+  frequency?: ControlFrequency;
+  owner?: string;
+  implementationDate?: Date;
+  lastTestedDate?: Date;
+  effectivenessScore?: number;
+  documentation?: string;
   riskIds?: string[];
   createdAt: Date;
   updatedAt: Date;

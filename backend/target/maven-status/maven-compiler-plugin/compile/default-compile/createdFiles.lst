@@ -1,6 +1,7 @@
 com/sentinelrisk/backend/controller/UserController.class
 com/sentinelrisk/backend/model/Assessment.class
 com/sentinelrisk/backend/service/CategoryService.class
+com/sentinelrisk/backend/dto/RiskResponse$ControlDto.class
 com/sentinelrisk/dto/RiskDTO.class
 com/sentinelrisk/model/RiskCategory.class
 com/sentinelrisk/backend/model/Control$Type.class
@@ -13,14 +14,18 @@ com/sentinelrisk/backend/model/Risk.class
 com/sentinelrisk/backend/SentinelRiskApplication.class
 com/sentinelrisk/model/IncidentSeverity.class
 com/sentinelrisk/controller/ComplianceControlController.class
+com/sentinelrisk/backend/exception/GlobalExceptionHandler.class
 com/sentinelrisk/backend/model/Risk$ProbabilityLevel.class
 com/sentinelrisk/repository/UserRepository.class
+com/sentinelrisk/backend/service/RiskServiceWrapper.class
 com/sentinelrisk/exception/GlobalExceptionHandler.class
 com/sentinelrisk/backend/controller/AssessmentController.class
+com/sentinelrisk/backend/dto/RiskRequest.class
 com/sentinelrisk/backend/controller/RiskController.class
 com/sentinelrisk/backend/service/UserService.class
 com/sentinelrisk/model/ComplianceControl.class
 com/sentinelrisk/service/ComplianceControlService.class
+com/sentinelrisk/backend/dto/RiskResponse.class
 com/sentinelrisk/backend/model/Risk$ImpactLevel.class
 com/sentinelrisk/backend/service/ControlService.class
 com/sentinelrisk/model/User.class
@@ -28,6 +33,7 @@ com/sentinelrisk/backend/model/Control$Status.class
 com/sentinelrisk/model/RiskLevel.class
 com/sentinelrisk/backend/model/User$UserBuilder.class
 com/sentinelrisk/backend/repository/RiskRepository.class
+com/sentinelrisk/backend/exception/GlobalExceptionHandler$ErrorResponse.class
 com/sentinelrisk/backend/repository/CategoryRepository.class
 com/sentinelrisk/controller/RiskController.class
 com/sentinelrisk/backend/model/Control.class
@@ -36,6 +42,7 @@ com/sentinelrisk/backend/model/Control$Frequency.class
 com/sentinelrisk/backend/config/OpenApiConfig.class
 com/sentinelrisk/backend/model/Assessment$Status.class
 com/sentinelrisk/service/RiskService.class
+com/sentinelrisk/backend/mapper/RiskMapper.class
 com/sentinelrisk/backend/service/AssessmentService.class
 com/sentinelrisk/model/ControlStatus.class
 com/sentinelrisk/backend/repository/AssessmentRepository.class
@@ -52,3 +59,4 @@ com/sentinelrisk/model/Risk.class
 com/sentinelrisk/backend/repository/ControlRepository.class
 com/sentinelrisk/repository/RiskRepository.class
 com/sentinelrisk/backend/controller/CategoryController.class
+com/sentinelrisk/backend/dto/RiskResponse$CategoryDto.class

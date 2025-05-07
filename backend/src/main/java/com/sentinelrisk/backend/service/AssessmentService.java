@@ -18,7 +18,7 @@ import java.util.List;
 public class AssessmentService {
 
     private final AssessmentRepository assessmentRepository;
-    private final RiskService riskService;
+    private final RiskServiceWrapper riskServiceWrapper;
     private final UserService userService;
 
     public List<Assessment> getAllAssessments() {
@@ -56,7 +56,7 @@ public class AssessmentService {
     }
 
     public Assessment createAssessment(Assessment assessment) {
-        Risk risk = riskService.getRiskById(assessment.getRisk().getId());
+        Risk risk = riskServiceWrapper.getRiskById(assessment.getRisk().getId());
         assessment.setRisk(risk);
 
         if (assessment.getAssignedTo() != null) {
@@ -71,7 +71,7 @@ public class AssessmentService {
         Assessment existingAssessment = getAssessmentById(id);
 
         if (assessment.getRisk() != null) {
-            Risk risk = riskService.getRiskById(assessment.getRisk().getId());
+            Risk risk = riskServiceWrapper.getRiskById(assessment.getRisk().getId());
             existingAssessment.setRisk(risk);
         }
 

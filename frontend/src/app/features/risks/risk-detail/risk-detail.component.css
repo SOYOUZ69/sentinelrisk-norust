@@ -1,0 +1,220 @@
+.risk-detail-container {
+  padding: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.risk-card {
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+/* Header styling */
+mat-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.back-button {
+  margin-right: 16px;
+}
+
+.header-content {
+  flex: 1;
+}
+
+mat-card-title {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.risk-metadata {
+  margin-top: 8px;
+}
+
+/* Section panels */
+.section-panel {
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.section-content {
+  padding: 16px;
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+/* Metrics grid */
+.risk-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  padding: 16px;
+}
+
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* Metadata grid */
+.metadata-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  padding: 16px;
+}
+
+.metadata-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Controls section */
+.controls-content {
+  padding: 16px;
+}
+
+.controls-chip-list {
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.control-chip {
+  cursor: pointer;
+}
+
+.actions-container {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.no-data-message {
+  color: rgba(0, 0, 0, 0.54);
+  font-style: italic;
+}
+
+/* Chips styling */
+.value-chip {
+  font-weight: 500;
+}
+
+/* Status colors */
+.identified {
+  background-color: #e3f2fd;
+  color: #0d47a1;
+}
+
+.in_assessment {
+  background-color: #fff8e1;
+  color: #ff6f00;
+}
+
+.mitigated {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.accepted {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.closed {
+  background-color: #eeeeee;
+  color: #616161;
+}
+
+/* Impact level colors */
+.negligible {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.low {
+  background-color: #c8e6c9;
+  color: #1b5e20;
+}
+
+.medium {
+  background-color: #fff8e1;
+  color: #ff6f00;
+}
+
+.high {
+  background-color: #ffccbc;
+  color: #bf360c;
+}
+
+.severe {
+  background-color: #ffcdd2;
+  color: #b71c1c;
+}
+
+/* Score chip styling */
+.score-chip {
+  font-weight: bold;
+  min-width: 40px;
+  justify-content: center;
+}
+
+/* Not found state */
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+}
+
+.not-found mat-icon {
+  font-size: 48px;
+  height: 48px;
+  width: 48px;
+  margin-bottom: 16px;
+  color: rgba(0, 0, 0, 0.38);
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .risk-metrics-grid,
+  .metadata-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  mat-card-title {
+    font-size: 20px;
+  }
+  
+  .actions-container {
+    justify-content: center;
+  }
+}

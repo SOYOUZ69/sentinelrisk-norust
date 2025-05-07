@@ -1,22 +1,24 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../../../core/services/api.service';
-import { Category } from '../../../core/models/risk.model';
+import { HttpParams } from '@angular/common/http';
+import { Category, CategoryRequest, Page } from '../models/category.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
-  private readonly basePath = '/categories';
-
-  constructor(private apiService: ApiService) {}
+  constructor(private api: ApiService) {}
 
   /**
    * Récupère la liste de toutes les catégories
    * @returns Observable contenant un tableau de catégories
    */
-  getCategories(): Observable<Category[]> {
-    return this.apiService.get<Category[]>(this.basePath);
+  getCategories(page: number, size: number, filters?: { name?: string; description?: string }): Observable<Page<Category>> {
+    let params = new HttpParams().set('page', page).set('size', size);
+    if (filters?.name) params = params.set('name', filters.name);
+    if (filters?.description) params = params.set('description', filters.description);
+    return this.api.get<Page<Category>>('/categories', params);
   }
 
   /**
@@ -24,8 +26,8 @@ export class CategoryService {
    * @param id Identifiant de la catégorie
    * @returns Observable contenant la catégorie
    */
-  getCategory(id: string): Observable<Category> {
-    return this.apiService.get<Category>(`${this.basePath}/${id}`);
+  getCategory(id: number): Observable<Category> {
+    return this.api.get<Category>(`/categories/${id}`);
   }
 
   /**
@@ -33,8 +35,8 @@ export class CategoryService {
    * @param category Données de la catégorie à créer
    * @returns Observable contenant la catégorie créée
    */
-  createCategory(category: Partial<Category>): Observable<Category> {
-    return this.apiService.post<Category>(this.basePath, category);
+  createCategory(body: CategoryRequest): Observable<Category> {
+    return this.api.post<Category>('/categories', body);
   }
 
   /**
@@ -43,8 +45,8 @@ export class CategoryService {
    * @param category Nouvelles données de la catégorie
    * @returns Observable contenant la catégorie mise à jour
    */
-  updateCategory(id: string, category: Partial<Category>): Observable<Category> {
-    return this.apiService.put<Category>(`${this.basePath}/${id}`, category);
+  updateCategory(id: number, body: CategoryRequest): Observable<Category> {
+    return this.api.put<Category>(`/categories/${id}`, body);
   }
 
   /**
@@ -52,8 +54,8 @@ export class CategoryService {
    * @param id Identifiant de la catégorie à supprimer
    * @returns Observable
    */
-  deleteCategory(id: string): Observable<void> {
-    return this.apiService.delete<void>(`${this.basePath}/${id}`);
+  deleteCategory(id: number): Observable<void> {
+    return this.api.delete<void>(`/categories/${id}`);
   }
 
   /**
@@ -62,6 +64,6 @@ export class CategoryService {
    * @returns Observable contenant un booléen
    */
   categoryExists(name: string): Observable<boolean> {
-    return this.apiService.get<boolean>(`${this.basePath}/exists?name=${encodeURIComponent(name)}`);
+    return this.api.get<boolean>(`/categories/exists?name=${encodeURIComponent(name)}`);
   }
 } 
