@@ -8,8 +8,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
+/**
+ * DTO pour représenter un risque sans boucle de référence
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,32 +21,22 @@ public class RiskResponse {
     private Long id;
     private String name;
     private String description;
-    private CategoryDto category;
+    
+    // Référence simplifiée à la catégorie
+    private Long categoryId;
+    private String categoryName;
+    
+    // IDs des contrôles associés (pour compatibilité)
+    private Set<Long> controlIds = new HashSet<>();
+    
+    // Objets contrôles complets
+    private Set<ControlDTO> controls = new HashSet<>();
+    
     private ImpactLevel impactLevel;
     private ProbabilityLevel probabilityLevel;
     private Integer riskScore;
     private Status status;
     private String mitigationPlan;
-    private List<ControlDto> controls;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class CategoryDto {
-        private Long id;
-        private String name;
-        private String description;
-    }
-    
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ControlDto {
-        private Long id;
-        private String name;
-        private String type;
-        private String status;
-    }
 } 

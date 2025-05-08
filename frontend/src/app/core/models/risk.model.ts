@@ -43,13 +43,24 @@ export interface Risk {
   id: string;
   name: string;
   description: string;
-  category: Category;
+  
+  // Nouveaux champs remplaçant category
+  categoryId: string;
+  categoryName: string;
+  
+  // Pour la rétrocompatibilité, on ajoute une propriété calculée
+  category?: {
+    id: string;
+    name: string;
+  };
+  
   impactLevel: ImpactLevel;
   probabilityLevel: ProbabilityLevel;
   score: number;
   status: RiskStatus;
   mitigationPlan?: string;
   controls?: Control[];
+  controlIds?: string[];
   createdAt: Date;
   updatedAt: Date;
 } 

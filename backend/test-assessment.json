@@ -1,0 +1,12 @@
+{
+  "risk": {
+    "id": 5
+  },
+  "assignedTo": {
+    "id": "d9d4ddca-7116-4df3-98f8-630a806f2248"
+  },
+  "status": "PLANNED",
+  "assessmentDate": "2025-05-07T10:00:00",
+  "findings": "Test findings for POST request",
+  "recommendations": "Test recommendations for POST request"
+} 

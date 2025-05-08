@@ -19,4 +19,14 @@ export interface Assessment {
   user?: User;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface AssessmentRequest {
+  riskId: string;
+  userId?: string;
+  status: AssessmentStatus;
+  assessmentDate: Date;
+  conclusions?: string;
+  recommendations?: string;
+  nextReviewDate?: Date;
 } 

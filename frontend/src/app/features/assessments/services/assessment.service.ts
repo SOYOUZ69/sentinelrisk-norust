@@ -1,7 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../../../core/services/api.service';
-import { Assessment, AssessmentStatus } from '../models/assessment.model';
+import { Assessment, AssessmentStatus, AssessmentRequest } from '../models/assessment.model';
+
+// Interface pour le payload envoyé au backend
+interface AssessmentPayload {
+  risk: { id: string };
+  status: AssessmentStatus;
+  assessmentDate: Date;
+  findings?: string;
+  recommendations?: string;
+  nextReviewDate?: Date;
+  assignedTo?: { id: string };
+}
 
 @Injectable({
   providedIn: 'root'
@@ -30,21 +41,51 @@ export class AssessmentService {
 
   /**
    * Crée une nouvelle évaluation
-   * @param assessment Données de l'évaluation à créer
+   * @param assessmentRequest Données de l'évaluation à créer
    * @returns Observable contenant l'évaluation créée
    */
-  createAssessment(assessment: Partial<Assessment>): Observable<Assessment> {
-    return this.apiService.post<Assessment>(this.basePath, assessment);
+  createAssessment(assessmentRequest: AssessmentRequest): Observable<Assessment> {
+    // Transformer le format pour correspondre à ce que le backend attend
+    const payload: AssessmentPayload = {
+      risk: { id: assessmentRequest.riskId },
+      status: assessmentRequest.status,
+      assessmentDate: assessmentRequest.assessmentDate,
+      findings: assessmentRequest.conclusions,
+      recommendations: assessmentRequest.recommendations,
+      nextReviewDate: assessmentRequest.nextReviewDate
+    };
+
+    // Ajouter l'utilisateur si présent
+    if (assessmentRequest.userId) {
+      payload.assignedTo = { id: assessmentRequest.userId };
+    }
+
+    return this.apiService.post<Assessment>(this.basePath, payload);
   }
 
   /**
    * Met à jour une évaluation existante
    * @param id Identifiant de l'évaluation
-   * @param assessment Nouvelles données de l'évaluation
+   * @param assessmentRequest Nouvelles données de l'évaluation
    * @returns Observable contenant l'évaluation mise à jour
    */
-  updateAssessment(id: string, assessment: Partial<Assessment>): Observable<Assessment> {
-    return this.apiService.put<Assessment>(`${this.basePath}/${id}`, assessment);
+  updateAssessment(id: string, assessmentRequest: AssessmentRequest): Observable<Assessment> {
+    // Transformer le format pour correspondre à ce que le backend attend
+    const payload: AssessmentPayload = {
+      risk: { id: assessmentRequest.riskId },
+      status: assessmentRequest.status,
+      assessmentDate: assessmentRequest.assessmentDate,
+      findings: assessmentRequest.conclusions,
+      recommendations: assessmentRequest.recommendations,
+      nextReviewDate: assessmentRequest.nextReviewDate
+    };
+
+    // Ajouter l'utilisateur si présent
+    if (assessmentRequest.userId) {
+      payload.assignedTo = { id: assessmentRequest.userId };
+    }
+
+    return this.apiService.put<Assessment>(`${this.basePath}/${id}`, payload);
   }
 
   /**

@@ -1,0 +1,80 @@
+<div class="container">
+  <div class="header-section">
+    <h1>Détails de l'évaluation</h1>
+    <div class="actions">
+      <button mat-raised-button (click)="navigateToList()">
+        <mat-icon>arrow_back</mat-icon> Retour
+      </button>
+      <button mat-raised-button color="primary" (click)="editAssessment()">
+        <mat-icon>edit</mat-icon> Modifier
+      </button>
+      <button mat-raised-button color="warn" (click)="deleteAssessment()">
+        <mat-icon>delete</mat-icon> Supprimer
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <mat-card *ngIf="assessment && !isLoading" class="assessment-card">
+    <mat-card-header>
+      <div mat-card-avatar [ngClass]="'status-badge ' + assessment.status?.toLowerCase()">
+        <mat-icon>assessment</mat-icon>
+      </div>
+      <mat-card-title>Évaluation #{{assessment.id}}</mat-card-title>
+      <mat-card-subtitle>
+        <span [ngClass]="'status-pill ' + assessment.status?.toLowerCase()">
+          {{assessment.status}}
+        </span>
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="detail-section">
+        <h3>Informations générales</h3>
+        <div class="detail-item">
+          <span class="label">Risque:</span>
+          <span class="value">{{assessment.risk?.name || 'Non défini'}}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Date d'évaluation:</span>
+          <span class="value">{{assessment.assessmentDate | date:'dd/MM/yyyy' || 'Non définie'}}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Prochaine revue:</span>
+          <span class="value">{{assessment.nextReviewDate | date:'dd/MM/yyyy' || 'Non planifiée'}}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Assigné à:</span>
+          <span class="value">{{(assessment.user?.firstName && assessment.user?.lastName) ? 
+                               (assessment.user?.firstName + ' ' + assessment.user?.lastName) : 
+                               assessment.user?.username || 'Non assigné'}}</span>
+        </div>
+      </div>
+
+      <div class="detail-section" *ngIf="assessment.conclusions">
+        <h3>Conclusions</h3>
+        <p>{{assessment.conclusions}}</p>
+      </div>
+
+      <div class="detail-section" *ngIf="assessment.recommendations">
+        <h3>Recommandations</h3>
+        <p>{{assessment.recommendations}}</p>
+      </div>
+
+      <div class="detail-section">
+        <h3>Informations supplémentaires</h3>
+        <div class="detail-item">
+          <span class="label">Date de création:</span>
+          <span class="value">{{assessment.createdAt | date:'dd/MM/yyyy HH:mm'}}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Dernière mise à jour:</span>
+          <span class="value">{{assessment.updatedAt | date:'dd/MM/yyyy HH:mm'}}</span>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

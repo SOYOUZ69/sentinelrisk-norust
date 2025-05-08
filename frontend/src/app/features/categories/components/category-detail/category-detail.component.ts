@@ -4,6 +4,7 @@ import { CategoryService } from '../../services/category.service';
 import { Category } from '../../models/category.model';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmDialogComponent, ConfirmDialogData } from '../../../admin/shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-category-detail',
@@ -49,21 +50,42 @@ export class CategoryDetailComponent implements OnInit {
   }
 
   deleteCategory() {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?')) {
-      this.isLoading = true;
-      this.categoryService.deleteCategory(this.id).subscribe({
-        next: () => {
-          this.isLoading = false;
-          this.showSuccess('Catégorie supprimée avec succès');
-          this.router.navigate(['/categories']);
-        },
-        error: (error) => {
-          this.isLoading = false;
-          this.showError('Erreur lors de la suppression de la catégorie');
-          console.error('Erreur lors de la suppression:', error);
-        }
-      });
-    }
+    if (!this.category) return;
+
+    const dialogData: ConfirmDialogData = {
+      title: 'Confirmation de suppression',
+      message: `Êtes-vous sûr de vouloir supprimer la catégorie "${this.category.name}" ?`,
+      confirmText: 'Supprimer',
+      cancelText: 'Annuler',
+      color: 'warn'
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: dialogData
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.performDeleteCategory();
+      }
+    });
+  }
+
+  private performDeleteCategory() {
+    this.isLoading = true;
+    this.categoryService.deleteCategory(this.id).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.showSuccess('Catégorie supprimée avec succès');
+        this.router.navigate(['/categories']);
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.showError('Erreur lors de la suppression de la catégorie');
+        console.error('Erreur lors de la suppression:', error);
+      }
+    });
   }
 
   navigateToList() {

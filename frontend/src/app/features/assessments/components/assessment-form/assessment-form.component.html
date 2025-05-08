@@ -1,0 +1,114 @@
+<div class="container">
+  <div class="header-section">
+    <h1>{{pageTitle}}</h1>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <div *ngIf="isLoading" class="loading-overlay">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+
+      <form [formGroup]="assessmentForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col">
+            <!-- Sélection du risque -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Risque</mat-label>
+              <mat-select formControlName="riskId" required>
+                <mat-option *ngFor="let risk of risks" [value]="risk.id">
+                  {{risk.name}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="assessmentForm.get('riskId')?.hasError('required')">
+                Le risque est obligatoire
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <!-- Sélection du statut -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Statut</mat-label>
+              <mat-select formControlName="status" required>
+                <mat-option *ngFor="let status of statusOptions" [value]="status">
+                  {{status}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="assessmentForm.get('status')?.hasError('required')">
+                Le statut est obligatoire
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col">
+            <!-- Sélection de l'utilisateur assigné -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Assigné à</mat-label>
+              <mat-select formControlName="userId">
+                <mat-option [value]="">-- Non assigné --</mat-option>
+                <mat-option *ngFor="let user of users" [value]="user.id">
+                  {{(user.firstName && user.lastName) ? (user.firstName + ' ' + user.lastName) : user.username}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <!-- Date d'évaluation -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Date d'évaluation</mat-label>
+              <input matInput [matDatepicker]="assessmentPicker" formControlName="assessmentDate" required>
+              <mat-datepicker-toggle matSuffix [for]="assessmentPicker"></mat-datepicker-toggle>
+              <mat-datepicker #assessmentPicker></mat-datepicker>
+              <mat-error *ngIf="assessmentForm.get('assessmentDate')?.hasError('required')">
+                La date d'évaluation est obligatoire
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col">
+            <!-- Date de prochaine revue -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Date de prochaine revue</mat-label>
+              <input matInput [matDatepicker]="reviewPicker" formControlName="nextReviewDate">
+              <mat-datepicker-toggle matSuffix [for]="reviewPicker"></mat-datepicker-toggle>
+              <mat-datepicker #reviewPicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <!-- Conclusions -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Conclusions</mat-label>
+              <textarea matInput formControlName="findings" rows="3"></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <!-- Recommandations -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Recommandations</mat-label>
+              <textarea matInput formControlName="recommendations" rows="3"></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button mat-button type="button" (click)="cancel()">Annuler</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="assessmentForm.invalid">
+            {{isEditMode ? 'Mettre à jour' : 'Créer'}}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

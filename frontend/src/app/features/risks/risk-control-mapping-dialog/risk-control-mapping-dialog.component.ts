@@ -40,11 +40,19 @@ export class RiskControlMappingDialogComponent implements OnInit {
   isLoading = false;
   isSaving = false;
 
-  // Fonction de comparaison adaptée pour gérer les IDs numériques et string
-  compareById = (id1: any, id2: any) => {
-    if (id1 === null || id2 === null || id1 === undefined || id2 === undefined) return false;
+  // Fonction de comparaison adaptée pour gérer les IDs de différents types
+  compareById = (option: any, selection: any) => {
+    if (option === null || selection === null || option === undefined || selection === undefined) {
+      return false;
+    }
+    
     // Convertir explicitement en string pour la comparaison
-    return String(id1) === String(id2);
+    const optionStr = String(option);
+    const selectionStr = String(selection);
+    
+    const result = optionStr === selectionStr;
+    console.log(`Comparing ${optionStr} to ${selectionStr}: ${result}`);
+    return result;
   };
 
   constructor(
@@ -54,6 +62,8 @@ export class RiskControlMappingDialogComponent implements OnInit {
     private controlService: ControlService,
     private riskService: RiskService
   ) {
+    console.log('Dialog initialized with data:', JSON.stringify(data));
+    
     // Initialisation avec un tableau vide - les valeurs réelles seront définies dans ngOnInit
     this.mappingForm = this.formBuilder.group({
       controlIds: [[], Validators.required]
@@ -71,14 +81,17 @@ export class RiskControlMappingDialogComponent implements OnInit {
       .subscribe({
         next: (controls) => {
           this.controls = controls;
-          console.log('Contrôles disponibles:', this.controls.map(c => c.id));
+          console.log('Contrôles disponibles:', controls.map(c => ({id: c.id, name: c.name})));
           
-          // Convertir explicitement les IDs en nombres après le chargement des contrôles
-          const ids: number[] = this.data.controlIds.map(id => +id);
-          console.log('IDs de contrôles convertis en nombres pour présélection:', ids);
+          // Conserver les IDs sous forme de chaînes
+          const controlIds = this.data.controlIds || [];
+          console.log('IDs de contrôles reçus du composant parent:', controlIds);
           
-          // Patcher le formulaire avec les IDs numériques
-          this.mappingForm.patchValue({ controlIds: ids });
+          // Patcher le formulaire avec les valeurs
+          this.mappingForm.patchValue({ controlIds: controlIds });
+          
+          // Vérifier ce qui a été sélectionné
+          console.log('Valeur du formulaire après patchValue:', this.mappingForm.get('controlIds')?.value);
         },
         error: (error) => {
           console.error('Erreur lors du chargement des contrôles:', error);
@@ -91,16 +104,30 @@ export class RiskControlMappingDialogComponent implements OnInit {
       return;
     }
 
-    // Récupérer et convertir les IDs en nombre
+    // Récupérer les IDs (ils peuvent être des chaînes ou des nombres)
     const selectedControlIds = this.mappingForm.get('controlIds')?.value || [];
-    console.log('Contrôles sélectionnés avant envoi:', selectedControlIds);
+    console.log('Contrôles sélectionnés avant envoi (brut):', selectedControlIds);
+    
+    // Convertir tous les IDs en nombres pour l'API backend
+    const numericControlIds = selectedControlIds.map((id: any) => {
+      const numId = Number(id);
+      console.log(`Converting control ID '${id}' to number: ${numId}`);
+      return numId;
+    });
+    
+    console.log('Contrôles sélectionnés convertis en nombres:', numericControlIds);
     
     this.isSaving = true;
-    this.riskService.updateRiskControls(this.data.riskId, selectedControlIds)
+    this.riskService.updateRiskControls(this.data.riskId, numericControlIds)
       .pipe(finalize(() => this.isSaving = false))
       .subscribe({
         next: (updatedRisk) => {
           console.log('Risque mis à jour avec succès:', updatedRisk);
+          
+          // Vérifier les contrôles dans le risque mis à jour
+          console.log('Contrôles dans le risque mis à jour:', updatedRisk.controls);
+          console.log('IDs de contrôles dans le risque mis à jour:', updatedRisk.controlIds);
+          
           this.dialogRef.close(updatedRisk);
         },
         error: (error) => {

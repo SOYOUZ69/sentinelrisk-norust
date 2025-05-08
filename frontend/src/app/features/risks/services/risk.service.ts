@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ApiService } from '../../../core/services/api.service';
-import { Risk, Category } from '../../../core/models/risk.model';
+import { Risk, Category, Control } from '../../../core/models/risk.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 
@@ -161,10 +161,13 @@ export class RiskService {
    * @returns Objet formaté pour le backend
    */
   private formatRiskRequest(risk: Partial<Risk>): any {
+    // Utiliser categoryId si disponible, sinon prendre de category.id
+    const categoryId = risk.categoryId || risk.category?.id;
+    
     return {
       name: risk.name,
       description: risk.description,
-      categoryId: risk.category?.id,
+      categoryId: categoryId,  // Utilise directement categoryId pour le backend
       impactLevel: risk.impactLevel,
       probabilityLevel: risk.probabilityLevel,
       status: risk.status,
@@ -205,16 +208,60 @@ export class RiskService {
    * @returns Objet Risk pour le frontend
    */
   private mapRiskResponse(riskData: any): Risk {
+    console.log('Mapping risk response:', riskData);
+    
+    // Création d'un objet category à partir de categoryId et categoryName
+    // pour la rétrocompatibilité
+    const categoryObject = riskData.categoryId ? {
+      id: riskData.categoryId.toString(),
+      name: riskData.categoryName || 'Sans catégorie'
+    } : undefined;
+    
+    // Utiliser directement les objets controls complets fournis par le backend s'ils existent
+    let controls: Control[] = [];
+    
+    // Priorité aux contrôles complets fournis par le backend
+    if (riskData.controls && Array.isArray(riskData.controls)) {
+      controls = riskData.controls.map((ctrl: any) => ({
+        id: ctrl.id?.toString(),
+        name: ctrl.name || `Contrôle ${ctrl.id}`,
+        description: ctrl.description,
+        type: ctrl.type || 'UNKNOWN',
+        status: ctrl.status || 'UNKNOWN',
+        frequency: ctrl.frequency
+      }));
+      console.log('Mapped controls from complete objects:', controls);
+    } 
+    // Utiliser les controlIds uniquement si les contrôles complets ne sont pas disponibles
+    else if (riskData.controlIds && Array.isArray(riskData.controlIds)) {
+      controls = riskData.controlIds.map((id: number | string) => ({
+        id: id.toString(),
+        name: `Contrôle ${id}`,
+        type: 'UNKNOWN',
+        status: 'UNKNOWN'
+      }));
+      console.log('Mapped controls from IDs:', controls);
+    }
+    
     // Mapper le score du backend vers le frontend
     return {
+      // Propriétés de base
       ...riskData,
       // Conversion de l'ID numérique en string si nécessaire
       id: riskData.id?.toString(),
+      
+      // Pour la rétrocompatibilité avec l'interface actuelle
+      category: categoryObject,
+      
+      // Ajouter les contrôles mappés
+      controls: controls,
+      
       // Utiliser riskScore du backend comme score dans le frontend
-      score: riskData.riskScore,
+      score: riskData.riskScore || 0,
+      
       // S'assurer que les dates sont correctement converties
-      createdAt: riskData.createdAt ? new Date(riskData.createdAt) : undefined,
-      updatedAt: riskData.updatedAt ? new Date(riskData.updatedAt) : undefined
+      createdAt: riskData.createdAt ? new Date(riskData.createdAt) : new Date(),
+      updatedAt: riskData.updatedAt ? new Date(riskData.updatedAt) : new Date()
     } as Risk;
   }
 } 

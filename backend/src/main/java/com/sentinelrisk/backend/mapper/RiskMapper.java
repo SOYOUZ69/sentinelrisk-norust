@@ -1,5 +1,6 @@
 package com.sentinelrisk.backend.mapper;
 
+import com.sentinelrisk.backend.dto.ControlDTO;
 import com.sentinelrisk.backend.dto.RiskRequest;
 import com.sentinelrisk.backend.dto.RiskResponse;
 import com.sentinelrisk.backend.model.Category;
@@ -8,8 +9,12 @@ import com.sentinelrisk.backend.model.Risk;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Mapper pour convertir entre entités Risk et DTO RiskResponse
+ */
 @Component
 public class RiskMapper {
 
@@ -35,52 +40,71 @@ public class RiskMapper {
         risk.setMitigationPlan(riskRequest.getMitigationPlan());
     }
 
+    /**
+     * Convertit une entité Risk en DTO RiskResponse
+     */
     public RiskResponse toResponse(Risk risk) {
+        if (risk == null) {
+            return null;
+        }
+        
         RiskResponse response = new RiskResponse();
         response.setId(risk.getId());
         response.setName(risk.getName());
         response.setDescription(risk.getDescription());
-        
-        // Map category
-        if (risk.getCategory() != null) {
-            RiskResponse.CategoryDto categoryDto = new RiskResponse.CategoryDto(
-                risk.getCategory().getId(),
-                risk.getCategory().getName(),
-                risk.getCategory().getDescription()
-            );
-            response.setCategory(categoryDto);
-        }
-        
         response.setImpactLevel(risk.getImpactLevel());
         response.setProbabilityLevel(risk.getProbabilityLevel());
         response.setRiskScore(risk.getRiskScore());
         response.setStatus(risk.getStatus());
         response.setMitigationPlan(risk.getMitigationPlan());
-        
-        // Map controls
-        if (risk.getControls() != null && !risk.getControls().isEmpty()) {
-            List<RiskResponse.ControlDto> controlDtos = risk.getControls().stream()
-                .map(this::mapControlToDto)
-                .collect(Collectors.toList());
-            response.setControls(controlDtos);
-        }
-        
         response.setCreatedAt(risk.getCreatedAt());
         response.setUpdatedAt(risk.getUpdatedAt());
+        
+        // Ajouter uniquement les infos de base de la catégorie, pas l'objet complet
+        if (risk.getCategory() != null) {
+            response.setCategoryId(risk.getCategory().getId());
+            response.setCategoryName(risk.getCategory().getName());
+        }
+        
+        // Ajouter les IDs des contrôles
+        if (risk.getControls() != null) {
+            Set<Long> controlIds = risk.getControls().stream()
+                .map(Control::getId)
+                .collect(Collectors.toSet());
+            response.setControlIds(controlIds);
+            
+            // Ajouter également les contrôles complets
+            Set<ControlDTO> controls = risk.getControls().stream()
+                .map(this::mapControlToDTO)
+                .collect(Collectors.toSet());
+            response.setControls(controls);
+        }
         
         return response;
     }
     
-    private RiskResponse.ControlDto mapControlToDto(Control control) {
-        return new RiskResponse.ControlDto(
-            control.getId(),
-            control.getName(),
-            control.getType().toString(),
-            control.getStatus().toString()
-        );
+    /**
+     * Convertit un Control en ControlDTO simplifié
+     */
+    private ControlDTO mapControlToDTO(Control control) {
+        ControlDTO dto = new ControlDTO();
+        dto.setId(control.getId());
+        dto.setName(control.getName());
+        dto.setDescription(control.getDescription());
+        dto.setType(control.getType());
+        dto.setStatus(control.getStatus());
+        dto.setFrequency(control.getFrequency());
+        return dto;
     }
     
+    /**
+     * Convertit une liste d'entités Risk en liste de DTOs RiskResponse
+     */
     public List<RiskResponse> toResponseList(List<Risk> risks) {
+        if (risks == null) {
+            return null;
+        }
+        
         return risks.stream()
             .map(this::toResponse)
             .collect(Collectors.toList());

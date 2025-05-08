@@ -73,10 +73,13 @@ export class RiskFormDialogComponent implements OnInit {
     });
     
     if (this.isEdit && data.risk) {
+      // Déterminer l'ID de la catégorie à partir de categoryId ou category.id
+      const categoryId = data.risk.categoryId || (data.risk.category?.id || '');
+      
       this.riskForm.patchValue({
         name: data.risk.name,
         description: data.risk.description,
-        categoryId: data.risk.category.id,
+        categoryId: categoryId,
         impactLevel: data.risk.impactLevel,
         probabilityLevel: data.risk.probabilityLevel,
         status: data.risk.status,
@@ -143,6 +146,10 @@ export class RiskFormDialogComponent implements OnInit {
       const riskData: Partial<Risk> = {
         name: formValues.name,
         description: formValues.description,
+        // Utiliser les deux approches pour la compatibilité
+        categoryId: formValues.categoryId,
+        categoryName: selectedCategory?.name || '(Catégorie inconnue)',
+        // Ajouter category pour la rétrocompatibilité
         category: { 
           id: formValues.categoryId,
           name: selectedCategory?.name || '(Catégorie inconnue)'

@@ -1,5 +1,7 @@
 package com.sentinelrisk.backend.controller;
 
+import com.sentinelrisk.backend.dto.CategoryResponse;
+import com.sentinelrisk.backend.mapper.CategoryMapper;
 import com.sentinelrisk.backend.model.Category;
 import com.sentinelrisk.backend.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,13 +22,15 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
+    private final CategoryMapper categoryMapper;
 
     @GetMapping
     @Operation(summary = "Lister les catégories",
             description = "Récupère la liste complète des catégories de risque")
     @ApiResponse(responseCode = "200", description = "Liste des catégories récupérée avec succès")
-    public List<Category> getAllCategories() {
-        return categoryService.getAllCategories();
+    public List<CategoryResponse> getAllCategories() {
+        List<Category> categories = categoryService.getAllCategories();
+        return categoryMapper.toResponseList(categories);
     }
 
     @GetMapping("/{id}")
@@ -34,10 +38,11 @@ public class CategoryController {
             description = "Récupère les détails d'une catégorie spécifique via son ID")
     @ApiResponse(responseCode = "200", description = "Catégorie trouvée")
     @ApiResponse(responseCode = "404", description = "Catégorie non trouvée")
-    public ResponseEntity<Category> getCategoryById(
+    public ResponseEntity<CategoryResponse> getCategoryById(
             @Parameter(description = "ID de la catégorie à récupérer") 
             @PathVariable Long id) {
-        return ResponseEntity.ok(categoryService.getCategoryById(id));
+        Category category = categoryService.getCategoryById(id);
+        return ResponseEntity.ok(categoryMapper.toResponse(category));
     }
 
     @PostMapping
@@ -45,10 +50,11 @@ public class CategoryController {
             description = "Crée une nouvelle catégorie de risque")
     @ApiResponse(responseCode = "201", description = "Catégorie créée avec succès")
     @ApiResponse(responseCode = "400", description = "Données de catégorie invalides")
-    public ResponseEntity<Category> createCategory(
+    public ResponseEntity<CategoryResponse> createCategory(
             @Parameter(description = "Données de la catégorie à créer") 
             @Valid @RequestBody Category category) {
-        return ResponseEntity.ok(categoryService.createCategory(category));
+        Category createdCategory = categoryService.createCategory(category);
+        return ResponseEntity.ok(categoryMapper.toResponse(createdCategory));
     }
 
     @PutMapping("/{id}")
@@ -56,12 +62,13 @@ public class CategoryController {
             description = "Met à jour les informations d'une catégorie existante")
     @ApiResponse(responseCode = "200", description = "Catégorie mise à jour avec succès")
     @ApiResponse(responseCode = "404", description = "Catégorie non trouvée")
-    public ResponseEntity<Category> updateCategory(
+    public ResponseEntity<CategoryResponse> updateCategory(
             @Parameter(description = "ID de la catégorie à mettre à jour") 
             @PathVariable Long id,
             @Parameter(description = "Nouvelles données de la catégorie") 
             @Valid @RequestBody Category category) {
-        return ResponseEntity.ok(categoryService.updateCategory(id, category));
+        Category updatedCategory = categoryService.updateCategory(id, category);
+        return ResponseEntity.ok(categoryMapper.toResponse(updatedCategory));
     }
 
     @DeleteMapping("/{id}")

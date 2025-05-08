@@ -1,0 +1,99 @@
+.container {
+  padding: 20px;
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.filter-field {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.table-container {
+  position: relative;
+  min-height: 200px;
+}
+
+.assessment-table {
+  width: 100%;
+}
+
+.loading-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.status-badge {
+  padding: 5px 10px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.status-badge.planned {
+  background-color: #e3f2fd;
+  color: #0d47a1;
+}
+
+.status-badge.in_progress {
+  background-color: #fff8e1;
+  color: #ff8f00;
+}
+
+.status-badge.completed {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-badge.cancelled {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.no-data-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.no-data-message mat-icon {
+  font-size: 48px;
+  height: 48px;
+  width: 48px;
+  margin-bottom: 10px;
+}
+
+/* Pour les tablettes et mobiles */
+@media (max-width: 959px) {
+  .header-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .header-section button {
+    margin-top: 10px;
+  }
+  
+  .mat-column-id,
+  .mat-column-nextReviewDate {
+    display: none;
+  }
+}

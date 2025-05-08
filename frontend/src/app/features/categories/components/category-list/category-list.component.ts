@@ -6,7 +6,9 @@ import { CategoryService } from '../../services/category.service';
 import { Category } from '../../models/category.model';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { CategoryFormDialogComponent } from '../category-form-dialog/category-form-dialog.component';
+import { ConfirmDialogComponent, ConfirmDialogData } from '../../../admin/shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-category-list',
@@ -29,7 +31,8 @@ export class CategoryListComponent implements OnInit, AfterViewInit {
   constructor(
     private categoryService: CategoryService, 
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {
     // Initialiser dataSource avec un tableau vide
     this.dataSource = new MatTableDataSource<Category>([]);
@@ -103,6 +106,7 @@ export class CategoryListComponent implements OnInit, AfterViewInit {
           console.error('Erreur lors du chargement des catégories:', error);
           this.isLoading = false;
           this.dataSource = new MatTableDataSource<Category>([]);
+          this.showError('Erreur lors du chargement des catégories');
         }
       });
   }
@@ -161,19 +165,46 @@ export class CategoryListComponent implements OnInit, AfterViewInit {
   }
 
   deleteCategory(id: number) {
-    if (confirm('Supprimer cette catégorie ?')) {
-      this.isLoading = true;
-      this.categoryService.deleteCategory(id).subscribe({
-        next: () => {
-          console.log('Catégorie supprimée, rechargement...');
-          this.loadCategories();
-        },
-        error: error => {
-          console.error('Erreur lors de la suppression:', error);
-          this.isLoading = false;
-        }
-      });
+    const category = this.categories.find(c => c.id === id);
+    if (!category) {
+      this.showError('Catégorie introuvable');
+      return;
     }
+
+    const dialogData: ConfirmDialogData = {
+      title: 'Confirmation de suppression',
+      message: `Êtes-vous sûr de vouloir supprimer la catégorie "${category.name}" ?`,
+      confirmText: 'Supprimer',
+      cancelText: 'Annuler',
+      color: 'warn'
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: dialogData
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.performDeleteCategory(id);
+      }
+    });
+  }
+
+  private performDeleteCategory(id: number) {
+    this.isLoading = true;
+    this.categoryService.deleteCategory(id).subscribe({
+      next: () => {
+        console.log('Catégorie supprimée, rechargement...');
+        this.loadCategories();
+        this.showSuccess('Catégorie supprimée avec succès');
+      },
+      error: error => {
+        console.error('Erreur lors de la suppression:', error);
+        this.isLoading = false;
+        this.showError('Erreur lors de la suppression de la catégorie');
+      }
+    });
   }
 
   openCategoryFormDialog(category?: Category) {
@@ -189,5 +220,13 @@ export class CategoryListComponent implements OnInit, AfterViewInit {
         this.loadCategories();
       }
     });
+  }
+
+  private showSuccess(message: string): void {
+    this.snackBar.open(message, 'Fermer', { duration: 3000 });
+  }
+
+  private showError(message: string): void {
+    this.snackBar.open(message, 'Fermer', { duration: 3000, panelClass: ['error-snackbar'] });
   }
 } 

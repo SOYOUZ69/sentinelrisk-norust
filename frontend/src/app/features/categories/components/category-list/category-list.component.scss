@@ -16,7 +16,7 @@
 }
 
 .filter-controls {
-  display: flex;
+ 
   flex-wrap: wrap;
   gap: 16px;
   align-items: flex-start;
@@ -64,7 +64,6 @@ th.mat-header-cell {
 
 .mat-column-actions {
   width: 140px;
-  text-align: center;
 }
 
 .mat-column-name {
@@ -139,4 +138,11 @@ th.mat-header-cell {
   align-items: center;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.6);
-} 
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}

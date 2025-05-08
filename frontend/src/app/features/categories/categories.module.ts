@@ -16,6 +16,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AdminSharedModule } from '../admin/shared/admin-shared.module';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     FormsModule,
     MatCardModule,
     MatTooltipModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    AdminSharedModule
   ]
 })
 export class CategoriesModule { } 

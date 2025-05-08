@@ -37,7 +37,18 @@ public class SecurityConfig {
         "/debug/**",
         "/api/debug/**",
         "/api/debug/ping",
-        "/api/debug/risks/**"
+        "/api/debug/risks/**",
+        "/api/test/**"
+    };
+    
+    private static final String[] ASSESSMENT_WHITELIST = {
+        "/api/assessments/**",
+        "/api/api/assessments/**"
+    };
+    
+    private static final String[] CATEGORY_WHITELIST = {
+        "/api/categories/**",
+        "/api/api/categories/**"
     };
 
     @Bean
@@ -52,6 +63,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(SWAGGER_WHITELIST).permitAll()
                 .requestMatchers(DEBUG_WHITELIST).permitAll()
+                .requestMatchers(ASSESSMENT_WHITELIST).permitAll()
+                .requestMatchers(CATEGORY_WHITELIST).permitAll()
                 .anyRequest().authenticated()
             )
             .oauth2ResourceServer()

@@ -12,7 +12,7 @@
         <mat-card-title>{{ risk.name }}</mat-card-title>
         <mat-card-subtitle class="risk-metadata">
           <mat-chip-set>
-            <mat-chip class="category-chip">{{ risk.category.name || 'Sans catégorie' }}</mat-chip>
+            <mat-chip class="category-chip">{{ risk.categoryName || risk.category?.name || 'Sans catégorie' }}</mat-chip>
             <mat-chip [class]="getStatusClass(risk.status)" class="status-chip">
               {{ statusTranslations[risk.status] }}
             </mat-chip>
@@ -139,7 +139,7 @@
           
           <div class="metadata-item">
             <span class="label mat-caption">Catégorie</span>
-            <span class="value mat-body-1">{{ risk.category.name || 'Non catégorisé' }}</span>
+            <span class="value mat-body-1">{{ risk.categoryName || risk.category?.name || 'Non catégorisé' }}</span>
           </div>
           
           <div class="metadata-item">

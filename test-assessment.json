@@ -1,0 +1,12 @@
+{
+  "risk": {
+    "id": 1
+  },
+  "assignedTo": {
+    "id": "1"
+  },
+  "status": "PLANNED",
+  "assessmentDate": "2025-05-07T10:00:00",
+  "findings": "Test findings for POST request",
+  "recommendations": "Test recommendations for POST request"
+} 
