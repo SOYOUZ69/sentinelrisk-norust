@@ -264,4 +264,35 @@ export class RiskService {
       updatedAt: riskData.updatedAt ? new Date(riskData.updatedAt) : new Date()
     } as Risk;
   }
+
+  /**
+   * Crée plusieurs risques en une seule opération
+   * @param risks Tableau d'objets risques à créer
+   * @returns Observable contenant les risques créés
+   */
+  bulkCreate(risks: any[]): Observable<any[]> {
+    // Transformer les données pour correspondre au format attendu par le backend
+    const riskRequests = risks.map(risk => {
+      // Préparer la requête avec le format attendu par le backend
+      return {
+        name: risk.name,
+        description: risk.description,
+        categoryName: risk.categoryName, // Utilisé pour rechercher la catégorie par nom
+        impactLevel: risk.impactLevel,
+        probabilityLevel: risk.probabilityLevel,
+        mitigationPlan: risk.mitigationPlan
+      };
+    });
+    
+    // Appel au backend pour création massive
+    return this.apiService.post<any[]>(`${this.basePath}/bulk`, riskRequests)
+      .pipe(
+        map(responseData => responseData.map(risk => this.mapRiskResponse(risk))),
+        catchError(error => {
+          console.error('Erreur lors de la création massive de risques', error);
+          const message = this.getErrorMessage(error) || 'Impossible de créer les risques. Veuillez réessayer.';
+          return throwError(() => new Error(message));
+        })
+      );
+  }
 } 

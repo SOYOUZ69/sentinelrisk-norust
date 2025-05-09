@@ -39,10 +39,19 @@ export class RiskFormDialogComponent implements OnInit {
   
   impactTranslations = {
     [ImpactLevel.NEGLIGIBLE]: 'Négligeable',
-    [ImpactLevel.LOW]: 'Faible',
-    [ImpactLevel.MEDIUM]: 'Moyen',
-    [ImpactLevel.HIGH]: 'Élevé',
-    [ImpactLevel.SEVERE]: 'Sévère'
+    [ImpactLevel.MINOR]: 'Mineur',
+    [ImpactLevel.MODERATE]: 'Modéré',
+    [ImpactLevel.SEVERE]: 'Sévère',
+    [ImpactLevel.MAJOR]: 'Majeur'
+  };
+  
+  // Mapping des libellés utilisateur vers les valeurs de l'enum ImpactLevel
+  impactLevelMapping: Record<string, string> = {
+    'Négligeable': 'NEGLIGIBLE',
+    'Mineur': 'MINOR',
+    'Modéré': 'MODERATE',
+    'Sévère': 'SEVERE',
+    'Majeur': 'MAJOR'
   };
   
   probabilityTranslations = {
@@ -66,7 +75,7 @@ export class RiskFormDialogComponent implements OnInit {
       name: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', Validators.required],
       categoryId: ['', Validators.required],
-      impactLevel: [ImpactLevel.MEDIUM, Validators.required],
+      impactLevel: [ImpactLevel.MODERATE, Validators.required],
       probabilityLevel: [ProbabilityLevel.POSSIBLE, Validators.required],
       status: [RiskStatus.IDENTIFIED, Validators.required],
       mitigationPlan: ['']
@@ -154,6 +163,7 @@ export class RiskFormDialogComponent implements OnInit {
           id: formValues.categoryId,
           name: selectedCategory?.name || '(Catégorie inconnue)'
         },
+        // S'assurer que les niveaux d'impact sont dans le bon format
         impactLevel: formValues.impactLevel,
         probabilityLevel: formValues.probabilityLevel,
         status: formValues.status,

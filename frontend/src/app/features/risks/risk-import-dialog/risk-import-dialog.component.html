@@ -1,0 +1,118 @@
+<div class="import-dialog">
+  <h2 mat-dialog-title>Import de risques</h2>
+  
+  <div mat-dialog-content>
+    <!-- Section de sélection de fichier -->
+    <div class="file-selection">
+      <input 
+        type="file" 
+        #fileInput 
+        style="display: none"
+        accept=".xlsx,.xls,.csv"
+        (change)="onFileSelected($event)"
+      />
+      
+      <div class="file-dropzone" (click)="triggerFileInput()">
+        <div *ngIf="!fileName">
+          <mat-icon>cloud_upload</mat-icon>
+          <p>Cliquez pour sélectionner un fichier Excel ou CSV</p>
+          <span class="formats-info">Formats acceptés: .xlsx, .xls, .csv</span>
+        </div>
+        <div *ngIf="fileName" class="selected-file">
+          <mat-icon>description</mat-icon>
+          <p>{{ fileName }}</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Chargement -->
+    <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+    
+    <!-- Résumé d'importation -->
+    <div *ngIf="dataSource.data.length > 0" class="import-summary">
+      <div class="summary-stats">
+        <div class="stat-item">
+          <span class="stat-value">{{ dataSource.data.length }}</span>
+          <span class="stat-label">Total</span>
+        </div>
+        <div class="stat-item success">
+          <span class="stat-value">{{ successCount }}</span>
+          <span class="stat-label">Valides</span>
+        </div>
+        <div class="stat-item error">
+          <span class="stat-value">{{ errorCount }}</span>
+          <span class="stat-label">Erreurs</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tableau d'aperçu -->
+    <div class="preview-table" *ngIf="dataSource.data.length > 0">
+      <h3>Aperçu des données</h3>
+      
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
+        
+        <!-- Colonnes pour chaque propriété -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Nom</th>
+          <td mat-cell *matCellDef="let item">{{ item.name }}</td>
+        </ng-container>
+        
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Description</th>
+          <td mat-cell *matCellDef="let item">{{ item.description | slice:0:50 }}{{ item.description.length > 50 ? '...' : '' }}</td>
+        </ng-container>
+        
+        <ng-container matColumnDef="categoryName">
+          <th mat-header-cell *matHeaderCellDef>Catégorie</th>
+          <td mat-cell *matCellDef="let item">{{ item.categoryName }}</td>
+        </ng-container>
+        
+        <ng-container matColumnDef="impactLevel">
+          <th mat-header-cell *matHeaderCellDef>Impact</th>
+          <td mat-cell *matCellDef="let item">{{ item.impactLevel }}</td>
+        </ng-container>
+        
+        <ng-container matColumnDef="probabilityLevel">
+          <th mat-header-cell *matHeaderCellDef>Probabilité</th>
+          <td mat-cell *matCellDef="let item">{{ item.probabilityLevel }}</td>
+        </ng-container>
+        
+        <ng-container matColumnDef="mitigationPlan">
+          <th mat-header-cell *matHeaderCellDef>Plan de mitigation</th>
+          <td mat-cell *matCellDef="let item">{{ item.mitigationPlan | slice:0:50 }}{{ item.mitigationPlan?.length > 50 ? '...' : '' }}</td>
+        </ng-container>
+        
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Statut</th>
+          <td mat-cell *matCellDef="let item">
+            <span *ngIf="item.isValid" class="status-valid">
+              <mat-icon>check_circle</mat-icon> Valide
+            </span>
+            <span *ngIf="!item.isValid" class="status-invalid" [matTooltip]="item.errors.join('\n')">
+              <mat-icon>error</mat-icon> Erreur
+            </span>
+          </td>
+        </ng-container>
+        
+        <!-- Définition des rangées -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="getRowClass(row)"></tr>
+      </table>
+    </div>
+  </div>
+  
+  <div mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" [disabled]="isProcessing">Annuler</button>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      [disabled]="dataSource.data.length === 0 || errorCount > 0 || isProcessing"
+      (click)="importRisks()"
+    >
+      <mat-icon *ngIf="!isProcessing">cloud_upload</mat-icon>
+      <mat-progress-bar *ngIf="isProcessing" mode="indeterminate" style="width: 100px;"></mat-progress-bar>
+      {{ isProcessing ? 'Import en cours...' : 'Valider l\'import' }}
+    </button>
+  </div>
+</div> 

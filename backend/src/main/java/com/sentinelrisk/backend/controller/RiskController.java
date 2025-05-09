@@ -14,7 +14,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.validation.annotation.Validated;
+import com.sentinelrisk.backend.dto.BulkResponse;
+import com.sentinelrisk.backend.dto.BulkRiskRequest;
+import com.sentinelrisk.backend.service.CategoryService;
+import com.sentinelrisk.backend.model.Category;
+import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/api/risks")
@@ -23,6 +31,7 @@ import java.util.List;
 public class RiskController {
 
     private final RiskService riskService;
+    private final CategoryService categoryService;
 
     @GetMapping
     @Operation(summary = "Lister tous les risques",
@@ -126,5 +135,87 @@ public class RiskController {
             @Parameter(description = "ID de la catégorie") 
             @PathVariable Long id) {
         return ResponseEntity.ok(riskService.getRisksByCategory(id));
+    }
+
+    /**
+     * Endpoint pour la création en masse de risques
+     * @param requests Liste de requêtes de création de risques
+     * @return Liste des risques créés avec statut 201 Created ou 207 Multi-Status en cas d'erreurs partielles
+     */
+    @PostMapping("/risks/bulk")
+    public ResponseEntity<?> bulkCreate(@RequestBody @Validated List<BulkRiskRequest> requests) {
+        if (requests == null || requests.isEmpty()) {
+            return ResponseEntity.badRequest().body("Aucune donnée fournie pour l'import");
+        }
+        
+        List<RiskResponse> successfullyCreated = new ArrayList<>();
+        List<BulkResponse.Error> errors = new ArrayList<>();
+        
+        // Traiter chaque risque individuellement
+        for (int i = 0; i < requests.size(); i++) {
+            BulkRiskRequest request = requests.get(i);
+            try {
+                // Rechercher la catégorie par nom si fourni
+                Category category = null;
+                if (request.getCategoryName() != null && !request.getCategoryName().trim().isEmpty()) {
+                    try {
+                        category = categoryService.getCategoryByName(request.getCategoryName());
+                    } catch (EntityNotFoundException e) {
+                        errors.add(new BulkResponse.Error(i, "Catégorie non trouvée: " + request.getCategoryName()));
+                        continue;
+                    }
+                } else if (request.getCategoryId() != null) {
+                    try {
+                        category = categoryService.getCategoryById(request.getCategoryId());
+                    } catch (EntityNotFoundException e) {
+                        errors.add(new BulkResponse.Error(i, "Catégorie non trouvée avec ID: " + request.getCategoryId()));
+                        continue;
+                    }
+                } else {
+                    errors.add(new BulkResponse.Error(i, "Aucune catégorie spécifiée"));
+                    continue;
+                }
+                
+                // Créer un objet RiskRequest à partir du BulkRiskRequest
+                RiskRequest riskRequest = convertBulkToStandard(request, category.getId());
+                
+                // Créer le risque en utilisant le service existant
+                RiskResponse createdRisk = riskService.createRisk(riskRequest);
+                successfullyCreated.add(createdRisk);
+                
+            } catch (Exception e) {
+                // Capturer toute erreur et l'ajouter à la liste des erreurs
+                errors.add(new BulkResponse.Error(i, e.getMessage()));
+            }
+        }
+        
+        // Déterminer la réponse en fonction des résultats
+        if (errors.isEmpty()) {
+            // Tous les risques ont été créés avec succès
+            return ResponseEntity.status(HttpStatus.CREATED).body(successfullyCreated);
+        } else if (successfullyCreated.isEmpty()) {
+            // Aucun risque n'a été créé
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new BulkResponse<>(successfullyCreated, errors));
+        } else {
+            // Certains risques ont été créés, d'autres ont échoué
+            return ResponseEntity.status(HttpStatus.MULTI_STATUS)
+                    .body(new BulkResponse<>(successfullyCreated, errors));
+        }
+    }
+    
+    /**
+     * Convertit un BulkRiskRequest en RiskRequest standard
+     */
+    private RiskRequest convertBulkToStandard(BulkRiskRequest bulkRequest, Long categoryId) {
+        RiskRequest request = new RiskRequest();
+        request.setName(bulkRequest.getName());
+        request.setDescription(bulkRequest.getDescription());
+        request.setCategoryId(categoryId);
+        request.setImpactLevel(bulkRequest.getImpactLevel());
+        request.setProbabilityLevel(bulkRequest.getProbabilityLevel());
+        request.setStatus(bulkRequest.getStatus() != null ? bulkRequest.getStatus() : Risk.Status.IDENTIFIED); // Valeur par défaut
+        request.setMitigationPlan(bulkRequest.getMitigationPlan());
+        return request;
     }
 } 

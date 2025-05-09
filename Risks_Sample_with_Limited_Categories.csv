@@ -1,0 +1,21 @@
+name,description,Catégorie,impactLevel,probabilityLevel,mitigationPlan
+Risk 1,Description of risk 1,tt,MAJOR,POSSIBLE,Mitigation plan details 1
+Risk 2,Description of risk 2,categorie 2,MODERATE,LIKELY,Mitigation plan details 2
+Risk 3,Description of risk 3,categorie 1,SEVERE,UNLIKELY,Mitigation plan details 3
+Risk 4,Description of risk 4,categorie 2,MAJOR,ALMOST_CERTAIN,Mitigation plan details 4
+Risk 5,Description of risk 5,categorie 1,MODERATE,POSSIBLE,Mitigation plan details 5
+Risk 6,Description of risk 6,categorie 2,SEVERE,LIKELY,Mitigation plan details 6
+Risk 7,Description of risk 7,categorie 1,MAJOR,UNLIKELY,Mitigation plan details 7
+Risk 8,Description of risk 8,categorie 2,MODERATE,ALMOST_CERTAIN,Mitigation plan details 8
+Risk 9,Description of risk 9,categorie 1,SEVERE,POSSIBLE,Mitigation plan details 9
+Risk 10,Description of risk 10,categorie 2,MAJOR,LIKELY,Mitigation plan details 10
+Risk 11,Description of risk 11,categorie 1,MODERATE,UNLIKELY,Mitigation plan details 11
+Risk 12,Description of risk 12,categorie 2,SEVERE,ALMOST_CERTAIN,Mitigation plan details 12
+Risk 13,Description of risk 13,categorie 1,MAJOR,POSSIBLE,Mitigation plan details 13
+Risk 14,Description of risk 14,categorie 2,MODERATE,LIKELY,Mitigation plan details 14
+Risk 15,Description of risk 15,categorie 1,SEVERE,UNLIKELY,Mitigation plan details 15
+Risk 16,Description of risk 16,categorie 2,MAJOR,ALMOST_CERTAIN,Mitigation plan details 16
+Risk 17,Description of risk 17,categorie 1,MODERATE,POSSIBLE,Mitigation plan details 17
+Risk 18,Description of risk 18,categorie 2,SEVERE,LIKELY,Mitigation plan details 18
+Risk 19,Description of risk 19,categorie 1,MAJOR,UNLIKELY,Mitigation plan details 19
+Risk 20,Description of risk 20,categorie 2,MODERATE,ALMOST_CERTAIN,Mitigation plan details 20

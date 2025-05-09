@@ -6,6 +6,7 @@ import { Risk, ImpactLevel, ProbabilityLevel, RiskStatus } from '../../core/mode
 import { RiskService } from './services/risk.service';
 import { RiskFormDialogComponent, RiskFormDialogData } from './risk-form-dialog/risk-form-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../admin/shared/confirm-dialog/confirm-dialog.component';
+import { RiskImportDialogComponent } from './risk-import-dialog/risk-import-dialog.component';
 
 @Component({
   selector: 'app-risks',
@@ -28,10 +29,10 @@ export class RisksComponent implements OnInit {
   
   impactTranslations: Record<string, string> = {
     [ImpactLevel.NEGLIGIBLE]: 'Négligeable',
-    [ImpactLevel.LOW]: 'Faible',
-    [ImpactLevel.MEDIUM]: 'Moyen',
-    [ImpactLevel.HIGH]: 'Élevé',
-    [ImpactLevel.SEVERE]: 'Sévère'
+    [ImpactLevel.MINOR]: 'Mineur',
+    [ImpactLevel.MODERATE]: 'Modéré',
+    [ImpactLevel.SEVERE]: 'Sévère',
+    [ImpactLevel.MAJOR]: 'Majeur'
   };
   
   probabilityTranslations: Record<string, string> = {
@@ -206,5 +207,18 @@ export class RisksComponent implements OnInit {
 
   private showError(message: string): void {
     this.snackBar.open(message, 'Fermer', { duration: 3000, panelClass: ['error-snackbar'] });
+  }
+
+  openImportDialog(): void {
+    const dialogRef = this.dialog.open(RiskImportDialogComponent, {
+      width: '900px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.loadRisks();
+      }
+    });
   }
 } 

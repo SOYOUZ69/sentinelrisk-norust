@@ -7,11 +7,11 @@ export enum RiskStatus {
 }
 
 export enum ImpactLevel {
-  NEGLIGIBLE = 'NEGLIGIBLE',
-  LOW = 'LOW',
-  MEDIUM = 'MEDIUM',
-  HIGH = 'HIGH',
-  SEVERE = 'SEVERE'
+  MAJOR = 'MAJOR',
+  MODERATE = 'MODERATE',
+  SEVERE = 'SEVERE',
+  MINOR = 'MINOR',
+  NEGLIGIBLE = 'NEGLIGIBLE'
 }
 
 export enum ProbabilityLevel {
