@@ -5,6 +5,7 @@ import { ApiService } from '../../../core/services/api.service';
 import { Risk, Category, Control } from '../../../core/models/risk.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ImportResult } from '../../../core/models/import-result.model';
 
 @Injectable({
   providedIn: 'root'
@@ -291,6 +292,26 @@ export class RiskService {
         catchError(error => {
           console.error('Erreur lors de la création massive de risques', error);
           const message = this.getErrorMessage(error) || 'Impossible de créer les risques. Veuillez réessayer.';
+          return throwError(() => new Error(message));
+        })
+      );
+  }
+  
+  /**
+   * Importe des risques à partir d'un fichier CSV
+   * @param file Fichier CSV à importer
+   * @returns Observable contenant le résultat de l'import
+   */
+  importRisksFromFile(file: File): Observable<ImportResult> {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    // Utiliser directement HttpClient pour pouvoir envoyer le FormData
+    return this.http.post<ImportResult>(`${environment.apiUrl}${this.basePath}/bulk`, formData)
+      .pipe(
+        catchError(error => {
+          console.error('Erreur lors de l\'import du fichier CSV', error);
+          const message = this.getErrorMessage(error) || 'Impossible d\'importer le fichier CSV. Veuillez réessayer.';
           return throwError(() => new Error(message));
         })
       );

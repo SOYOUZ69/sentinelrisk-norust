@@ -23,6 +23,9 @@ import com.sentinelrisk.backend.dto.BulkRiskRequest;
 import com.sentinelrisk.backend.service.CategoryService;
 import com.sentinelrisk.backend.model.Category;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.MediaType;
+import org.springframework.web.multipart.MultipartFile;
+import com.sentinelrisk.backend.dto.ImportResult;
 
 @RestController
 @RequestMapping("/api/risks")
@@ -218,4 +221,140 @@ public class RiskController {
         request.setMitigationPlan(bulkRequest.getMitigationPlan());
         return request;
     }
-} 
+
+    /**
+     * Endpoint pour l'import CSV en masse des risques
+     */
+    @PostMapping(value = "/bulk", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ImportResult> importRisks(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            ImportResult result = new ImportResult(0);
+            result.getErrors().add("Le fichier est vide");
+            return ResponseEntity.badRequest().body(result);
+        }
+        
+        try {
+            // Lire le contenu du fichier
+            String content = new String(file.getBytes());
+            String[] lines = content.split("\n");
+            
+            if (lines.length <= 1) {
+                ImportResult result = new ImportResult(0);
+                result.getErrors().add("Le fichier ne contient pas de données");
+                return ResponseEntity.badRequest().body(result);
+            }
+            
+            // Analyser l'en-tête pour déterminer les colonnes
+            String[] headers = lines[0].split(",");
+            
+            // Préparer les listes pour stocker les résultats
+            List<RiskResponse> successfullyCreated = new ArrayList<>();
+            List<String> errors = new ArrayList<>();
+            
+            // Traiter chaque ligne (sauf l'en-tête)
+            for (int i = 1; i < lines.length; i++) {
+                try {
+                    String line = lines[i].trim();
+                    if (line.isEmpty()) continue;
+                    
+                    // Analyser la ligne CSV (gestion basique, à améliorer pour les champs entre guillemets)
+                    String[] values = line.split(",");
+                    
+                    // Créer un objet BulkRiskRequest à partir des valeurs CSV
+                    BulkRiskRequest request = new BulkRiskRequest();
+                    
+                    // Remplir les champs en fonction des en-têtes
+                    for (int j = 0; j < headers.length && j < values.length; j++) {
+                        String header = headers[j].trim();
+                        String value = values[j].trim();
+                        
+                        // Enlever les guillemets si présents
+                        if (value.startsWith("\"") && value.endsWith("\"")) {
+                            value = value.substring(1, value.length() - 1);
+                        }
+                        
+                        switch (header) {
+                            case "name":
+                                request.setName(value);
+                                break;
+                            case "description":
+                                request.setDescription(value);
+                                break;
+                            case "categoryName":
+                                request.setCategoryName(value);
+                                break;
+                            case "impactLevel":
+                                try {
+                                    request.setImpactLevel(Risk.ImpactLevel.valueOf(value));
+                                } catch (IllegalArgumentException e) {
+                                    errors.add("Ligne " + i + ": Niveau d'impact invalide: " + value);
+                                }
+                                break;
+                            case "probabilityLevel":
+                                try {
+                                    request.setProbabilityLevel(Risk.ProbabilityLevel.valueOf(value));
+                                } catch (IllegalArgumentException e) {
+                                    errors.add("Ligne " + i + ": Niveau de probabilité invalide: " + value);
+                                }
+                                break;
+                            case "mitigationPlan":
+                                request.setMitigationPlan(value);
+                                break;
+                        }
+                    }
+                    
+                    // Vérifier les champs obligatoires
+                    if (request.getName() == null || request.getName().isEmpty()) {
+                        errors.add("Ligne " + i + ": Le nom est obligatoire");
+                        continue;
+                    }
+                    
+                    // Rechercher la catégorie
+                    Category category = null;
+                    if (request.getCategoryName() != null && !request.getCategoryName().trim().isEmpty()) {
+                        try {
+                            category = categoryService.getCategoryByName(request.getCategoryName());
+                        } catch (EntityNotFoundException e) {
+                            errors.add("Ligne " + i + ": Catégorie non trouvée: " + request.getCategoryName());
+                            continue;
+                        }
+                    } else {
+                        errors.add("Ligne " + i + ": Catégorie manquante");
+                        continue;
+                    }
+                    
+                    // Créer un objet RiskRequest à partir du BulkRiskRequest
+                    RiskRequest riskRequest = convertBulkToStandard(request, category.getId());
+                    
+                    // Créer le risque en utilisant le service existant
+                    RiskResponse createdRisk = riskService.createRisk(riskRequest);
+                    successfullyCreated.add(createdRisk);
+                    
+                } catch (Exception e) {
+                    // Capturer toute erreur et l'ajouter à la liste des erreurs
+                    errors.add("Ligne " + i + ": " + e.getMessage());
+                }
+            }
+            
+            // Créer l'objet de résultat
+            ImportResult result = new ImportResult(successfullyCreated.size(), errors);
+            
+            // Déterminer la réponse en fonction des résultats
+            if (errors.isEmpty()) {
+                // Tous les risques ont été créés avec succès
+                return ResponseEntity.status(HttpStatus.CREATED).body(result);
+            } else if (successfullyCreated.isEmpty()) {
+                // Aucun risque n'a été créé
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+            } else {
+                // Certains risques ont été créés, d'autres ont échoué
+                return ResponseEntity.status(HttpStatus.MULTI_STATUS).body(result);
+            }
+            
+        } catch (Exception e) {
+            ImportResult result = new ImportResult(0);
+            result.getErrors().add("Erreur lors du traitement du fichier CSV: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+        }
+    }
+}

@@ -21,6 +21,7 @@ import * as XLSX from 'xlsx';
 
 import { RiskService } from '../services/risk.service';
 import { ImpactLevel, ProbabilityLevel } from '../../../core/models/risk.model';
+import { ImportResult } from '../../../core/models/import-result.model';
 import { finalize } from 'rxjs/operators';
 
 // Log to verify XLSX is loaded correctly
@@ -215,13 +216,27 @@ export class RiskImportDialogComponent implements OnInit {
     
     this.isProcessing = true;
     
-    this.riskService.bulkCreate(validItems)
+    // Convertir les données validées en CSV et créer un fichier
+    const csvContent = this.convertToCSV(validItems);
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const file = new File([blob], 'risks_import.csv', { type: 'text/csv' });
+    
+    // Utiliser la nouvelle méthode d'import de fichier
+    this.riskService.importRisksFromFile(file)
       .pipe(finalize(() => this.isProcessing = false))
       .subscribe({
-        next: (response) => {
-          this.snackBar.open(`Import terminé : ${response.length} risque(s) créé(s)`, 'OK', {
-            duration: 5000
-          });
+        next: (response: ImportResult) => {
+          if (response.errors && response.errors.length > 0) {
+            // Il y a eu des erreurs lors de l'import
+            this.snackBar.open(`Import terminé avec ${response.importedCount} risques importés et ${response.errors.length} erreurs`, 'OK', {
+              duration: 5000
+            });
+          } else {
+            // Import réussi sans erreurs
+            this.snackBar.open(`Import terminé avec succès : ${response.importedCount} risques importés`, 'OK', {
+              duration: 5000
+            });
+          }
           this.dialogRef.close(true); // Ferme avec succès
         },
         error: (error) => {
@@ -231,6 +246,33 @@ export class RiskImportDialogComponent implements OnInit {
           });
         }
       });
+  }
+  
+  /**
+   * Convertit les données en format CSV
+   */
+  private convertToCSV(items: RiskImportItem[]): string {
+    // En-têtes CSV
+    const headers = ['name', 'description', 'categoryName', 'impactLevel', 'probabilityLevel', 'mitigationPlan'];
+    const csvRows = [];
+    
+    // Ajouter l'en-tête
+    csvRows.push(headers.join(','));
+    
+    // Ajouter les lignes de données
+    for (const item of items) {
+      const values = [
+        `"${String(item.name || '').replace(/"/g, '""')}"`,
+        `"${String(item.description || '').replace(/"/g, '""')}"`,
+        `"${String(item.categoryName || '').replace(/"/g, '""')}"`,
+        item.impactLevel || '',
+        item.probabilityLevel || '',
+        `"${String(item.mitigationPlan || '').replace(/"/g, '""')}"`
+      ];
+      csvRows.push(values.join(','));
+    }
+    
+    return csvRows.join('\n');
   }
   
   onCancel(): void {
