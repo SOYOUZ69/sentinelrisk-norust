@@ -5,9 +5,9 @@ import { CategoryFormDialogComponent } from './components/category-form-dialog/c
 import { CategoryDetailComponent } from './components/category-detail/category-detail.component';
 
 const routes: Routes = [
-  { path: '', component: CategoryListComponent },
-  { path: ':id', component: CategoryDetailComponent },
-  { path: ':id/edit', component: CategoryFormDialogComponent }
+  { path: '', component: CategoryListComponent, data: { roles: ['admin', 'risk_manager', 'compliance_officer', 'auditor', 'user'] } },
+  { path: ':id', component: CategoryDetailComponent, data: { roles: ['admin', 'risk_manager', 'compliance_officer', 'auditor', 'user'] } },
+  { path: ':id/edit', component: CategoryFormDialogComponent, data: { roles: ['admin', 'risk_manager'] } }
 ];
 
 @NgModule({

@@ -1,12 +1,52 @@
 <div class="risks-container">
+  <!-- Test de directive structurelle -->
+  <div style="background-color: lightgreen; padding: 10px; margin-bottom: 15px;" *ngIf="true">
+    <p>Test de directive ngIf (devrait être visible)</p>
+    <button mat-raised-button color="primary">Bouton toujours visible</button>
+    <button mat-raised-button color="accent" *ngIf="keycloakService.hasRole('admin') || keycloakService.hasRole('ADMIN')">
+      Bouton visible si admin (via ngIf direct)
+    </button>
+  </div>
+
+  <!-- Débogage des rôles (temporaire) -->
+  <div class="debug-box" *ngIf="showDebug">
+    <h3>Informations de débogage</h3>
+    <p><strong>Nom d'utilisateur:</strong> {{ keycloakService.getUsername() }}</p>
+    <p><strong>Rôles:</strong> {{ keycloakService.getUserRoles().join(', ') }}</p>
+    <div>
+      <strong>Vérification des rôles (minuscules):</strong>
+      <ul>
+        <li>admin: {{ keycloakService.hasRole('admin') }}</li>
+        <li>risk_manager: {{ keycloakService.hasRole('risk_manager') }}</li>
+        <li>compliance_officer: {{ keycloakService.hasRole('compliance_officer') }}</li>
+        <li>auditor: {{ keycloakService.hasRole('auditor') }}</li>
+        <li>user: {{ keycloakService.hasRole('user') }}</li>
+      </ul>
+    </div>
+    <div>
+      <strong>Vérification des rôles (majuscules):</strong>
+      <ul>
+        <li>ADMIN: {{ keycloakService.hasRole('ADMIN') }}</li>
+        <li>RISK_MANAGER: {{ keycloakService.hasRole('RISK_MANAGER') }}</li>
+        <li>COMPLIANCE_OFFICER: {{ keycloakService.hasRole('COMPLIANCE_OFFICER') }}</li>
+        <li>AUDITOR: {{ keycloakService.hasRole('AUDITOR') }}</li>
+        <li>USER: {{ keycloakService.hasRole('USER') }}</li>
+      </ul>
+    </div>
+    <button mat-button color="accent" (click)="showDebug = false">Masquer le débogage</button>
+  </div>
   <div class="header">
     <h1>Gestion des risques</h1>
     <div class="header-actions">
-      <button mat-raised-button color="accent" (click)="openImportDialog()" class="import-button">
+      <button mat-button color="accent" (click)="showDebug = true" *ngIf="!showDebug" class="debug-button">
+        <mat-icon>bug_report</mat-icon>
+        Débogage des rôles
+      </button>
+      <button mat-raised-button color="accent" (click)="openImportDialog()" class="import-button" *ngIf="keycloakService.hasRole('admin') || keycloakService.hasRole('ADMIN') || keycloakService.hasRole('risk_manager') || keycloakService.hasRole('RISK_MANAGER')">
         <mat-icon>upload_file</mat-icon>
         Importer des risques
       </button>
-      <button mat-raised-button color="primary" (click)="openRiskForm()">
+      <button mat-raised-button color="primary" (click)="openRiskForm()" *ngIf="keycloakService.hasRole('admin') || keycloakService.hasRole('ADMIN') || keycloakService.hasRole('risk_manager') || keycloakService.hasRole('RISK_MANAGER')">
         <mat-icon>add</mat-icon>
         Nouveau risque
       </button>
@@ -84,10 +124,10 @@
           <button mat-icon-button color="accent" (click)="viewRisk(risk)" matTooltip="Voir les détails">
             <mat-icon>visibility</mat-icon>
           </button>
-          <button mat-icon-button color="primary" (click)="openRiskForm(risk)" matTooltip="Modifier">
+          <button mat-icon-button color="primary" (click)="openRiskForm(risk)" matTooltip="Modifier" *ngIf="keycloakService.hasRole('admin') || keycloakService.hasRole('ADMIN') || keycloakService.hasRole('risk_manager') || keycloakService.hasRole('RISK_MANAGER')">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button color="warn" (click)="deleteRisk(risk)" matTooltip="Supprimer">
+          <button mat-icon-button color="warn" (click)="deleteRisk(risk)" matTooltip="Supprimer" *ngIf="keycloakService.hasRole('admin') || keycloakService.hasRole('ADMIN') || keycloakService.hasRole('risk_manager') || keycloakService.hasRole('RISK_MANAGER')">
             <mat-icon>delete</mat-icon>
           </button>
         </td>
@@ -100,7 +140,7 @@
     <!-- Message si aucune donnée -->
     <div class="no-data" *ngIf="!isLoading && risks.length === 0">
       <p>Aucun risque trouvé</p>
-      <button mat-raised-button color="primary" (click)="openRiskForm()">
+      <button mat-raised-button color="primary" (click)="openRiskForm()" *ngIf="keycloakService.hasRole('admin') || keycloakService.hasRole('ADMIN') || keycloakService.hasRole('risk_manager') || keycloakService.hasRole('RISK_MANAGER')">
         Ajouter un risque
       </button>
     </div>

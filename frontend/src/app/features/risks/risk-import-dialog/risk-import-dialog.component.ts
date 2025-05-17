@@ -10,19 +10,25 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 // @ts-ignore
 import * as XLSX from 'xlsx';
+// Importation de file-saver
+import { saveAs } from 'file-saver';
 
 import { RiskService } from '../services/risk.service';
 import { ImpactLevel, ProbabilityLevel } from '../../../core/models/risk.model';
-import { ImportResult } from '../../../core/models/import-result.model';
+import { ImportResult, ImportError } from '../../../core/models/import-result.model';
 import { finalize } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment';
+import { KeycloakService } from '../../../core/auth/keycloak.service';
 
 // Log to verify XLSX is loaded correctly
 console.log('XLSX module loaded:', !!XLSX);
@@ -52,6 +58,7 @@ export interface RiskImportItem {
     MatInputModule,
     MatButtonModule,
     MatProgressBarModule,
+    MatProgressSpinnerModule,
     MatTableModule,
     MatIconModule,
     MatChipsModule,
@@ -66,12 +73,19 @@ export class RiskImportDialogComponent implements OnInit {
   isProcessing = false;
   successCount = 0;
   errorCount = 0;
+  isTemplateDownloading = false;
   
   // Colonnes pour la table d'aperçu
   displayedColumns: string[] = ['name', 'description', 'categoryName', 'impactLevel', 'probabilityLevel', 'mitigationPlan', 'status'];
   
-  // Source de données pour la table
+  // Colonnes pour la table d'erreurs
+  errorColumns: string[] = ['row', 'field', 'message'];
+  
+  // Source de données pour la table d'aperçu
   dataSource = new MatTableDataSource<RiskImportItem>([]);
+  
+  // Erreurs d'importation
+  importErrors: ImportError[] = [];
   
   // Valeurs valides pour les niveaux d'impact et de probabilité
   validImpactLevels = Object.values(ImpactLevel);
@@ -80,11 +94,52 @@ export class RiskImportDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<RiskImportDialogComponent>,
     private riskService: RiskService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private http: HttpClient,
+    private keycloakService: KeycloakService
   ) {}
   
   ngOnInit(): void {
     // Initialisation au besoin
+  }
+  
+  /**
+   * Télécharge le modèle Excel pour l'import de risques
+   */
+  downloadTemplate(): void {
+    this.isTemplateDownloading = true;
+    
+    // Récupération du token Keycloak
+    this.keycloakService.getToken()
+      .then(token => {
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+        
+        // Requête HTTP avec le token d'authentification
+        this.http.get(`${environment.apiUrl}/api/risks/template`, {
+          headers,
+          responseType: 'blob'
+        }).pipe(
+          finalize(() => this.isTemplateDownloading = false)
+        ).subscribe({
+          next: (blob: Blob) => {
+            // Téléchargement du fichier avec file-saver
+            saveAs(blob, 'risk_import_template.xlsx');
+          },
+          error: (error) => {
+            console.error('Erreur lors du téléchargement du modèle', error);
+            this.snackBar.open('Erreur lors du téléchargement du modèle. Veuillez réessayer.', 'Fermer', {
+              duration: 5000
+            });
+          }
+        });
+      })
+      .catch(error => {
+        console.error('Erreur lors de la récupération du token', error);
+        this.isTemplateDownloading = false;
+        this.snackBar.open('Erreur d\'authentification. Veuillez vous reconnecter.', 'Fermer', {
+          duration: 5000
+        });
+      });
   }
   
   onFileSelected(event: Event): void {
@@ -150,6 +205,9 @@ export class RiskImportDialogComponent implements OnInit {
       });
       return;
     }
+    
+    // Réinitialiser les erreurs d'importation
+    this.importErrors = [];
     
     // Mapper les données du fichier au format attendu
     const importItems: RiskImportItem[] = data.map(item => {
@@ -226,8 +284,12 @@ export class RiskImportDialogComponent implements OnInit {
       .pipe(finalize(() => this.isProcessing = false))
       .subscribe({
         next: (response: ImportResult) => {
+          // Réinitialiser les erreurs d'importation
+          this.importErrors = [];
+          
           if (response.errors && response.errors.length > 0) {
             // Il y a eu des erreurs lors de l'import
+            this.importErrors = response.errors;
             this.snackBar.open(`Import terminé avec ${response.importedCount} risques importés et ${response.errors.length} erreurs`, 'OK', {
               duration: 5000
             });
@@ -236,8 +298,8 @@ export class RiskImportDialogComponent implements OnInit {
             this.snackBar.open(`Import terminé avec succès : ${response.importedCount} risques importés`, 'OK', {
               duration: 5000
             });
+            this.dialogRef.close(true); // Ferme avec succès uniquement s'il n'y a pas d'erreurs
           }
-          this.dialogRef.close(true); // Ferme avec succès
         },
         error: (error) => {
           console.error('Erreur lors de l\'import', error);
@@ -262,12 +324,12 @@ export class RiskImportDialogComponent implements OnInit {
     // Ajouter les lignes de données
     for (const item of items) {
       const values = [
-        `"${String(item.name || '').replace(/"/g, '""')}"`,
-        `"${String(item.description || '').replace(/"/g, '""')}"`,
-        `"${String(item.categoryName || '').replace(/"/g, '""')}"`,
+        `"${(item.name || '').replace(/"/g, '""')}"`,
+        `"${(item.description || '').replace(/"/g, '""')}"`,
+        `"${(item.categoryName || '').replace(/"/g, '""')}"`,
         item.impactLevel || '',
         item.probabilityLevel || '',
-        `"${String(item.mitigationPlan || '').replace(/"/g, '""')}"`
+        `"${((item.mitigationPlan || '')).replace(/"/g, '""')}"`
       ];
       csvRows.push(values.join(','));
     }

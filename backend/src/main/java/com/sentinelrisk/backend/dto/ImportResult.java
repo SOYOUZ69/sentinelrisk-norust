@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ImportResult {
     private int importedCount;
-    private List<String> errors = new ArrayList<>();
+    private List<ImportError> errors = new ArrayList<>();
     
     public ImportResult(int importedCount) {
         this.importedCount = importedCount;

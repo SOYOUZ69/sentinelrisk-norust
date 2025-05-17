@@ -35,4 +35,4 @@ public class BulkResponse<T> {
         private int index;  // Index de l'élément dans la liste d'origine
         private String message;  // Message d'erreur
     }
-} 
+}

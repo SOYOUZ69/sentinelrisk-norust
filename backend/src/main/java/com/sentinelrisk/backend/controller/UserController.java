@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class UserController {
     @Operation(summary = "Lister tous les utilisateurs",
             description = "Récupère la liste complète des utilisateurs du système")
     @ApiResponse(responseCode = "200", description = "Liste des utilisateurs récupérée avec succès")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
@@ -34,6 +36,7 @@ public class UserController {
             description = "Récupère les détails d'un utilisateur spécifique via son ID")
     @ApiResponse(responseCode = "200", description = "Utilisateur trouvé")
     @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or principal.id == #id")
     public ResponseEntity<User> getUserById(
             @Parameter(description = "ID de l'utilisateur à récupérer") 
             @PathVariable String id) {
@@ -45,6 +48,7 @@ public class UserController {
             description = "Crée un nouvel utilisateur dans le système")
     @ApiResponse(responseCode = "201", description = "Utilisateur créé avec succès")
     @ApiResponse(responseCode = "400", description = "Données d'utilisateur invalides")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<User> createUser(
             @Parameter(description = "Données de l'utilisateur à créer") 
             @Valid @RequestBody User user) {
@@ -56,6 +60,7 @@ public class UserController {
             description = "Met à jour les informations d'un utilisateur existant")
     @ApiResponse(responseCode = "200", description = "Utilisateur mis à jour avec succès")
     @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or principal.id == #id")
     public ResponseEntity<User> updateUser(
             @Parameter(description = "ID de l'utilisateur à mettre à jour") 
             @PathVariable String id,
@@ -69,6 +74,7 @@ public class UserController {
             description = "Supprime un utilisateur du système")
     @ApiResponse(responseCode = "204", description = "Utilisateur supprimé avec succès")
     @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteUser(
             @Parameter(description = "ID de l'utilisateur à supprimer") 
             @PathVariable String id) {
@@ -80,6 +86,7 @@ public class UserController {
     @Operation(summary = "Lister les utilisateurs actifs",
             description = "Récupère la liste des utilisateurs actifs avec des évaluations en attente")
     @ApiResponse(responseCode = "200", description = "Liste des utilisateurs actifs récupérée avec succès")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_COMPLIANCE_OFFICER')")
     public List<User> getActiveUsers() {
         return userService.getActiveUsersWithPendingAssessments();
     }

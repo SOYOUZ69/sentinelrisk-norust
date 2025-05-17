@@ -2,6 +2,22 @@
   <h2 mat-dialog-title>Import de risques</h2>
   
   <div mat-dialog-content>
+    <!-- Bouton pour télécharger le modèle -->
+    <div class="template-download">
+      <button mat-stroked-button color="primary" 
+              (click)="downloadTemplate()" 
+              [disabled]="isTemplateDownloading">
+        <mat-icon *ngIf="!isTemplateDownloading">download</mat-icon>
+        <mat-progress-spinner *ngIf="isTemplateDownloading" 
+                             diameter="20" 
+                             mode="indeterminate" 
+                             color="primary" 
+                             class="spinner-in-button">
+        </mat-progress-spinner>
+        {{ isTemplateDownloading ? 'Téléchargement...' : 'Télécharger le modèle Excel' }}
+      </button>
+    </div>
+    
     <!-- Section de sélection de fichier -->
     <div class="file-selection">
       <input 
@@ -98,6 +114,32 @@
         <!-- Définition des rangées -->
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="getRowClass(row)"></tr>
+      </table>
+    </div>
+    
+    <!-- Tableau des erreurs d'importation -->
+    <div class="error-table" *ngIf="importErrors && importErrors.length > 0">
+      <h3>Erreurs d'importation</h3>
+      
+      <table mat-table [dataSource]="importErrors" class="mat-elevation-z2">
+        
+        <ng-container matColumnDef="row">
+          <th mat-header-cell *matHeaderCellDef>Ligne</th>
+          <td mat-cell *matCellDef="let error">{{ error.row }}</td>
+        </ng-container>
+        
+        <ng-container matColumnDef="field">
+          <th mat-header-cell *matHeaderCellDef>Champ</th>
+          <td mat-cell *matCellDef="let error">{{ error.field }}</td>
+        </ng-container>
+        
+        <ng-container matColumnDef="message">
+          <th mat-header-cell *matHeaderCellDef>Message</th>
+          <td mat-cell *matCellDef="let error">{{ error.message }}</td>
+        </ng-container>
+        
+        <tr mat-header-row *matHeaderRowDef="errorColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: errorColumns;"></tr>
       </table>
     </div>
   </div>

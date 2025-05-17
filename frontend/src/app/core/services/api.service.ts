@@ -8,6 +8,7 @@ import { environment } from '../../../environments/environment';
 })
 export class ApiService {
   private apiUrl = environment.apiUrl;
+  private apiPrefix = '/api'; // Préfixe pour tous les appels d'API
 
   constructor(private http: HttpClient) {}
 
@@ -18,7 +19,7 @@ export class ApiService {
    * @returns Observable avec les données
    */
   get<T>(path: string, params: HttpParams = new HttpParams()): Observable<T> {
-    const url = `${this.apiUrl}${path}`;
+    const url = `${this.apiUrl}${this.apiPrefix}${path}`;
     console.log(`ApiService GET: ${url} avec params:`, params.toString());
     return this.http.get<T>(url, { params });
   }
@@ -30,7 +31,7 @@ export class ApiService {
    * @returns Observable avec les données
    */
   post<T>(path: string, body: any): Observable<T> {
-    return this.http.post<T>(`${this.apiUrl}${path}`, body);
+    return this.http.post<T>(`${this.apiUrl}${this.apiPrefix}${path}`, body);
   }
 
   /**
@@ -40,7 +41,7 @@ export class ApiService {
    * @returns Observable avec les données
    */
   put<T>(path: string, body: any): Observable<T> {
-    return this.http.put<T>(`${this.apiUrl}${path}`, body);
+    return this.http.put<T>(`${this.apiUrl}${this.apiPrefix}${path}`, body);
   }
 
   /**
@@ -50,7 +51,7 @@ export class ApiService {
    * @returns Observable avec les données
    */
   patch<T>(path: string, body: any): Observable<T> {
-    return this.http.patch<T>(`${this.apiUrl}${path}`, body);
+    return this.http.patch<T>(`${this.apiUrl}${this.apiPrefix}${path}`, body);
   }
 
   /**
@@ -59,6 +60,18 @@ export class ApiService {
    * @returns Observable avec les données
    */
   delete<T>(path: string): Observable<T> {
-    return this.http.delete<T>(`${this.apiUrl}${path}`);
+    return this.http.delete<T>(`${this.apiUrl}${this.apiPrefix}${path}`);
+  }
+
+  /**
+   * Effectue une requête HTTP POST avec FormData (pour l'upload de fichiers)
+   * @param path Chemin de l'API (sans le préfixe de base)
+   * @param formData Objet FormData contenant les fichiers et autres données
+   * @returns Observable avec les données
+   */
+  postFormData<T>(path: string, formData: FormData): Observable<T> {
+    const url = `${this.apiUrl}${this.apiPrefix}${path}`;
+    console.log(`ApiService POST FormData: ${url}`);
+    return this.http.post<T>(url, formData);
   }
 } 

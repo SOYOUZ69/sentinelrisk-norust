@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class ControlController {
     @Operation(summary = "Lister tous les contrôles",
             description = "Récupère la liste complète des contrôles de risque")
     @ApiResponse(responseCode = "200", description = "Liste des contrôles récupérée avec succès")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_RISK_MANAGER', 'ROLE_COMPLIANCE_OFFICER', 'ROLE_AUDITOR', 'ROLE_USER')")
     public List<ControlResponse> getAllControls() {
         return controlService.getAllControls();
     }
@@ -36,6 +38,7 @@ public class ControlController {
             description = "Récupère les détails d'un contrôle spécifique via son ID")
     @ApiResponse(responseCode = "200", description = "Contrôle trouvé")
     @ApiResponse(responseCode = "404", description = "Contrôle non trouvé")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_RISK_MANAGER', 'ROLE_COMPLIANCE_OFFICER', 'ROLE_AUDITOR', 'ROLE_USER')")
     public ResponseEntity<ControlResponse> getControlById(
             @Parameter(description = "ID du contrôle à récupérer") 
             @PathVariable Long id) {
@@ -47,6 +50,7 @@ public class ControlController {
             description = "Crée un nouveau contrôle de risque")
     @ApiResponse(responseCode = "201", description = "Contrôle créé avec succès")
     @ApiResponse(responseCode = "400", description = "Données du contrôle invalides")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_RISK_MANAGER')")
     public ResponseEntity<ControlResponse> createControl(
             @Parameter(description = "Données du contrôle à créer") 
             @Valid @RequestBody ControlRequest controlRequest) {
@@ -58,6 +62,7 @@ public class ControlController {
             description = "Met à jour les informations d'un contrôle existant")
     @ApiResponse(responseCode = "200", description = "Contrôle mis à jour avec succès")
     @ApiResponse(responseCode = "404", description = "Contrôle non trouvé")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_RISK_MANAGER')")
     public ResponseEntity<ControlResponse> updateControl(
             @Parameter(description = "ID du contrôle à mettre à jour") 
             @PathVariable Long id,
@@ -71,6 +76,7 @@ public class ControlController {
             description = "Supprime un contrôle de risque")
     @ApiResponse(responseCode = "204", description = "Contrôle supprimé avec succès")
     @ApiResponse(responseCode = "404", description = "Contrôle non trouvé")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_RISK_MANAGER')")
     public ResponseEntity<Void> deleteControl(
             @Parameter(description = "ID du contrôle à supprimer") 
             @PathVariable Long id) {
@@ -83,6 +89,7 @@ public class ControlController {
             description = "Récupère la liste des contrôles associés à un risque spécifique")
     @ApiResponse(responseCode = "200", description = "Liste des contrôles du risque récupérée avec succès")
     @ApiResponse(responseCode = "404", description = "Risque non trouvé")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_RISK_MANAGER', 'ROLE_COMPLIANCE_OFFICER', 'ROLE_AUDITOR', 'ROLE_USER')")
     public List<ControlResponse> getControlsByRisk(
             @Parameter(description = "ID du risque") 
             @PathVariable Long id) {

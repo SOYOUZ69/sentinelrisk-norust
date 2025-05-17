@@ -1,6 +1,6 @@
 export const environment = {
-  production: true,
-  apiUrl: '/api',
+  production: false,
+  apiUrl: 'http://localhost:8080/api/api',
   keycloakUrl: 'http://localhost:8081',
   keycloakRealm: 'sentinelrisk',
   keycloakClientId: 'sentinelrisk-frontend'

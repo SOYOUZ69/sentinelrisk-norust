@@ -53,11 +53,56 @@ export class KeycloakService {
   }
 
   hasRole(role: string): boolean {
-    return this.keycloakAngular.isUserInRole(role);
+    // Si le rôle recherché est vide, retourner false
+    if (!role) return false;
+    
+    // Obtenir les rôles de l'utilisateur
+    const userRoles = this.getUserRoles();
+    
+    // Convertir le rôle recherché en minuscules et supprimer les préfixes
+    const roleLower = role.toLowerCase().replace(/^role_/, '');
+    
+    // Journaliser pour débogage
+    console.debug(`[KeycloakService] Vérification du rôle: ${role} (normalisé: ${roleLower})`);
+    console.debug(`[KeycloakService] Rôles utilisateur: ${userRoles.join(', ')}`);
+    
+    // Vérifier si un des rôles de l'utilisateur correspond (indépendamment de la casse)
+    const hasRole = userRoles.some(userRole => {
+      // Normaliser le rôle utilisateur
+      const userRoleLower = userRole.toLowerCase();
+      
+      // Vérifier l'égalité directe indépendamment de la casse
+      const match = userRoleLower === roleLower;
+      console.debug(`[KeycloakService] Comparaison ${userRole} avec ${role}: ${match}`);
+      
+      return match;
+    });
+    
+    console.debug(`[KeycloakService] Résultat final pour ${role}: ${hasRole}`);
+    return hasRole;
+  }
+
+  hasAnyRole(roles: string[]): boolean {
+    return roles.some(role => this.hasRole(role));
   }
 
   getUsername(): string | undefined {
     const userDetails: KeycloakTokenParsed | undefined = this.keycloakAngular.getKeycloakInstance().tokenParsed;
     return userDetails ? userDetails['preferred_username'] as string : undefined;
+  }
+  
+  // Debug function to display all roles
+  logUserRoles(): void {
+    console.log('User roles:', this.getUserRoles());
+    
+    // Check standard roles
+    const standardRoles = ['admin', 'risk_manager', 'compliance_officer', 'auditor', 'user'];
+    standardRoles.forEach(role => {
+      console.log(`Has role '${role}': ${this.hasRole(role)}`);
+    });
+    
+    // Log user details from token
+    const token = this.keycloakAngular.getKeycloakInstance().tokenParsed;
+    console.log('Token data:', token);
   }
 } 

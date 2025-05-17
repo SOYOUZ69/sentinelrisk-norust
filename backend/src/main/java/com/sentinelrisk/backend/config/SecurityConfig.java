@@ -13,8 +13,15 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -36,19 +43,10 @@ public class SecurityConfig {
     private static final String[] DEBUG_WHITELIST = {
         "/debug/**",
         "/api/debug/**",
+        "/api/debug/jwt/**",
         "/api/debug/ping",
         "/api/debug/risks/**",
         "/api/test/**"
-    };
-    
-    private static final String[] ASSESSMENT_WHITELIST = {
-        "/api/assessments/**",
-        "/api/api/assessments/**"
-    };
-    
-    private static final String[] CATEGORY_WHITELIST = {
-        "/api/categories/**",
-        "/api/api/categories/**"
     };
 
     @Bean
@@ -63,8 +61,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(SWAGGER_WHITELIST).permitAll()
                 .requestMatchers(DEBUG_WHITELIST).permitAll()
-                .requestMatchers(ASSESSMENT_WHITELIST).permitAll()
-                .requestMatchers(CATEGORY_WHITELIST).permitAll()
+                // Toutes les autres requêtes nécessitent une authentification
+                // mais les permissions spécifiques sont gérées par les annotations @PreAuthorize
                 .anyRequest().authenticated()
             )
             .oauth2ResourceServer()
@@ -77,11 +75,78 @@ public class SecurityConfig {
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        grantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
+        
+        // Le claim "roles" est généralement imbriqué dans "realm_access" dans les jetons Keycloak
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("realm_access.roles");
         grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
+            // Log pour débogage
+            System.out.println("====== DÉBOGAGE JWT ======");
+            System.out.println("JWT Headers: " + jwt.getHeaders());
+            System.out.println("JWT Claims: " + jwt.getClaims());
+            System.out.println("JWT Subject: " + jwt.getSubject());
+            
+            // Récupérer les rôles depuis le claim 'realm_access'
+            Map<String, Object> realmAccess = jwt.getClaimAsMap("realm_access");
+            if (realmAccess != null && realmAccess.containsKey("roles")) {
+                @SuppressWarnings("unchecked")
+                List<String> roles = (List<String>) realmAccess.get("roles");
+                
+                System.out.println("Roles trouvés dans realm_access: " + roles);
+                
+                Collection<GrantedAuthority> authorities = roles.stream()
+                    .map(role -> {
+                        String formattedRole = "ROLE_" + role.toUpperCase();
+                        System.out.println("Ajout du rôle: " + formattedRole);
+                        return new SimpleGrantedAuthority(formattedRole);
+                    })
+                    .collect(Collectors.toList());
+                
+                System.out.println("Authorities finales: " + authorities);
+                return authorities;
+            }
+            
+            // Si on ne trouve pas de roles dans realm_access, chercher dans le resource_access
+            try {
+                Map<String, Object> resourceAccess = jwt.getClaimAsMap("resource_access");
+                if (resourceAccess != null) {
+                    System.out.println("Resource Access trouvé: " + resourceAccess);
+                    
+                    // Chercher les rôles dans le client 'sentinelrisk-frontend'
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> clientAccess = (Map<String, Object>) resourceAccess.get("sentinelrisk-frontend");
+                    
+                    if (clientAccess != null && clientAccess.containsKey("roles")) {
+                        @SuppressWarnings("unchecked")
+                        List<String> roles = (List<String>) clientAccess.get("roles");
+                        
+                        System.out.println("Roles trouvés dans resource_access.sentinelrisk-frontend: " + roles);
+                        
+                        Collection<GrantedAuthority> authorities = roles.stream()
+                            .map(role -> {
+                                String formattedRole = "ROLE_" + role.toUpperCase();
+                                System.out.println("Ajout du rôle client: " + formattedRole);
+                                return new SimpleGrantedAuthority(formattedRole);
+                            })
+                            .collect(Collectors.toList());
+                        
+                        if (!authorities.isEmpty()) {
+                            System.out.println("Authorities client finales: " + authorities);
+                            return authorities;
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Erreur lors de l'extraction des rôles resource_access: " + e.getMessage());
+            }
+            
+            System.out.println("Aucun rôle trouvé dans le token JWT!");
+            // Retourner une liste vide si aucun rôle n'est trouvé
+            return Collections.emptyList();
+        });
+        
         return jwtAuthenticationConverter;
     }
 

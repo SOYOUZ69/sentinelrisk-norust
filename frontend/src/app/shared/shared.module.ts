@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { HasRoleDirective } from './directives/has-role.directive';
 
 @NgModule({
   declarations: [
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    HasRoleDirective
   ],
   imports: [
     CommonModule,
@@ -14,7 +16,8 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
     MatButtonModule
   ],
   exports: [
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    HasRoleDirective
   ]
 })
 export class SharedModule { } 

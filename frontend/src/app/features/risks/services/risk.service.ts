@@ -306,8 +306,8 @@ export class RiskService {
     const formData = new FormData();
     formData.append('file', file);
     
-    // Utiliser directement HttpClient pour pouvoir envoyer le FormData
-    return this.http.post<ImportResult>(`${environment.apiUrl}${this.basePath}/bulk`, formData)
+    // Utiliser la méthode spécialisée pour les FormData
+    return this.apiService.postFormData<ImportResult>(`${this.basePath}/bulk`, formData)
       .pipe(
         catchError(error => {
           console.error('Erreur lors de l\'import du fichier CSV', error);

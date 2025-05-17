@@ -24,6 +24,7 @@ import { RiskDetailComponent } from './risk-detail/risk-detail.component';
 
 // Shared modules
 import { AdminSharedModule } from '../admin/shared/admin-shared.module';
+import { SharedModule } from '../../shared/shared.module';
 
 const routes: Routes = [
   { path: '', component: RisksComponent },
@@ -40,6 +41,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     ReactiveFormsModule,
     AdminSharedModule,
+    SharedModule,
     
     // Material modules
     MatTableModule,

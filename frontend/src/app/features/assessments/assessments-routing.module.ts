@@ -7,21 +7,23 @@ import { AssessmentFormComponent } from './components/assessment-form/assessment
 const routes: Routes = [
   {
     path: '',
-    component: AssessmentListComponent
+    component: AssessmentListComponent,
+    data: { roles: ['admin', 'compliance_officer', 'risk_manager', 'auditor', 'user'] }
   },
   {
     path: 'new',
     component: AssessmentFormComponent,
-    data: { title: 'Nouvelle évaluation', isEdit: false }
+    data: { title: 'Nouvelle évaluation', isEdit: false, roles: ['admin', 'compliance_officer'] }
   },
   {
     path: ':id',
-    component: AssessmentDetailComponent
+    component: AssessmentDetailComponent,
+    data: { roles: ['admin', 'compliance_officer', 'risk_manager', 'auditor', 'user'] }
   },
   {
     path: ':id/edit',
     component: AssessmentFormComponent,
-    data: { title: 'Modifier l\'évaluation', isEdit: true }
+    data: { title: 'Modifier l\'évaluation', isEdit: true, roles: ['admin', 'compliance_officer'] }
   }
 ];
 

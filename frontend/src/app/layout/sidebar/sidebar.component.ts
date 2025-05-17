@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { KeycloakService } from '../../core/auth/keycloak.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -8,7 +9,7 @@ import { Component } from '@angular/core';
         <mat-icon matListItemIcon>dashboard</mat-icon>
         <span matListItemTitle>Tableau de bord</span>
       </a>
-      <a mat-list-item routerLink="/users" routerLinkActive="active">
+      <a mat-list-item routerLink="/users" routerLinkActive="active" *appHasRole="['admin']">
         <mat-icon matListItemIcon>people</mat-icon>
         <span matListItemTitle>Utilisateurs</span>
       </a>
@@ -42,4 +43,6 @@ import { Component } from '@angular/core';
     }
   `]
 })
-export class SidebarComponent {} 
+export class SidebarComponent {
+  constructor(private keycloakService: KeycloakService) {}
+} 

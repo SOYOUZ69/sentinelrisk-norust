@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class AssessmentController {
     @Operation(summary = "Lister toutes les évaluations",
             description = "Récupère la liste complète des évaluations de risque")
     @ApiResponse(responseCode = "200", description = "Liste des évaluations récupérée avec succès")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_COMPLIANCE_OFFICER', 'ROLE_RISK_MANAGER', 'ROLE_AUDITOR')")
     public ResponseEntity<List<Map<String, Object>>> getAllAssessments() {
         List<Assessment> assessments = assessmentService.getAllAssessments();
         List<Map<String, Object>> responseList = new ArrayList<>();
@@ -53,6 +55,7 @@ public class AssessmentController {
             description = "Récupère les détails d'une évaluation spécifique via son ID")
     @ApiResponse(responseCode = "200", description = "Évaluation trouvée")
     @ApiResponse(responseCode = "404", description = "Évaluation non trouvée")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_COMPLIANCE_OFFICER', 'ROLE_RISK_MANAGER', 'ROLE_AUDITOR', 'ROLE_USER')")
     public ResponseEntity<Map<String, Object>> getAssessmentById(
             @Parameter(description = "ID de l'évaluation à récupérer") 
             @PathVariable Long id) {
@@ -66,6 +69,7 @@ public class AssessmentController {
             description = "Crée une nouvelle évaluation de risque")
     @ApiResponse(responseCode = "201", description = "Évaluation créée avec succès")
     @ApiResponse(responseCode = "400", description = "Données d'évaluation invalides")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_COMPLIANCE_OFFICER')")
     public ResponseEntity<Map<String, Object>> createAssessment(
             @Parameter(description = "Données de l'évaluation à créer") 
             @Valid @RequestBody Assessment assessment) {
@@ -79,6 +83,7 @@ public class AssessmentController {
             description = "Met à jour les informations d'une évaluation existante")
     @ApiResponse(responseCode = "200", description = "Évaluation mise à jour avec succès")
     @ApiResponse(responseCode = "404", description = "Évaluation non trouvée")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_COMPLIANCE_OFFICER')")
     public ResponseEntity<Map<String, Object>> updateAssessment(
             @Parameter(description = "ID de l'évaluation à mettre à jour") 
             @PathVariable Long id,
@@ -94,6 +99,7 @@ public class AssessmentController {
             description = "Supprime une évaluation de risque")
     @ApiResponse(responseCode = "204", description = "Évaluation supprimée avec succès")
     @ApiResponse(responseCode = "404", description = "Évaluation non trouvée")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_COMPLIANCE_OFFICER')")
     public ResponseEntity<Void> deleteAssessment(
             @Parameter(description = "ID de l'évaluation à supprimer") 
             @PathVariable Long id) {
@@ -106,6 +112,7 @@ public class AssessmentController {
             description = "Récupère la liste des évaluations assignées à un utilisateur spécifique")
     @ApiResponse(responseCode = "200", description = "Liste des évaluations de l'utilisateur récupérée avec succès")
     @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_COMPLIANCE_OFFICER', 'ROLE_RISK_MANAGER', 'ROLE_AUDITOR', 'ROLE_USER')")
     public ResponseEntity<List<Map<String, Object>>> getAssessmentsByUser(
             @Parameter(description = "ID de l'utilisateur") 
             @PathVariable String userId) {
@@ -124,6 +131,7 @@ public class AssessmentController {
     @Operation(summary = "Lister les évaluations par risque",
             description = "Récupère la liste des évaluations liées à un risque spécifique")
     @ApiResponse(responseCode = "200", description = "Liste des évaluations du risque récupérée avec succès")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_COMPLIANCE_OFFICER', 'ROLE_RISK_MANAGER', 'ROLE_AUDITOR', 'ROLE_USER')")
     public ResponseEntity<List<Map<String, Object>>> getAssessmentsByRisk(
             @Parameter(description = "ID du risque") 
             @PathVariable Long riskId) {

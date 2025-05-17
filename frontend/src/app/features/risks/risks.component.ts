@@ -7,6 +7,7 @@ import { RiskService } from './services/risk.service';
 import { RiskFormDialogComponent, RiskFormDialogData } from './risk-form-dialog/risk-form-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../admin/shared/confirm-dialog/confirm-dialog.component';
 import { RiskImportDialogComponent } from './risk-import-dialog/risk-import-dialog.component';
+import { KeycloakService } from '../../core/auth/keycloak.service';
 
 @Component({
   selector: 'app-risks',
@@ -43,11 +44,14 @@ export class RisksComponent implements OnInit {
     [ProbabilityLevel.ALMOST_CERTAIN]: 'Quasi-certain'
   };
 
+  showDebug = false;
+
   constructor(
     private riskService: RiskService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    public keycloakService: KeycloakService
   ) {}
 
   ngOnInit(): void {

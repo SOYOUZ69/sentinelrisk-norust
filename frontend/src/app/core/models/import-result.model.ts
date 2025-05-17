@@ -3,5 +3,14 @@
  */
 export interface ImportResult {
   importedCount: number;
-  errors: string[];
+  errors: ImportError[];
+}
+
+/**
+ * Modèle pour une erreur d'importation
+ */
+export interface ImportError {
+  row: number;
+  field: string;
+  message: string;
 } 

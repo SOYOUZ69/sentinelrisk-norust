@@ -212,4 +212,30 @@
       color: #616161;
     }
   }
+}
+
+.debug-box {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  
+  h3 {
+    margin-top: 0;
+    color: #6c757d;
+  }
+  
+  ul {
+    padding-left: 20px;
+  }
+  
+  li {
+    margin-bottom: 5px;
+  }
+}
+
+.debug-button {
+  margin-right: 10px;
 } 
