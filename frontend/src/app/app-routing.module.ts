@@ -23,6 +23,11 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   { 
+    path: 'compliance',
+    loadChildren: () => import('./features/compliance/compliance.module').then(m => m.ComplianceModule),
+    canActivate: [AuthGuard]
+  },
+  { 
     path: '404', 
     component: PageNotFoundComponent 
   },

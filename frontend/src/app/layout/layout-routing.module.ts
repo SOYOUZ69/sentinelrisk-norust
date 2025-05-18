@@ -41,6 +41,11 @@ const routes: Routes = [
         path: 'assessments',
         loadChildren: () => import('../features/assessments/assessments.module').then(m => m.AssessmentsModule),
         data: { roles: ['admin', 'compliance_officer', 'risk_manager', 'auditor', 'user'] }
+      },
+      {
+        path: 'compliance',
+        loadChildren: () => import('../features/compliance/compliance.module').then(m => m.ComplianceModule),
+        data: { roles: ['admin', 'compliance_officer', 'risk_manager', 'auditor', 'user'] }
       }
     ]
   }

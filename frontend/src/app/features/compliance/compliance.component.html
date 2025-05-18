@@ -1,0 +1,41 @@
+<div class="compliance-container">
+  <div class="page-header">
+    <h1>Gestion de la Conformité</h1>
+    <p class="subtitle">Gérez les référentiels normatifs et les mappings avec les risques</p>
+  </div>
+
+  <nav mat-tab-nav-bar class="compliance-nav">
+    <a mat-tab-link
+       routerLink="frameworks"
+       routerLinkActive #rlFrameworks="routerLinkActive"
+       [active]="rlFrameworks.isActive">
+       <mat-icon>library_books</mat-icon>
+       Référentiels Normatifs
+    </a>
+    <a mat-tab-link
+       routerLink="requirements"
+       routerLinkActive #rlRequirements="routerLinkActive"
+       [active]="rlRequirements.isActive">
+       <mat-icon>assignment</mat-icon>
+       Exigences
+    </a>
+    <a mat-tab-link
+       routerLink="mappings"
+       routerLinkActive #rlMapping="routerLinkActive"
+       [active]="rlMapping.isActive">
+       <mat-icon>link</mat-icon>
+       Mappings Risques-Conformité
+    </a>
+    <a mat-tab-link
+       routerLink="gap-analysis"
+       routerLinkActive #rlGap="routerLinkActive"
+       [active]="rlGap.isActive">
+       <mat-icon>analytics</mat-icon>
+       Analyse d'Écarts
+    </a>
+  </nav>
+
+  <div class="compliance-content">
+    <router-outlet></router-outlet>
+  </div>
+</div> 

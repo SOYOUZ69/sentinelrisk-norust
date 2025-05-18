@@ -1,0 +1,115 @@
+<div class="requirements-container">
+  <div class="requirements-header">
+    <h2>Exigences de Conformité</h2>
+    <button mat-raised-button color="primary" (click)="openRequirementDialog()">
+      <mat-icon>add</mat-icon>
+      Nouvelle Exigence
+    </button>
+  </div>
+
+  <mat-form-field appearance="outline" class="filter-field">
+    <mat-label>Rechercher</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. SEC-01" #input>
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  <div class="filters-container">
+    <mat-form-field appearance="outline">
+      <mat-label>Référentiel</mat-label>
+      <mat-select [(value)]="selectedFramework" (selectionChange)="filterByFramework()">
+        <mat-option [value]="''">Tous les référentiels</mat-option>
+        <mat-option *ngFor="let framework of frameworks" [value]="framework.id">
+          {{framework.name}} ({{framework.version}})
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Type</mat-label>
+      <mat-select [(value)]="selectedType" (selectionChange)="filterByType()">
+        <mat-option [value]="''">Tous les types</mat-option>
+        <mat-option value="PREVENTIVE">Préventif</mat-option>
+        <mat-option value="DETECTIVE">Détectif</mat-option>
+        <mat-option value="CORRECTIVE">Correctif</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="loading-error-container" *ngIf="isLoading || error">
+    <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+    <div *ngIf="error" class="error-message">
+      <mat-icon>error</mat-icon>
+      <span>{{ error }}</span>
+    </div>
+  </div>
+
+  <div class="mat-elevation-z2 data-table-container">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <!-- Code Column -->
+      <ng-container matColumnDef="code">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Code </th>
+        <td mat-cell *matCellDef="let requirement"> {{requirement.code}} </td>
+      </ng-container>
+
+      <!-- Framework Column -->
+      <ng-container matColumnDef="framework">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Référentiel </th>
+        <td mat-cell *matCellDef="let requirement">
+          <div class="framework-info" *ngIf="requirement.framework; else noFramework">
+            <span class="framework-name">{{ requirement.framework?.name }}</span>
+            <span class="framework-version" *ngIf="requirement.framework?.version">({{ requirement.framework?.version }})</span>
+          </div>
+          <ng-template #noFramework>-</ng-template>
+        </td>
+      </ng-container>
+
+      <!-- Description Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef> Description </th>
+        <td mat-cell *matCellDef="let requirement"> {{requirement.description}} </td>
+      </ng-container>
+
+      <!-- Type Column -->
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Type </th>
+        <td mat-cell *matCellDef="let requirement"> 
+          <span [ngClass]="getTypeClass(requirement.type)">
+            {{getTypeLabel(requirement.type)}}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let requirement">
+          <button mat-icon-button color="primary" matTooltip="Voir les détails">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button mat-icon-button color="accent" (click)="openRequirementDialog(requirement)" matTooltip="Modifier">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteRequirement(requirement.id)" matTooltip="Supprimer">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="5">
+          <div class="no-data-message">
+            <mat-icon>info</mat-icon>
+            <span *ngIf="input.value">Aucune exigence trouvée pour "{{input.value}}"</span>
+            <span *ngIf="!input.value && !isLoading && !error">Aucune exigence disponible</span>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+  </div>
+</div>

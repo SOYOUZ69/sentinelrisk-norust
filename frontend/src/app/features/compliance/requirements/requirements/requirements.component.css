@@ -1,0 +1,131 @@
+.requirements-container {
+  padding: 20px;
+}
+
+.requirements-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.requirements-header h2 {
+  margin: 0;
+  font-weight: 500;
+  color: #333;
+}
+
+.filter-field {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.filters-container {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.filters-container mat-form-field {
+  flex: 1;
+}
+
+.loading-error-container {
+  margin-bottom: 15px;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  color: #f44336;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: rgba(244, 67, 54, 0.1);
+}
+
+.error-message mat-icon {
+  margin-right: 10px;
+}
+
+.data-table-container {
+  overflow-x: auto;
+  border-radius: 4px;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-column-code {
+  width: 120px;
+}
+
+.mat-column-framework {
+  width: 200px;
+}
+
+.mat-column-description {
+  min-width: 300px;
+}
+
+.mat-column-type {
+  width: 120px;
+}
+
+.mat-column-actions {
+  width: 150px;
+  text-align: center;
+}
+
+.no-data-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: #666;
+}
+
+.no-data-message mat-icon {
+  margin-right: 10px;
+  color: #999;
+}
+
+/* Styles pour les types d'exigences */
+.preventive-type, .detective-type, .corrective-type {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  display: inline-block;
+}
+
+.preventive-type {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.detective-type {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.corrective-type {
+  background-color: #fff8e1;
+  color: #ff8f00;
+}
+
+/* Styles pour l'affichage du framework */
+.framework-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.framework-name {
+  font-weight: 500;
+  color: #333;
+}
+
+.framework-version {
+  font-size: 0.8em;
+  color: #777;
+  margin-top: 2px;
+}

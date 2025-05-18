@@ -1,0 +1,134 @@
+.framework-detail-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.back-button {
+  margin-bottom: 16px;
+}
+
+.loading-error-container {
+  margin-bottom: 16px;
+
+  .error-message {
+    display: flex;
+    align-items: center;
+    color: #f44336;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: rgba(244, 67, 54, 0.1);
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+.framework-detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.framework-info-card {
+  .card-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  mat-card-content {
+    margin-top: 16px;
+    
+    p {
+      margin: 0;
+      line-height: 1.5;
+    }
+  }
+}
+
+.requirements-section {
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 500;
+    }
+  }
+}
+
+.data-table-container {
+  overflow: auto;
+  border-radius: 4px;
+  
+  table {
+    width: 100%;
+  }
+
+  .mat-column-code {
+    min-width: 120px;
+    max-width: 120px;
+  }
+
+  .mat-column-description {
+    min-width: 200px;
+  }
+
+  .mat-column-type {
+    min-width: 120px;
+    max-width: 150px;
+  }
+
+  .mat-column-actions {
+    min-width: 120px;
+    max-width: 120px;
+    text-align: center;
+  }
+
+  td.mat-cell, th.mat-header-cell {
+    padding: 0 16px;
+  }
+
+  .no-data-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    color: rgba(0, 0, 0, 0.54);
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+.type-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+
+  &.preventive {
+    background-color: #e3f2fd;
+    color: #1976d2;
+  }
+
+  &.detective {
+    background-color: #fff8e1;
+    color: #ff8f00;
+  }
+
+  &.corrective {
+    background-color: #ffebee;
+    color: #d32f2f;
+  }
+} 

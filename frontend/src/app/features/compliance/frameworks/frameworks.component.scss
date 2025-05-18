@@ -1,0 +1,87 @@
+.frameworks-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.frameworks-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+
+.filter-field {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.loading-error-container {
+  margin-bottom: 16px;
+
+  .error-message {
+    display: flex;
+    align-items: center;
+    color: #f44336;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: rgba(244, 67, 54, 0.1);
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+.data-table-container {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  border-radius: 4px;
+  
+  table {
+    width: 100%;
+  }
+
+  .mat-column-name {
+    min-width: 150px;
+    max-width: 250px;
+  }
+
+  .mat-column-version {
+    min-width: 100px;
+    max-width: 150px;
+  }
+
+  .mat-column-description {
+    min-width: 200px;
+  }
+
+  .mat-column-actions {
+    min-width: 120px;
+    max-width: 120px;
+    text-align: center;
+  }
+
+  td.mat-cell, th.mat-header-cell {
+    padding: 0 16px;
+  }
+
+  .no-data-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    color: rgba(0, 0, 0, 0.54);
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+} 

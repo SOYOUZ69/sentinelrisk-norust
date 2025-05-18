@@ -1,0 +1,150 @@
+<div class="gap-analysis-container">
+  <div class="gap-analysis-header">
+    <h2>Analyse d'Écarts de Conformité</h2>
+  </div>
+
+  <div class="filter-container">
+    <div class="filter-row">
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Sélectionner un référentiel</mat-label>
+        <mat-select [(value)]="selectedFramework" (selectionChange)="loadGapAnalysis()">
+          <mat-option *ngFor="let framework of frameworks" [value]="framework.id">
+            {{ framework.name }} ({{ framework.version }})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Sélectionner un risque (optionnel)</mat-label>
+        <mat-select [(value)]="selectedRisk" (selectionChange)="loadGapAnalysis()">
+          <mat-option [value]="''">Tous les risques</mat-option>
+          <mat-option *ngFor="let risk of risks" [value]="risk.id">
+            {{ risk.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="loading-error-container" *ngIf="isLoading || error">
+    <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+    <div *ngIf="error" class="error-message">
+      <mat-icon>error</mat-icon>
+      <span>{{ error }}</span>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!isLoading && !error">
+    <div *ngIf="!selectedFramework" class="no-framework-selected">
+      <mat-icon>info</mat-icon>
+      <p>Veuillez sélectionner un référentiel pour afficher l'analyse d'écarts.</p>
+    </div>
+
+    <ng-container *ngIf="selectedFramework && gapAnalysisResult">
+      <!-- Dashboard Cards -->
+      <div class="dashboard-cards">
+        <mat-card class="dashboard-card">
+          <div class="card-content">
+            <div class="card-icon compliant">
+              <mat-icon>check_circle</mat-icon>
+            </div>
+            <div class="card-stats">
+              <span class="stat-value">{{compliantCount}}</span>
+              <span class="stat-label">Conforme</span>
+            </div>
+          </div>
+        </mat-card>
+
+        <mat-card class="dashboard-card">
+          <div class="card-content">
+            <div class="card-icon non-compliant">
+              <mat-icon>cancel</mat-icon>
+            </div>
+            <div class="card-stats">
+              <span class="stat-value">{{nonCompliantCount}}</span>
+              <span class="stat-label">Non conforme</span>
+            </div>
+          </div>
+        </mat-card>
+
+        <mat-card class="dashboard-card">
+          <div class="card-content">
+            <div class="card-icon partially-compliant">
+              <mat-icon>remove_circle</mat-icon>
+            </div>
+            <div class="card-stats">
+              <span class="stat-value">{{partiallyCompliantCount}}</span>
+              <span class="stat-label">Partiellement conforme</span>
+            </div>
+          </div>
+        </mat-card>
+
+        <mat-card class="dashboard-card">
+          <div class="card-content">
+            <div class="card-icon not-applicable">
+              <mat-icon>not_interested</mat-icon>
+            </div>
+            <div class="card-stats">
+              <span class="stat-value">{{notApplicableCount}}</span>
+              <span class="stat-label">Non applicable</span>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+
+      <!-- Compliance Progress -->
+      <mat-card class="progress-card">
+        <mat-card-header>
+          <mat-card-title>Progression de la conformité</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="progress-bar-container">
+            <div class="progress-label">
+              <span>{{compliancePercentage | number:'1.0-1'}}%</span>
+            </div>
+            <mat-progress-bar mode="determinate" [value]="compliancePercentage"></mat-progress-bar>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Gap Analysis Table -->
+      <mat-card class="gap-table-card">
+        <mat-card-header>
+          <mat-card-title>Exigences non couvertes ({{dataSource.data.length}})</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="gap-table-container">
+            <table mat-table [dataSource]="dataSource" matSort>
+              <!-- Code Column -->
+              <ng-container matColumnDef="code">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Code </th>
+                <td mat-cell *matCellDef="let requirement"> {{requirement.code}} </td>
+              </ng-container>
+
+              <!-- Description Column -->
+              <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef> Description </th>
+                <td mat-cell *matCellDef="let requirement"> {{requirement.description}} </td>
+              </ng-container>
+
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Actions </th>
+                <td mat-cell *matCellDef="let requirement">
+                  <button mat-icon-button color="primary" [matTooltip]="'Créer un plan d\'action'" (click)="createActionPlan(requirement)">
+                    <mat-icon>assignment</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </ng-container>
+  </ng-container>
+</div>

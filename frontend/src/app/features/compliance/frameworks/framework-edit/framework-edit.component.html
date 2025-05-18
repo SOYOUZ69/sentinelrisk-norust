@@ -1,0 +1,69 @@
+<div class="framework-edit-container">
+  <div class="back-button">
+    <button mat-icon-button color="primary" (click)="goBack()" matTooltip="Retour au framework">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </div>
+
+  <h2>Modifier le Référentiel Normatif</h2>
+
+  <div class="loading-error-container" *ngIf="isLoading || error">
+    <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+    <div *ngIf="error" class="error-message">
+      <mat-icon>error</mat-icon>
+      <span>{{ error }}</span>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && !error && isAdmin" class="form-container">
+    <form [formGroup]="frameworkForm" (ngSubmit)="onSubmit()">
+      <mat-card>
+        <mat-card-content>
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Nom</mat-label>
+            <input matInput formControlName="name" placeholder="Ex: ISO 27001" required>
+            <mat-error *ngIf="frameworkForm.get('name')?.hasError('required')">
+              Le nom est obligatoire
+            </mat-error>
+            <mat-error *ngIf="frameworkForm.get('name')?.hasError('maxlength')">
+              Le nom ne doit pas dépasser 100 caractères
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Version</mat-label>
+            <input matInput formControlName="version" placeholder="Ex: 2022" required>
+            <mat-error *ngIf="frameworkForm.get('version')?.hasError('required')">
+              La version est obligatoire
+            </mat-error>
+            <mat-error *ngIf="frameworkForm.get('version')?.hasError('maxlength')">
+              La version ne doit pas dépasser 20 caractères
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" placeholder="Description du référentiel normatif" rows="4"></textarea>
+            <mat-error *ngIf="frameworkForm.get('description')?.hasError('maxlength')">
+              La description ne doit pas dépasser 500 caractères
+            </mat-error>
+          </mat-form-field>
+        </mat-card-content>
+
+        <mat-card-actions align="end">
+          <button mat-button type="button" (click)="goBack()">Annuler</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="frameworkForm.invalid">
+            Enregistrer
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </form>
+  </div>
+
+  <div *ngIf="!isLoading && !error && !isAdmin" class="not-authorized">
+    <mat-icon color="warn">block</mat-icon>
+    <h3>Accès non autorisé</h3>
+    <p>Vous n'avez pas les droits nécessaires pour modifier un référentiel normatif.</p>
+    <button mat-raised-button color="primary" (click)="goBack()">Retour aux référentiels</button>
+  </div>
+</div>

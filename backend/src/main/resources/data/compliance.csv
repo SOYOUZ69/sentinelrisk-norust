@@ -1,0 +1,34 @@
+framework_name,framework_version,framework_description,requirement_code,requirement_description,requirement_type
+ISO 27001,2022,Framework international pour la sécurité de l'information,A.5.1,Politiques de sécurité de l'information - Les politiques doivent être définies et approuvées par la direction,PREVENTIVE
+ISO 27001,2022,Framework international pour la sécurité de l'information,A.5.2,Revue des politiques de sécurité - Les politiques doivent être revues à intervalles planifiés,DETECTIVE
+ISO 27001,2022,Framework international pour la sécurité de l'information,A.6.1,Organisation interne - Attribution des responsabilités pour la sécurité de l'information,PREVENTIVE
+ISO 27001,2022,Framework international pour la sécurité de l'information,A.6.2,Appareils mobiles et télétravail - Sécurisation des équipements nomades,PREVENTIVE
+ISO 27001,2022,Framework international pour la sécurité de l'information,A.7.1,Avant l'embauche - Vérifications préalables à l'embauche,PREVENTIVE
+ISO 27001,2022,Framework international pour la sécurité de l'information,A.7.2,Pendant l'embauche - Sensibilisation à la sécurité,PREVENTIVE
+ISO 27001,2022,Framework international pour la sécurité de l'information,A.7.3,Fin ou changement d'emploi - Restitution des actifs et révocation des droits d'accès,CORRECTIVE
+GDPR,2016,Règlement Général sur la Protection des Données de l'UE,Art.5,Principes relatifs au traitement des données (licéité, finalité, minimisation),PREVENTIVE
+GDPR,2016,Règlement Général sur la Protection des Données de l'UE,Art.6,Licéité du traitement - Base légale requise pour tout traitement,PREVENTIVE
+GDPR,2016,Règlement Général sur la Protection des Données de l'UE,Art.7,Conditions applicables au consentement - Démontrable et révocable,PREVENTIVE
+GDPR,2016,Règlement Général sur la Protection des Données de l'UE,Art.12,Transparence des informations - Informations claires et accessibles,PREVENTIVE
+GDPR,2016,Règlement Général sur la Protection des Données de l'UE,Art.15,Droit d'accès - Accès aux données personnelles par la personne concernée,CORRECTIVE
+GDPR,2016,Règlement Général sur la Protection des Données de l'UE,Art.16,Droit de rectification - Correction des données inexactes,CORRECTIVE
+GDPR,2016,Règlement Général sur la Protection des Données de l'UE,Art.17,Droit à l'effacement - Suppression des données dans certaines circonstances,CORRECTIVE
+GDPR,2016,Règlement Général sur la Protection des Données de l'UE,Art.32,Sécurité du traitement - Mesures techniques et organisationnelles appropriées,PREVENTIVE
+GDPR,2016,Règlement Général sur la Protection des Données de l'UE,Art.33,Notification de violation - Notification à l'autorité de contrôle,DETECTIVE
+GDPR,2016,Règlement Général sur la Protection des Données de l'UE,Art.35,Analyse d'impact - Pour les traitements à haut risque,DETECTIVE
+NIST SP 800-53,Rev. 5,Contrôles de sécurité et de confidentialité pour les systèmes d'information fédéraux,AC-1,Politique et procédures de contrôle d'accès,PREVENTIVE
+NIST SP 800-53,Rev. 5,Contrôles de sécurité et de confidentialité pour les systèmes d'information fédéraux,AC-2,Gestion des comptes,PREVENTIVE
+NIST SP 800-53,Rev. 5,Contrôles de sécurité et de confidentialité pour les systèmes d'information fédéraux,AC-3,Application du contrôle d'accès,PREVENTIVE
+NIST SP 800-53,Rev. 5,Contrôles de sécurité et de confidentialité pour les systèmes d'information fédéraux,AU-2,Événements auditables,DETECTIVE
+NIST SP 800-53,Rev. 5,Contrôles de sécurité et de confidentialité pour les systèmes d'information fédéraux,AU-6,Examen, analyse et reporting d'audit,DETECTIVE
+NIST SP 800-53,Rev. 5,Contrôles de sécurité et de confidentialité pour les systèmes d'information fédéraux,CM-3,Contrôle des changements de configuration,PREVENTIVE
+NIST SP 800-53,Rev. 5,Contrôles de sécurité et de confidentialité pour les systèmes d'information fédéraux,CP-2,Plan de contingence,CORRECTIVE
+NIST SP 800-53,Rev. 5,Contrôles de sécurité et de confidentialité pour les systèmes d'information fédéraux,IR-4,Gestion des incidents,CORRECTIVE
+SOC 2,2017,Contrôles pour la sécurité, la disponibilité, l'intégrité, la confidentialité et la protection de la vie privée,CC1.1,Engagement envers l'intégrité et les valeurs éthiques,PREVENTIVE
+SOC 2,2017,Contrôles pour la sécurité, la disponibilité, l'intégrité, la confidentialité et la protection de la vie privée,CC1.2,Responsabilité de surveillance du conseil d'administration,PREVENTIVE
+SOC 2,2017,Contrôles pour la sécurité, la disponibilité, l'intégrité, la confidentialité et la protection de la vie privée,CC3.1,Spécification d'objectifs de qualité de l'information,PREVENTIVE
+SOC 2,2017,Contrôles pour la sécurité, la disponibilité, l'intégrité, la confidentialité et la protection de la vie privée,CC4.1,Identification et évaluation des risques,DETECTIVE
+SOC 2,2017,Contrôles pour la sécurité, la disponibilité, l'intégrité, la confidentialité et la protection de la vie privée,CC5.1,Politiques de sécurité logique,PREVENTIVE
+SOC 2,2017,Contrôles pour la sécurité, la disponibilité, l'intégrité, la confidentialité et la protection de la vie privée,CC6.1,Activités de contrôle d'accès logique,PREVENTIVE
+SOC 2,2017,Contrôles pour la sécurité, la disponibilité, l'intégrité, la confidentialité et la protection de la vie privée,CC7.1,Activités de surveillance continue,DETECTIVE
+SOC 2,2017,Contrôles pour la sécurité, la disponibilité, l'intégrité, la confidentialité et la protection de la vie privée,CC8.1,Évaluation des risques liés aux changements,DETECTIVE 

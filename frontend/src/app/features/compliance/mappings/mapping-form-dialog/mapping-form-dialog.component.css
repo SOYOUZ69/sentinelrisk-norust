@@ -1,0 +1,31 @@
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 500px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.spinner-button {
+  display: inline-block;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+::ng-deep .mat-mdc-progress-spinner circle {
+  stroke: #fff !important;
+}
+
+/* Pour forcer une hauteur minimale du contenu */
+mat-dialog-content {
+  max-height: 70vh;
+  min-height: 300px;
+}
+
+/* Pour augmenter l'espace entre les champs */
+mat-form-field {
+  margin-bottom: 8px;
+}

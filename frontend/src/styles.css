@@ -8,3 +8,31 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif; 
   background-color: #f5f5f5;
 }
+
+/* Styles pour les snackbars */
+.success-snackbar {
+  background-color: #e8f5e9 !important;
+  color: #2e7d32 !important;
+}
+
+.success-snackbar .mat-simple-snackbar-action {
+  color: #2e7d32 !important;
+}
+
+.error-snackbar {
+  background-color: #ffebee !important;
+  color: #c62828 !important;
+}
+
+.error-snackbar .mat-simple-snackbar-action {
+  color: #c62828 !important;
+}
+
+.info-snackbar {
+  background-color: #e3f2fd !important;
+  color: #1565c0 !important;
+}
+
+.info-snackbar .mat-simple-snackbar-action {
+  color: #1565c0 !important;
+}

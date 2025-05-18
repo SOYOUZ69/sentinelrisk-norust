@@ -1,0 +1,80 @@
+<h2 mat-dialog-title>{{ dialogTitle }}</h2>
+
+<form [formGroup]="mappingForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="form-fields">
+      <input type="hidden" formControlName="id">
+
+      <!-- Sélection du risque -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Risque</mat-label>
+        <mat-select formControlName="riskId" required>
+          <mat-option *ngFor="let risk of risks" [value]="risk.id">
+            {{ risk.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="mappingForm.get('riskId')?.hasError('required')">
+          Le risque est obligatoire
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Sélection du référentiel (pour filtrer les exigences) -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Référentiel</mat-label>
+        <mat-select [(value)]="selectedFramework" (selectionChange)="onFrameworkChange()">
+          <mat-option [value]="''">Tous les référentiels</mat-option>
+          <mat-option *ngFor="let framework of frameworks" [value]="framework.id">
+            {{ framework.name }} ({{ framework.version }})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Sélection de l'exigence -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Exigence</mat-label>
+        <mat-select formControlName="requirementId" required>
+          <mat-option *ngFor="let requirement of filteredRequirements" [value]="requirement.id">
+            {{ requirement.code }} - {{ requirement.description | slice:0:50 }}{{ requirement.description.length > 50 ? '...' : '' }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="mappingForm.get('requirementId')?.hasError('required')">
+          L'exigence est obligatoire
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Statut de conformité -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Statut de conformité</mat-label>
+        <mat-select formControlName="status" required>
+          <mat-option value="COMPLIANT">Conforme</mat-option>
+          <mat-option value="NON_COMPLIANT">Non conforme</mat-option>
+          <mat-option value="PARTIALLY_COMPLIANT">Partiellement conforme</mat-option>
+          <mat-option value="NOT_APPLICABLE">Non applicable</mat-option>
+        </mat-select>
+        <mat-error *ngIf="mappingForm.get('status')?.hasError('required')">
+          Le statut est obligatoire
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Commentaire -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Commentaire</mat-label>
+        <textarea matInput formControlName="comment" placeholder="Commentaire sur le mapping" rows="2"></textarea>
+      </mat-form-field>
+
+      <!-- Preuves -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Preuves/Evidences</mat-label>
+        <textarea matInput formControlName="evidence" placeholder="Justificatifs, preuves ou documents associés" rows="3"></textarea>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()" [disabled]="isSubmitting">Annuler</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="mappingForm.invalid || isSubmitting">
+      <mat-spinner *ngIf="isSubmitting" diameter="20" class="spinner-button"></mat-spinner>
+      <span *ngIf="!isSubmitting">{{ isEditMode ? 'Mettre à jour' : 'Créer' }}</span>
+    </button>
+  </mat-dialog-actions>
+</form>

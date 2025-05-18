@@ -29,6 +29,35 @@ import { KeycloakService } from '../../core/auth/keycloak.service';
         <mat-icon matListItemIcon>assessment</mat-icon>
         <span matListItemTitle>Évaluations</span>
       </a>
+      
+      <!-- Menu Conformité avec sous-menus -->
+      <mat-expansion-panel class="mat-elevation-z0">
+        <mat-expansion-panel-header expandedHeight="48px" collapsedHeight="48px">
+          <mat-panel-title class="sidebar-menu-title">
+            <mat-icon>gavel</mat-icon>
+            <span>Conformité</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        
+        <mat-nav-list class="sub-menu">
+          <a mat-list-item routerLink="/compliance/frameworks" routerLinkActive="active">
+            <mat-icon matListItemIcon>library_books</mat-icon>
+            <span matListItemTitle>Référentiels Normatifs</span>
+          </a>
+          <a mat-list-item routerLink="/compliance/requirements" routerLinkActive="active">
+            <mat-icon matListItemIcon>fact_check</mat-icon>
+            <span matListItemTitle>Exigences</span>
+          </a>
+          <a mat-list-item routerLink="/compliance/mappings" routerLinkActive="active">
+            <mat-icon matListItemIcon>link</mat-icon>
+            <span matListItemTitle>Mappings Risques-Conformité</span>
+          </a>
+          <a mat-list-item routerLink="/compliance/gap-analysis" routerLinkActive="active">
+            <mat-icon matListItemIcon>analytics</mat-icon>
+            <span matListItemTitle>Analyse d'Écarts</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
     </mat-nav-list>
   `,
   styles: [`
@@ -40,6 +69,24 @@ import { KeycloakService } from '../../core/auth/keycloak.service';
     }
     mat-icon {
       margin-right: 8px;
+    }
+    .sidebar-menu-title {
+      display: flex;
+      align-items: center;
+      height: 48px;
+    }
+    .sidebar-menu-title mat-icon {
+      margin-right: 8px;
+    }
+    .sub-menu {
+      padding-left: 8px;
+    }
+    mat-expansion-panel {
+      box-shadow: none !important;
+      background: transparent;
+    }
+    ::ng-deep .mat-expansion-panel-body {
+      padding: 0 !important;
     }
   `]
 })

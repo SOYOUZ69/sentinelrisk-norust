@@ -1,0 +1,159 @@
+.mappings-container {
+  padding: 20px;
+}
+
+.mappings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.mappings-header h2 {
+  margin: 0;
+  font-weight: 500;
+  color: #333;
+}
+
+.filter-container {
+  margin-bottom: 20px;
+}
+
+.filter-field {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.filter-buttons mat-form-field {
+  flex: 1;
+}
+
+.loading-error-container {
+  margin-bottom: 15px;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  color: #f44336;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: rgba(244, 67, 54, 0.1);
+}
+
+.error-message mat-icon {
+  margin-right: 10px;
+}
+
+.data-table-container {
+  overflow-x: auto;
+  border-radius: 4px;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-column-requirement {
+  min-width: 200px;
+}
+
+.mat-column-risk {
+  min-width: 200px;
+}
+
+.mat-column-status {
+  width: 150px;
+}
+
+.mat-column-comment {
+  min-width: 200px;
+}
+
+.mat-column-actions {
+  width: 120px;
+  text-align: center;
+}
+
+.requirement-info, .risk-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.requirement-code {
+  font-weight: bold;
+  color: #333;
+}
+
+.requirement-description {
+  font-size: 0.85em;
+  color: #666;
+  margin-top: 2px;
+}
+
+.framework-name {
+  font-size: 0.8em;
+  color: #888;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.risk-name {
+  font-weight: bold;
+  color: #333;
+}
+
+.risk-description {
+  font-size: 0.85em;
+  color: #666;
+  margin-top: 2px;
+}
+
+.no-data-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: #666;
+}
+
+.no-data-message mat-icon {
+  margin-right: 10px;
+  color: #999;
+}
+
+/* Statut styles */
+.status-compliant,
+.status-non-compliant,
+.status-partially-compliant,
+.status-not-applicable {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  display: inline-block;
+}
+
+.status-compliant {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-non-compliant {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.status-partially-compliant {
+  background-color: #fff8e1;
+  color: #ff8f00;
+}
+
+.status-not-applicable {
+  background-color: #f5f5f5;
+  color: #757575;
+}
