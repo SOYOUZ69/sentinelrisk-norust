@@ -131,7 +131,9 @@
               <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> Actions </th>
                 <td mat-cell *matCellDef="let requirement">
-                  <button mat-icon-button color="primary" [matTooltip]="'Créer un plan d\'action'" (click)="createActionPlan(requirement)">
+                  <button mat-icon-button color="primary" 
+                          [matTooltip]="'Créer un plan d\'action'" 
+                          (click)="createActionPlan(requirement)">
                     <mat-icon>assignment</mat-icon>
                   </button>
                 </td>

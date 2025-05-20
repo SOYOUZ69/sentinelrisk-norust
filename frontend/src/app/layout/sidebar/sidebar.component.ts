@@ -56,6 +56,10 @@ import { KeycloakService } from '../../core/auth/keycloak.service';
             <mat-icon matListItemIcon>analytics</mat-icon>
             <span matListItemTitle>Analyse d'Écarts</span>
           </a>
+          <a mat-list-item routerLink="/remediation-plans" routerLinkActive="active">
+            <mat-icon matListItemIcon>assignment</mat-icon>
+            <span matListItemTitle>Plans d'Action</span>
+          </a>
         </mat-nav-list>
       </mat-expansion-panel>
     </mat-nav-list>
@@ -91,5 +95,5 @@ import { KeycloakService } from '../../core/auth/keycloak.service';
   `]
 })
 export class SidebarComponent {
-  constructor(private keycloakService: KeycloakService) {}
+  constructor(public keycloakService: KeycloakService) {}
 } 

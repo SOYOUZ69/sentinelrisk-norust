@@ -1,0 +1,48 @@
+<div *ngIf="!loading && !error && plan">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Plan #{{plan.id}}</mat-card-title>
+      <mat-chip-set>
+        <mat-chip [color]="getChipColor(plan.status)" selected>{{getStatusLabel(plan.status)}}</mat-chip>
+      </mat-chip-set>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="grid">
+        <div><strong>Titre :</strong> {{plan.title}}</div>
+        <div><strong>Description :</strong> {{plan.description || 'Non spécifiée'}}</div>
+        <div><strong>Échéance :</strong> {{plan.dueDate | date:'dd/MM/yyyy' || 'Non spécifiée'}}</div>
+        <div><strong>Responsable :</strong> {{plan.ownerName || 'Non assigné'}}</div>
+        <div><strong>Créé le :</strong> {{plan.createdAt | date:'dd/MM/yyyy'}}</div>
+        <div><strong>Mis à jour :</strong> {{plan.updatedAt | date:'dd/MM/yyyy'}}</div>
+        <div><strong>Lien au mapping :</strong> {{plan.mappingId}}</div>
+        <div><strong>Résumé du mapping :</strong> {{plan.mappingSummary || 'Non spécifié'}}</div>
+      </div>
+
+      <div class="description-section" *ngIf="plan.description">
+        <h3>Description détaillée</h3>
+        <p>{{plan.description}}</p>
+      </div>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-button routerLink="/remediation-plans">Retour</button>
+      <button mat-raised-button color="accent" (click)="editPlan()">Modifier</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<div *ngIf="loading" class="loading-container">
+  <mat-spinner [diameter]="40"></mat-spinner>
+  <p>Chargement du plan d'action...</p>
+</div>
+
+<mat-card *ngIf="!loading && error" class="error-card">
+  <mat-card-content>
+    <div class="error-message">
+      <mat-icon>error</mat-icon>
+      <span>Impossible de charger les détails du plan d'action. Veuillez réessayer plus tard.</span>
+    </div>
+  </mat-card-content>
+  <mat-card-actions align="end">
+    <button mat-button (click)="goBack()">Retour</button>
+  </mat-card-actions>
+</mat-card> 

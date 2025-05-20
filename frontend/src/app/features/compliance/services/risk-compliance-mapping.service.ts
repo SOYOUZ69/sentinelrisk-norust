@@ -159,6 +159,23 @@ export class RiskComplianceMappingService {
   }
 
   /**
+   * Récupère un mapping spécifique par risque et exigence
+   * @param riskId Identifiant du risque
+   * @param requirementId Identifiant de l'exigence
+   * @returns Observable contenant le mapping s'il existe
+   */
+  getMappingByRiskAndRequirement(riskId: string, requirementId: string): Observable<RiskComplianceMapping[]> {
+    return this.apiService.get<RiskComplianceMapping[]>(
+      `${this.basePath}?riskId=${riskId}&requirementId=${requirementId}`
+    ).pipe(
+      catchError(error => {
+        console.error(`Erreur lors de la récupération du mapping pour le risque ${riskId} et l'exigence ${requirementId}`, error);
+        return throwError(() => new Error('Impossible de récupérer le mapping spécifique. Veuillez réessayer.'));
+      })
+    );
+  }
+
+  /**
    * Extrait un message d'erreur lisible de la réponse HTTP
    * @param error Erreur HTTP
    * @returns Message d'erreur lisible

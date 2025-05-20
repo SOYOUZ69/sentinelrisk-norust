@@ -1,0 +1,73 @@
+.status-todo {
+  background-color: #f8d7da !important;
+  color: #721c24 !important;
+}
+
+.status-in-progress {
+  background-color: #fff3cd !important;
+  color: #856404 !important;
+}
+
+.status-done {
+  background-color: #d4edda !important;
+  color: #155724 !important;
+}
+
+.mat-card {
+  margin-bottom: 20px;
+}
+
+.mat-card-header {
+  margin-bottom: 20px;
+}
+
+mat-spinner {
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+  margin-bottom: 24px;
+}
+
+.description-section {
+  margin-top: 24px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  padding-top: 16px;
+}
+
+.description-section h3 {
+  margin-top: 0;
+  color: #3f51b5;
+  font-weight: 500;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.loading-container p {
+  margin-top: 16px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.error-card {
+  margin-top: 16px;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  color: #f44336;
+}
+
+.error-message mat-icon {
+  margin-right: 8px;
+} 

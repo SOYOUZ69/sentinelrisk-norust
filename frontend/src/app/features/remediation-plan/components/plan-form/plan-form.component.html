@@ -1,0 +1,93 @@
+<div class="plan-form-container">
+  <div class="plan-form-header">
+    <h2>{{ isEditMode ? 'Modifier le Plan de Remédiation' : 'Nouveau Plan de Remédiation' }}</h2>
+  </div>
+
+  <div class="loading-error-container" *ngIf="isLoading || error">
+    <mat-progress-spinner *ngIf="isLoading" mode="indeterminate" diameter="40"></mat-progress-spinner>
+    <div *ngIf="error" class="error-message">
+      <mat-icon>error</mat-icon>
+      <span>{{ error }}</span>
+    </div>
+  </div>
+
+  <form [formGroup]="planForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading && !error">
+    <mat-card class="form-card">
+      <mat-card-content>
+        <!-- Titre -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Titre du plan</mat-label>
+          <input matInput formControlName="title" placeholder="Ex: Mise à jour de la politique de sécurité" required>
+          <mat-error *ngIf="planForm.get('title')?.hasError('required')">
+            Le titre est obligatoire
+          </mat-error>
+          <mat-error *ngIf="planForm.get('title')?.hasError('maxlength')">
+            Le titre ne doit pas dépasser 100 caractères
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Description -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="4" placeholder="Décrivez les actions à entreprendre..."></textarea>
+          <mat-error *ngIf="planForm.get('description')?.hasError('maxlength')">
+            La description ne doit pas dépasser 2000 caractères
+          </mat-error>
+        </mat-form-field>
+
+        <div class="form-row">
+          <!-- Responsable -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Responsable</mat-label>
+            <mat-select formControlName="ownerId">
+              <mat-option [value]="null">Non assigné</mat-option>
+              <mat-option *ngFor="let user of users" [value]="user.id">
+                {{ user.firstName }} {{ user.lastName }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Date d'échéance -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Date d'échéance</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="dueDate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <!-- Mapping ID (hidden if prérempli) -->
+          <mat-form-field appearance="outline" class="form-field" *ngIf="!mappingId">
+            <mat-label>ID du mapping</mat-label>
+            <input matInput formControlName="mappingId" required>
+            <mat-error *ngIf="planForm.get('mappingId')?.hasError('required')">
+              L'ID du mapping est obligatoire
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Statut -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Statut</mat-label>
+            <mat-select formControlName="status" required>
+              <mat-option *ngFor="let status of statuses" [value]="status">
+                {{ getStatusLabel(status) }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="planForm.get('status')?.hasError('required')">
+              Le statut est obligatoire
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions class="form-actions">
+        <button mat-button type="button" (click)="cancel()">Annuler</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="submitting">
+          <mat-spinner *ngIf="submitting" diameter="20"></mat-spinner>
+          <span *ngIf="!submitting">{{ isEditMode ? 'Mettre à jour' : 'Créer' }}</span>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </form>
+</div> 

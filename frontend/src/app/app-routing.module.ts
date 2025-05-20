@@ -9,6 +9,17 @@ const routes: Routes = [
     loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule)
   },
   {
+    path: 'remediation-plans',
+    loadChildren: () => {
+      console.debug('AppRoutingModule: Chargement du module RemediationPlan');
+      return import('./features/remediation-plan/remediation-plan.module').then(m => {
+        console.debug('AppRoutingModule: Module RemediationPlan chargé avec succès');
+        return m.RemediationPlanModule;
+      });
+    },
+    canActivate: [AuthGuard]
+  },
+  {
     path: '',
     loadChildren: () => import('./layout/layout.module').then(m => m.LayoutModule),
     canActivate: [AuthGuard]
@@ -38,7 +49,11 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    enableTracing: true,
+    paramsInheritanceStrategy: 'always',
+    onSameUrlNavigation: 'reload'
+  })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { } 

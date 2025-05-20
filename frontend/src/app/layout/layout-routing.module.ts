@@ -46,6 +46,11 @@ const routes: Routes = [
         path: 'compliance',
         loadChildren: () => import('../features/compliance/compliance.module').then(m => m.ComplianceModule),
         data: { roles: ['admin', 'compliance_officer', 'risk_manager', 'auditor', 'user'] }
+      },
+      {
+        path: 'remediation-plans',
+        loadChildren: () => import('../features/remediation-plan/remediation-plan.module').then(m => m.RemediationPlanModule),
+        data: { roles: ['admin', 'compliance_officer', 'risk_manager', 'auditor', 'user'] }
       }
     ]
   }
