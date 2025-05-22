@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RemediationPlanService } from '../../services/remediation-plan.service';
 import { RemediationPlan, RemediationPlanStatus } from '../../../../core/models/remediation-plan.model';
-import { ThemePalette } from '@angular/material/core';
 
 @Component({
   selector: 'app-plan-detail',
@@ -13,7 +12,7 @@ import { ThemePalette } from '@angular/material/core';
 export class PlanDetailComponent implements OnInit {
   plan: RemediationPlan | null = null;
   loading = true;
-  error = false;
+  error: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -23,32 +22,34 @@ export class PlanDetailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.loadPlan(id);
-    } else {
-      this.error = true;
-      this.loading = false;
-      this.snackBar.open('ID du plan non spécifié', 'Fermer', { duration: 3000 });
-    }
+    this.loadPlan();
   }
 
-  loadPlan(id: string): void {
-    this.planService.getPlan(id).subscribe({
+  loadPlan(): void {
+    const planId = this.route.snapshot.paramMap.get('id');
+    if (!planId) {
+      this.error = 'ID du plan non spécifié';
+      this.loading = false;
+      return;
+    }
+
+    this.planService.getPlan(planId).subscribe({
       next: (plan) => {
         this.plan = plan;
         this.loading = false;
       },
-      error: (err) => {
-        console.error('Erreur lors du chargement du plan:', err);
-        this.error = true;
+      error: (error) => {
+        console.error('Erreur lors du chargement du plan', error);
+        this.error = 'Impossible de charger les détails du plan';
         this.loading = false;
-        this.snackBar.open('Erreur lors du chargement du plan', 'Fermer', { duration: 3000 });
+        this.showErrorSnackbar(this.error);
       }
     });
   }
 
-  getStatusLabel(status: RemediationPlanStatus): string {
+  getStatusLabel(status: RemediationPlanStatus | undefined): string {
+    if (!status) return 'Inconnu';
+    
     switch (status) {
       case RemediationPlanStatus.TODO:
         return 'À faire';
@@ -61,26 +62,39 @@ export class PlanDetailComponent implements OnInit {
     }
   }
 
-  getChipColor(status: RemediationPlanStatus): ThemePalette {
+  getStatusColor(status: RemediationPlanStatus | undefined): string {
+    if (!status) return 'default';
+    
     switch (status) {
       case RemediationPlanStatus.TODO:
         return 'warn';
       case RemediationPlanStatus.IN_PROGRESS:
-        return 'primary';
-      case RemediationPlanStatus.DONE:
         return 'accent';
+      case RemediationPlanStatus.DONE:
+        return 'primary';
       default:
-        return undefined;
+        return 'default';
+    }
+  }
+
+  editPlan(): void {
+    if (this.plan?.id) {
+      this.router.navigate(['/remediation-plans/edit', this.plan.id]);
     }
   }
 
   goBack(): void {
-    this.router.navigate(['/remediation-plans']);
+    if (this.plan?.mappingId) {
+      this.router.navigate(['/remediation-plans', this.plan.mappingId]);
+    } else {
+      this.router.navigate(['/remediation-plans']);
+    }
   }
 
-  editPlan(): void {
-    if (this.plan) {
-      this.router.navigate(['/remediation-plans/edit', this.plan.id]);
-    }
+  private showErrorSnackbar(message: string): void {
+    this.snackBar.open(message, 'Fermer', {
+      duration: 5000,
+      panelClass: ['error-snackbar']
+    });
   }
 } 

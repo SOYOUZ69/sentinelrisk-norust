@@ -1,33 +1,90 @@
 <div *ngIf="!loading && !error && plan">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Plan #{{plan.id}}</mat-card-title>
-      <mat-chip-set>
-        <mat-chip [color]="getChipColor(plan.status)" selected>{{getStatusLabel(plan.status)}}</mat-chip>
-      </mat-chip-set>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="grid">
-        <div><strong>Titre :</strong> {{plan.title}}</div>
-        <div><strong>Description :</strong> {{plan.description || 'Non spécifiée'}}</div>
-        <div><strong>Échéance :</strong> {{plan.dueDate | date:'dd/MM/yyyy' || 'Non spécifiée'}}</div>
-        <div><strong>Responsable :</strong> {{plan.ownerName || 'Non assigné'}}</div>
-        <div><strong>Créé le :</strong> {{plan.createdAt | date:'dd/MM/yyyy'}}</div>
-        <div><strong>Mis à jour :</strong> {{plan.updatedAt | date:'dd/MM/yyyy'}}</div>
-        <div><strong>Lien au mapping :</strong> {{plan.mappingId}}</div>
-        <div><strong>Résumé du mapping :</strong> {{plan.mappingSummary || 'Non spécifié'}}</div>
-      </div>
+  <div class="layout">
+    <app-sidebar class="sidebar"></app-sidebar>
+    
+    <div class="content">
+      <mat-card class="plan-detail-card">
+        <mat-card-header>
+          <mat-card-title>
+            <h1>Détails du Plan d'Action</h1>
+          </mat-card-title>
+          <mat-card-subtitle>
+            <mat-chip [color]="getStatusColor(plan.status)" selected>
+              {{ getStatusLabel(plan.status) }}
+            </mat-chip>
+          </mat-card-subtitle>
+        </mat-card-header>
 
-      <div class="description-section" *ngIf="plan.description">
-        <h3>Description détaillée</h3>
-        <p>{{plan.description}}</p>
-      </div>
-    </mat-card-content>
-    <mat-card-actions align="end">
-      <button mat-button routerLink="/remediation-plans">Retour</button>
-      <button mat-raised-button color="accent" (click)="editPlan()">Modifier</button>
-    </mat-card-actions>
-  </mat-card>
+        <mat-card-content>
+          <div class="plan-info-grid">
+            <!-- Informations principales -->
+            <div class="info-section">
+              <h2>Informations générales</h2>
+              <div class="info-row">
+                <mat-icon>title</mat-icon>
+                <div class="info-content">
+                  <span class="label">Titre</span>
+                  <span class="value">{{ plan.title }}</span>
+                </div>
+              </div>
+              
+              <div class="info-row">
+                <mat-icon>description</mat-icon>
+                <div class="info-content">
+                  <span class="label">Description</span>
+                  <span class="value">{{ plan.description || 'Non spécifiée' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Métadonnées -->
+            <div class="info-section">
+              <h2>Métadonnées</h2>
+              <div class="info-row">
+                <mat-icon>person</mat-icon>
+                <div class="info-content">
+                  <span class="label">Responsable</span>
+                  <span class="value">{{ plan.ownerName || 'Non assigné' }}</span>
+                </div>
+              </div>
+
+              <div class="info-row">
+                <mat-icon>event</mat-icon>
+                <div class="info-content">
+                  <span class="label">Date d'échéance</span>
+                  <span class="value">{{ plan.dueDate | date:'longDate' || 'Non spécifiée' }}</span>
+                </div>
+              </div>
+
+              <div class="info-row">
+                <mat-icon>update</mat-icon>
+                <div class="info-content">
+                  <span class="label">Dernière mise à jour</span>
+                  <span class="value">{{ plan.updatedAt | date:'medium' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="description-section" *ngIf="plan.description">
+            <h3>Description détaillée</h3>
+            <p>{{plan.description}}</p>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions align="end">
+          <button mat-button color="primary" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+            Retour à la liste
+          </button>
+          <button mat-raised-button color="primary" (click)="editPlan()">
+            <mat-icon>edit</mat-icon>
+            Modifier
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
 </div>
 
 <div *ngIf="loading" class="loading-container">

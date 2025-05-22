@@ -32,7 +32,8 @@ import { SharedModule } from '../shared/shared.module';
     MatExpansionModule
   ],
   exports: [
-    LayoutComponent
+    LayoutComponent,
+    SidebarComponent
   ]
 })
 export class LayoutModule { } 

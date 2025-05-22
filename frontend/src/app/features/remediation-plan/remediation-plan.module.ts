@@ -19,6 +19,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatToolbarModule } from '@angular/material/toolbar';
+
+// Layout
+import { LayoutModule } from '../../layout/layout.module';
 
 // Routing
 import { RemediationPlanRoutingModule } from './remediation-plan-routing.module';
@@ -38,6 +42,7 @@ import { PlanDetailComponent } from './components/plan-detail/plan-detail.compon
     CommonModule,
     ReactiveFormsModule,
     RemediationPlanRoutingModule,
+    LayoutModule,
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
@@ -53,7 +58,8 @@ import { PlanDetailComponent } from './components/plan-detail/plan-detail.compon
     MatSnackBarModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
-    MatDialogModule
+    MatDialogModule,
+    MatToolbarModule
   ],
   exports: [
     PlanListComponent,
