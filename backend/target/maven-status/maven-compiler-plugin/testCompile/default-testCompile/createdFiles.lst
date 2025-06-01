@@ -1,1 +1,4 @@
 com/sentinelrisk/backend/controller/RiskControllerTest.class
+com/sentinelrisk/controller/UserControllerIntegrationTest.class
+com/sentinelrisk/model/SnmpEntitiesTest.class
+com/sentinelrisk/controller/SnmpAssetControllerTest.class

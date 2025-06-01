@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/features/compliance/compliance.component.scss"],
+  "sourcesContent": [".compliance-container {\n  display: flex;\n  flex-direction: column;\n  height: 100%;\n  padding: 20px;\n}\n\n.page-header {\n  margin-bottom: 20px;\n\n  h1 {\n    font-size: 24px;\n    font-weight: 500;\n    margin-bottom: 8px;\n    color: #333;\n  }\n\n  .subtitle {\n    color: #666;\n    font-size: 14px;\n    margin: 0;\n  }\n}\n\n.compliance-nav {\n  margin-bottom: 20px;\n  background-color: #f5f5f5;\n  border-radius: 4px;\n\n  a {\n    display: flex;\n    align-items: center;\n    padding: 12px 16px;\n    color: #555;\n    text-decoration: none;\n\n    mat-icon {\n      margin-right: 8px;\n    }\n\n    &.active {\n      color: #3f51b5;\n      font-weight: 500;\n    }\n  }\n}\n\n.compliance-content {\n  flex: 1;\n  overflow: auto;\n  background-color: #fff;\n  border-radius: 4px;\n  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n  padding: 20px;\n} "],
+  "mappings": ";AAAA,CAAA;AACE,WAAA;AACA,kBAAA;AACA,UAAA;AACA,WAAA;;AAGF,CAAA;AACE,iBAAA;;AAEA,CAHF,YAGE;AACE,aAAA;AACA,eAAA;AACA,iBAAA;AACA,SAAA;;AAGF,CAVF,YAUE,CAAA;AACE,SAAA;AACA,aAAA;AACA,UAAA;;AAIJ,CAAA;AACE,iBAAA;AACA,oBAAA;AACA,iBAAA;;AAEA,CALF,eAKE;AACE,WAAA;AACA,eAAA;AACA,WAAA,KAAA;AACA,SAAA;AACA,mBAAA;;AAEA,CAZJ,eAYI,EAAA;AACE,gBAAA;;AAGF,CAhBJ,eAgBI,CAAA,CAAA;AACE,SAAA;AACA,eAAA;;AAKN,CAAA;AACE,QAAA;AACA,YAAA;AACA,oBAAA;AACA,iBAAA;AACA,cAAA,EAAA,IAAA,IAAA,KAAA,CAAA,EAAA,CAAA,EAAA,CAAA,EAAA;AACA,WAAA;;",
+  "names": []
+}

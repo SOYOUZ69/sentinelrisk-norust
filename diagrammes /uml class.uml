@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XMI xmi:version="2.1"
+     xmlns:uml="http://www.omg.org/spec/UML/20090901"
+     xmlns:xmi="http://www.omg.org/XMI">
+  <!--=========================================
+       Modèle UML contenant vos classes et associations
+  ==========================================-->
+  <uml:Model xmi:id="model_1" name="DiagrammeClasses">
+    <packagedElement xmi:type="uml:Package" xmi:id="package_1" name="Default">
+      
+      <!-- ================================
+           Classe Utilisateur
+           ================================ -->
+      <packagedElement xmi:type="uml:Class" xmi:id="class_Utilisateur" name="Utilisateur">
+        <!-- Attributs -->
+        <ownedAttribute xmi:id="attr_Utilisateur_id" name="id" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_Utilisateur_nomUtilisateur" name="nomUtilisateur" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_Utilisateur_email" name="email" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_Utilisateur_role" name="role" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <!-- Opérations -->
+        <ownedOperation xmi:id="op_Utilisateur_seConnecter" name="seConnecter" visibility="public">
+          <ownedParameter xmi:id="param_Utilisateur_seConnecter_return" name="return" direction="return">
+            <type xmi:type="uml:PrimitiveType"
+                  href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Boolean"/>
+          </ownedParameter>
+        </ownedOperation>
+        <ownedOperation xmi:id="op_Utilisateur_deconnecter" name="deconnecter" visibility="public">
+          <ownedParameter xmi:id="param_Utilisateur_deconnecter_return" name="return" direction="return">
+            <type xmi:type="uml:PrimitiveType"
+                  href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Void"/>
+          </ownedParameter>
+        </ownedOperation>
+        <ownedOperation xmi:id="op_Utilisateur_creerUtilisateur" name="creerUtilisateur" visibility="public">
+          <ownedParameter xmi:id="param_Utilisateur_creerUtilisateur_u" name="u" direction="in">
+            <type xmi:type="uml:Class" href="#class_Utilisateur"/>
+          </ownedParameter>
+          <ownedParameter xmi:id="param_Utilisateur_creerUtilisateur_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_Utilisateur"/>
+          </ownedParameter>
+        </ownedOperation>
+        <ownedOperation xmi:id="op_Utilisateur_modifierUtilisateur" name="modifierUtilisateur" visibility="public">
+          <ownedParameter xmi:id="param_Utilisateur_modifierUtilisateur_u" name="u" direction="in">
+            <type xmi:type="uml:Class" href="#class_Utilisateur"/>
+          </ownedParameter>
+          <ownedParameter xmi:id="param_Utilisateur_modifierUtilisateur_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_Utilisateur"/>
+          </ownedParameter>
+        </ownedOperation>
+      </packagedElement>
+      
+      <!-- ================================
+           Classe Risque
+           ================================ -->
+      <packagedElement xmi:type="uml:Class" xmi:id="class_Risque" name="Risque">
+        <!-- Attributs -->
+        <ownedAttribute xmi:id="attr_Risque_id" name="id" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Long"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_Risque_nom" name="nom" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_Risque_description" name="description" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_Risque_niveauImpact" name="niveauImpact" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_Risque_niveauProbabilite" name="niveauProbabilite" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_Risque_statut" name="statut" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_Risque_score" name="score" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Double"/>
+        </ownedAttribute>
+        <!-- Opérations -->
+        <ownedOperation xmi:id="op_Risque_creerRisque" name="creerRisque" visibility="public">
+          <ownedParameter xmi:id="param_Risque_creerRisque_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_Risque"/>
+          </ownedParameter>
+        </ownedOperation>
+        <ownedOperation xmi:id="op_Risque_modifierRisque" name="modifierRisque" visibility="public">
+          <ownedParameter xmi:id="param_Risque_modifierRisque_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_Risque"/>
+          </ownedParameter>
+        </ownedOperation>
+        <ownedOperation xmi:id="op_Risque_supprimerRisque" name="supprimerRisque" visibility="public">
+          <ownedParameter xmi:id="param_Risque_supprimerRisque_return" name="return" direction="return">
+            <type xmi:type="uml:PrimitiveType"
+                  href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Void"/>
+          </ownedParameter>
+        </ownedOperation>
+      </packagedElement>
+      
+      <!-- ================================
+           Classe PlanAction
+           ================================ -->
+      <packagedElement xmi:type="uml:Class" xmi:id="class_PlanAction" name="PlanAction">
+        <!-- Attributs -->
+        <ownedAttribute xmi:id="attr_PlanAction_id" name="id" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Long"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_PlanAction_titre" name="titre" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_PlanAction_description" name="description" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_PlanAction_dateEcheance" name="dateEcheance" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Date"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_PlanAction_statut" name="statut" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <!-- Opérations -->
+        <ownedOperation xmi:id="op_PlanAction_creerPlan" name="creerPlan" visibility="public">
+          <ownedParameter xmi:id="param_PlanAction_creerPlan_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_PlanAction"/>
+          </ownedParameter>
+        </ownedOperation>
+        <ownedOperation xmi:id="op_PlanAction_modifierPlan" name="modifierPlan" visibility="public">
+          <ownedParameter xmi:id="param_PlanAction_modifierPlan_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_PlanAction"/>
+          </ownedParameter>
+        </ownedOperation>
+        <ownedOperation xmi:id="op_PlanAction_mettreAjourStatut" name="mettreAjourStatut" visibility="public">
+          <ownedParameter xmi:id="param_PlanAction_mettreAjourStatut_return" name="return" direction="return">
+            <type xmi:type="uml:PrimitiveType"
+                  href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Void"/>
+          </ownedParameter>
+        </ownedOperation>
+      </packagedElement>
+      
+      <!-- ================================
+           Classe ActifSNMP
+           ================================ -->
+      <packagedElement xmi:type="uml:Class" xmi:id="class_ActifSNMP" name="ActifSNMP">
+        <!-- Attributs -->
+        <ownedAttribute xmi:id="attr_ActifSNMP_id" name="id" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Long"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_ActifSNMP_nomHote" name="nomHote" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_ActifSNMP_adresseIP" name="adresseIP" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_ActifSNMP_type" name="type" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_ActifSNMP_version" name="version" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_ActifSNMP_communaute" name="communaute" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <!-- Opérations -->
+        <ownedOperation xmi:id="op_ActifSNMP_creerActif" name="creerActif" visibility="public">
+          <ownedParameter xmi:id="param_ActifSNMP_creerActif_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_ActifSNMP"/>
+          </ownedParameter>
+        </ownedOperation>
+        <ownedOperation xmi:id="op_ActifSNMP_modifierActif" name="modifierActif" visibility="public">
+          <ownedParameter xmi:id="param_ActifSNMP_modifierActif_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_ActifSNMP"/>
+          </ownedParameter>
+        </ownedOperation>
+      </packagedElement>
+
+      <!-- ================================
+           Classe Controle
+           ================================ -->
+      <packagedElement xmi:type="uml:Class" xmi:id="class_Controle" name="Controle">
+        <!-- Attributs -->
+        <ownedAttribute xmi:id="attr_Controle_id" name="id" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Long"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_Controle_nom" name="nom" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_Controle_type" name="type" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_Controle_frequence" name="frequence" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_Controle_statut" name="statut" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <!-- Opérations -->
+        <ownedOperation xmi:id="op_Controle_creerControle" name="creerControle" visibility="public">
+          <ownedParameter xmi:id="param_Controle_creerControle_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_Controle"/>
+          </ownedParameter>
+        </ownedOperation>
+        <ownedOperation xmi:id="op_Controle_modifierControle" name="modifierControle" visibility="public">
+          <ownedParameter xmi:id="param_Controle_modifierControle_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_Controle"/>
+          </ownedParameter>
+        </ownedOperation>
+      </packagedElement>
+
+      <!-- ================================
+           Classe Evaluation
+           ================================ -->
+      <packagedElement xmi:type="uml:Class" xmi:id="class_Evaluation" name="Evaluation">
+        <!-- Attributs -->
+        <ownedAttribute xmi:id="attr_Evaluation_id" name="id" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Long"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_Evaluation_statut" name="statut" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_Evaluation_dateEvaluation" name="dateEvaluation" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Date"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_Evaluation_conclusions" name="conclusions" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_Evaluation_recommandations" name="recommandations" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <!-- Opérations -->
+        <ownedOperation xmi:id="op_Evaluation_lancerEvaluation" name="lancerEvaluation" visibility="public">
+          <ownedParameter xmi:id="param_Evaluation_lancerEvaluation_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_Evaluation"/>
+          </ownedParameter>
+        </ownedOperation>
+        <ownedOperation xmi:id="op_Evaluation_cloreEvaluation" name="cloreEvaluation" visibility="public">
+          <ownedParameter xmi:id="param_Evaluation_cloreEvaluation_return" name="return" direction="return">
+            <type xmi:type="uml:PrimitiveType"
+                  href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Void"/>
+          </ownedParameter>
+        </ownedOperation>
+      </packagedElement>
+      
+      <!-- ================================
+           Classe Categorie
+           ================================ -->
+      <packagedElement xmi:type="uml:Class" xmi:id="class_Categorie" name="Categorie">
+        <!-- Attributs -->
+        <ownedAttribute xmi:id="attr_Categorie_id" name="id" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Long"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_Categorie_nom" name="nom" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_Categorie_description" name="description" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <!-- Opérations -->
+        <ownedOperation xmi:id="op_Categorie_creerCategorie" name="creerCategorie" visibility="public">
+          <ownedParameter xmi:id="param_Categorie_creerCategorie_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_Categorie"/>
+          </ownedParameter>
+        </ownedOperation>
+        <ownedOperation xmi:id="op_Categorie_modifierCategorie" name="modifierCategorie" visibility="public">
+          <ownedParameter xmi:id="param_Categorie_modifierCategorie_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_Categorie"/>
+          </ownedParameter>
+        </ownedOperation>
+      </packagedElement>
+      
+      <!-- ================================
+           Classe FrameworkConformite
+           ================================ -->
+      <packagedElement xmi:type="uml:Class" xmi:id="class_FrameworkConformite" name="FrameworkConformite">
+        <!-- Attributs -->
+        <ownedAttribute xmi:id="attr_FrameworkConformite_id" name="id" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Long"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_FrameworkConformite_nom" name="nom" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_FrameworkConformite_version" name="version" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_FrameworkConformite_description" name="description" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <!-- Opérations -->
+        <ownedOperation xmi:id="op_FrameworkConformite_creerFramework" name="creerFramework" visibility="public">
+          <ownedParameter xmi:id="param_FrameworkConformite_creerFramework_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_FrameworkConformite"/>
+          </ownedParameter>
+        </ownedOperation>
+        <ownedOperation xmi:id="op_FrameworkConformite_modifierFramework" name="modifierFramework" visibility="public">
+          <ownedParameter xmi:id="param_FrameworkConformite_modifierFramework_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_FrameworkConformite"/>
+          </ownedParameter>
+        </ownedOperation>
+      </packagedElement>
+      
+      <!-- ================================
+           Classe MappingRisqueConforme
+           ================================ -->
+      <packagedElement xmi:type="uml:Class" xmi:id="class_MappingRisqueConforme" name="MappingRisqueConforme">
+        <!-- Attributs -->
+        <ownedAttribute xmi:id="attr_MappingRisqueConforme_id" name="id" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Long"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_MappingRisqueConforme_statut" name="statut" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_MappingRisqueConforme_preuve" name="preuve" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <!-- Opérations -->
+        <ownedOperation xmi:id="op_MappingRisqueConforme_creerMapping" name="creerMapping" visibility="public">
+          <ownedParameter xmi:id="param_MappingRisqueConforme_creerMapping_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_MappingRisqueConforme"/>
+          </ownedParameter>
+        </ownedOperation>
+        <ownedOperation xmi:id="op_MappingRisqueConforme_modifierMapping" name="modifierMapping" visibility="public">
+          <ownedParameter xmi:id="param_MappingRisqueConforme_modifierMapping_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_MappingRisqueConforme"/>
+          </ownedParameter>
+        </ownedOperation>
+      </packagedElement>
+      
+      <!-- ================================
+           Classe ExigenceConformite
+           ================================ -->
+      <packagedElement xmi:type="uml:Class" xmi:id="class_ExigenceConformite" name="ExigenceConformite">
+        <!-- Attributs -->
+        <ownedAttribute xmi:id="attr_ExigenceConformite_id" name="id" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Long"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_ExigenceConformite_code" name="code" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_ExigenceConformite_description" name="description" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_ExigenceConformite_type" name="type" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_ExigenceConformite_seuil" name="seuil" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Double"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_ExigenceConformite_operateurSeuil" name="operateurSeuil" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <!-- Opérations -->
+        <ownedOperation xmi:id="op_ExigenceConformite_creerExigence" name="creerExigence" visibility="public">
+          <ownedParameter xmi:id="param_ExigenceConformite_creerExigence_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_ExigenceConformite"/>
+          </ownedParameter>
+        </ownedOperation>
+        <ownedOperation xmi:id="op_ExigenceConformite_modifierExigence" name="modifierExigence" visibility="public">
+          <ownedParameter xmi:id="param_ExigenceConformite_modifierExigence_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_ExigenceConformite"/>
+          </ownedParameter>
+        </ownedOperation>
+      </packagedElement>
+      
+      <!-- ================================
+           Classe ConfigurationScan
+           ================================ -->
+      <packagedElement xmi:type="uml:Class" xmi:id="class_ConfigurationScan" name="ConfigurationScan">
+        <!-- Attributs -->
+        <ownedAttribute xmi:id="attr_ConfigurationScan_id" name="id" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Long"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_ConfigurationScan_nom" name="nom" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_ConfigurationScan_intervalleMinutes" name="intervalleMinutes" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Integer"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_ConfigurationScan_oids" name="oids" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <!-- Opérations -->
+        <ownedOperation xmi:id="op_ConfigurationScan_creerConfig" name="creerConfig" visibility="public">
+          <ownedParameter xmi:id="param_ConfigurationScan_creerConfig_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_ConfigurationScan"/>
+          </ownedParameter>
+        </ownedOperation>
+        <ownedOperation xmi:id="op_ConfigurationScan_modifierConfig" name="modifierConfig" visibility="public">
+          <ownedParameter xmi:id="param_ConfigurationScan_modifierConfig_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_ConfigurationScan"/>
+          </ownedParameter>
+        </ownedOperation>
+      </packagedElement>
+      
+      <!-- ================================
+           Classe ResultatScan
+           ================================ -->
+      <packagedElement xmi:type="uml:Class" xmi:id="class_ResultatScan" name="ResultatScan">
+        <!-- Attributs -->
+        <ownedAttribute xmi:id="attr_ResultatScan_id" name="id" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Long"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_ResultatScan_dateScan" name="dateScan" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Date"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_ResultatScan_scoreGlobal" name="scoreGlobal" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Double"/>
+        </ownedAttribute>
+        <!-- Opérations -->
+        <ownedOperation xmi:id="op_ResultatScan_lancerScanManuel" name="lancerScanManuel" visibility="public">
+          <ownedParameter xmi:id="param_ResultatScan_lancerScanManuel_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_ResultatScan"/>
+          </ownedParameter>
+        </ownedOperation>
+      </packagedElement>
+      
+      <!-- ================================
+           Classe MesureOID
+           ================================ -->
+      <packagedElement xmi:type="uml:Class" xmi:id="class_MesureOID" name="MesureOID">
+        <!-- Attributs -->
+        <ownedAttribute xmi:id="attr_MesureOID_id" name="id" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#Long"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_MesureOID_oid" name="oid" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:id="attr_MesureOID_valeur" name="valeur" visibility="private">
+          <type xmi:type="uml:PrimitiveType"
+                href="http://www.omg.org/spec/UML/20090901/PrimitiveTypes.library#String"/>
+        </ownedAttribute>
+        <!-- Opérations -->
+        <ownedOperation xmi:id="op_MesureOID_ajouterMesure" name="ajouterMesure" visibility="public">
+          <ownedParameter xmi:id="param_MesureOID_ajouterMesure_return" name="return" direction="return">
+            <type xmi:type="uml:Class" href="#class_MesureOID"/>
+          </ownedParameter>
+        </ownedOperation>
+      </packagedElement>
+      
+      <!-- ================================================
+           Associations entre classes (multiplicités)
+           ================================================ -->
+      
+      <!-- Utilisateur ↔ Risque (1 → 0..*) -->
+      <packagedElement xmi:type="uml:Association" xmi:id="assoc_Utilisateur_Risque" memberEnd="end_Utilisateur_Risque_Utilisateur end_Utilisateur_Risque_Risque">
+        <ownedEnd xmi:id="end_Utilisateur_Risque_Utilisateur" type="class_Utilisateur" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="1"/>
+        </ownedEnd>
+        <ownedEnd xmi:id="end_Utilisateur_Risque_Risque" type="class_Risque" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="0"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="*"/>
+        </ownedEnd>
+      </packagedElement>
+      
+      <!-- Utilisateur ↔ PlanAction (1 → 0..*) -->
+      <packagedElement xmi:type="uml:Association" xmi:id="assoc_Utilisateur_PlanAction" memberEnd="end_Utilisateur_PlanAction_Utilisateur end_Utilisateur_PlanAction_PlanAction">
+        <ownedEnd xmi:id="end_Utilisateur_PlanAction_Utilisateur" type="class_Utilisateur" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="1"/>
+        </ownedEnd>
+        <ownedEnd xmi:id="end_Utilisateur_PlanAction_PlanAction" type="class_PlanAction" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="0"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="*"/>
+        </ownedEnd>
+      </packagedElement>
+      
+      <!-- Utilisateur ↔ ActifSNMP (1 → 0..*) -->
+      <packagedElement xmi:type="uml:Association" xmi:id="assoc_Utilisateur_ActifSNMP" memberEnd="end_Utilisateur_ActifSNMP_Utilisateur end_Utilisateur_ActifSNMP_ActifSNMP">
+        <ownedEnd xmi:id="end_Utilisateur_ActifSNMP_Utilisateur" type="class_Utilisateur" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="1"/>
+        </ownedEnd>
+        <ownedEnd xmi:id="end_Utilisateur_ActifSNMP_ActifSNMP" type="class_ActifSNMP" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="0"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="*"/>
+        </ownedEnd>
+      </packagedElement>
+      
+      <!-- Utilisateur ↔ FrameworkConformite (1 → 0..*) -->
+      <packagedElement xmi:type="uml:Association" xmi:id="assoc_Utilisateur_FrameworkConformite" memberEnd="end_Utilisateur_FrameworkConformite_Utilisateur end_Utilisateur_FrameworkConformite_FrameworkConformite">
+        <ownedEnd xmi:id="end_Utilisateur_FrameworkConformite_Utilisateur" type="class_Utilisateur" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="1"/>
+        </ownedEnd>
+        <ownedEnd xmi:id="end_Utilisateur_FrameworkConformite_FrameworkConformite" type="class_FrameworkConformite" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="0"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="*"/>
+        </ownedEnd>
+      </packagedElement>
+      
+      <!-- Utilisateur ↔ ConfigurationScan (1 → 0..*) -->
+      <packagedElement xmi:type="uml:Association" xmi:id="assoc_Utilisateur_ConfigurationScan" memberEnd="end_Utilisateur_ConfigurationScan_Utilisateur end_Utilisateur_ConfigurationScan_ConfigurationScan">
+        <ownedEnd xmi:id="end_Utilisateur_ConfigurationScan_Utilisateur" type="class_Utilisateur" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="1"/>
+        </ownedEnd>
+        <ownedEnd xmi:id="end_Utilisateur_ConfigurationScan_ConfigurationScan" type="class_ConfigurationScan" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="0"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="*"/>
+        </ownedEnd>
+      </packagedElement>
+      
+      <!-- Risque ↔ Categorie (1 → 0..*) -->
+      <packagedElement xmi:type="uml:Association" xmi:id="assoc_Risque_Categorie" memberEnd="end_Risque_Categorie_Risque end_Risque_Categorie_Categorie">
+        <ownedEnd xmi:id="end_Risque_Categorie_Risque" type="class_Risque" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="1"/>
+        </ownedEnd>
+        <ownedEnd xmi:id="end_Risque_Categorie_Categorie" type="class_Categorie" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="0"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="*"/>
+        </ownedEnd>
+      </packagedElement>
+      
+      <!-- Risque ↔ Evaluation (0..* → 0..*) -->
+      <packagedElement xmi:type="uml:Association" xmi:id="assoc_Risque_Evaluation" memberEnd="end_Risque_Evaluation_Risque end_Risque_Evaluation_Evaluation">
+        <ownedEnd xmi:id="end_Risque_Evaluation_Risque" type="class_Risque" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="0"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="*"/>
+        </ownedEnd>
+        <ownedEnd xmi:id="end_Risque_Evaluation_Evaluation" type="class_Evaluation" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="0"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="*"/>
+        </ownedEnd>
+      </packagedElement>
+      
+      <!-- Risque ↔ Controle (0..* → 0..*) -->
+      <packagedElement xmi:type="uml:Association" xmi:id="assoc_Risque_Controle" memberEnd="end_Risque_Controle_Risque end_Risque_Controle_Controle">
+        <ownedEnd xmi:id="end_Risque_Controle_Risque" type="class_Risque" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="0"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="*"/>
+        </ownedEnd>
+        <ownedEnd xmi:id="end_Risque_Controle_Controle" type="class_Controle" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="0"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="*"/>
+        </ownedEnd>
+      </packagedElement>
+      
+      <!-- Risque ↔ MappingRisqueConforme (0..* → 1) -->
+      <packagedElement xmi:type="uml:Association" xmi:id="assoc_Risque_MappingRisqueConforme" memberEnd="end_Risque_MappingRisqueConforme_Risque end_Risque_MappingRisqueConforme_MappingRisqueConforme">
+        <ownedEnd xmi:id="end_Risque_MappingRisqueConforme_Risque" type="class_Risque" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="0"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="*"/>
+        </ownedEnd>
+        <ownedEnd xmi:id="end_Risque_MappingRisqueConforme_MappingRisqueConforme" type="class_MappingRisqueConforme" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="1"/>
+        </ownedEnd>
+      </packagedElement>
+      
+      <!-- FrameworkConformite ↔ PlanAction (1 → 0..*) -->
+      <packagedElement xmi:type="uml:Association" xmi:id="assoc_FrameworkConformite_PlanAction" memberEnd="end_FrameworkConformite_PlanAction_FrameworkConformite end_FrameworkConformite_PlanAction_PlanAction">
+        <ownedEnd xmi:id="end_FrameworkConformite_PlanAction_FrameworkConformite" type="class_FrameworkConformite" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="1"/>
+        </ownedEnd>
+        <ownedEnd xmi:id="end_FrameworkConformite_PlanAction_PlanAction" type="class_PlanAction" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="0"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="*"/>
+        </ownedEnd>
+      </packagedElement>
+      
+      <!-- FrameworkConformite ↔ MappingRisqueConforme (1 → 0..*) -->
+      <packagedElement xmi:type="uml:Association" xmi:id="assoc_FrameworkConformite_MappingRisqueConforme" memberEnd="end_FrameworkConformite_MappingRisqueConforme_FrameworkConformite end_FrameworkConformite_MappingRisqueConforme_MappingRisqueConforme">
+        <ownedEnd xmi:id="end_FrameworkConformite_MappingRisqueConforme_FrameworkConformite" type="class_FrameworkConformite" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="1"/>
+        </ownedEnd>
+        <ownedEnd xmi:id="end_FrameworkConformite_MappingRisqueConforme_MappingRisqueConforme" type="class_MappingRisqueConforme" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="0"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="*"/>
+        </ownedEnd>
+      </packagedElement>
+      
+      <!-- MappingRisqueConforme ↔ ExigenceConformite (1 → 0..*) -->
+      <packagedElement xmi:type="uml:Association" xmi:id="assoc_MappingRisqueConforme_ExigenceConformite" memberEnd="end_MappingRisqueConforme_ExigenceConformite_MappingRisqueConforme end_MappingRisqueConforme_ExigenceConformite_ExigenceConformite">
+        <ownedEnd xmi:id="end_MappingRisqueConforme_ExigenceConformite_MappingRisqueConforme" type="class_MappingRisqueConforme" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="1"/>
+        </ownedEnd>
+        <ownedEnd xmi:id="end_MappingRisqueConforme_ExigenceConformite_ExigenceConformite" type="class_ExigenceConformite" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="0"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="*"/>
+        </ownedEnd>
+      </packagedElement>
+      
+      <!-- ConfigurationScan ↔ ResultatScan (1 → 0..*) -->
+      <packagedElement xmi:type="uml:Association" xmi:id="assoc_ConfigurationScan_ResultatScan" memberEnd="end_ConfigurationScan_ResultatScan_ConfigurationScan end_ConfigurationScan_ResultatScan_ResultatScan">
+        <ownedEnd xmi:id="end_ConfigurationScan_ResultatScan_ConfigurationScan" type="class_ConfigurationScan" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="1"/>
+        </ownedEnd>
+        <ownedEnd xmi:id="end_ConfigurationScan_ResultatScan_ResultatScan" type="class_ResultatScan" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="0"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="*"/>
+        </ownedEnd>
+      </packagedElement>
+      
+      <!-- ResultatScan ↔ MesureOID (1 → 0..*) -->
+      <packagedElement xmi:type="uml:Association" xmi:id="assoc_ResultatScan_MesureOID" memberEnd="end_ResultatScan_MesureOID_ResultatScan end_ResultatScan_MesureOID_MesureOID">
+        <ownedEnd xmi:id="end_ResultatScan_MesureOID_ResultatScan" type="class_ResultatScan" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="1"/>
+        </ownedEnd>
+        <ownedEnd xmi:id="end_ResultatScan_MesureOID_MesureOID" type="class_MesureOID" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="0"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="*"/>
+        </ownedEnd>
+      </packagedElement>
+      
+      <!-- ConfigurationScan ↔ ActifSNMP (0..* ↔ 0..*) -->
+      <packagedElement xmi:type="uml:Association" xmi:id="assoc_ConfigurationScan_ActifSNMP" memberEnd="end_ConfigurationScan_ActifSNMP_ConfigurationScan end_ConfigurationScan_ActifSNMP_ActifSNMP">
+        <ownedEnd xmi:id="end_ConfigurationScan_ActifSNMP_ConfigurationScan" type="class_ConfigurationScan" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="0"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="*"/>
+        </ownedEnd>
+        <ownedEnd xmi:id="end_ConfigurationScan_ActifSNMP_ActifSNMP" type="class_ActifSNMP" visibility="public">
+          <lowerValue xmi:type="uml:LiteralInteger" value="0"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" value="*"/>
+        </ownedEnd>
+      </packagedElement>
+      
+    </packagedElement>
+  </uml:Model>
+</XMI>

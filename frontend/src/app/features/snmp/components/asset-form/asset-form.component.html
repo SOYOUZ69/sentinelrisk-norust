@@ -1,0 +1,186 @@
+<div class="asset-form-container">
+  <h2 mat-dialog-title>
+    {{ isEditMode ? 'Modifier l\'Asset SNMP' : 'Nouvel Asset SNMP' }}
+  </h2>
+
+  <form [formGroup]="assetForm" (ngSubmit)="onSubmit()" class="asset-form">
+    <mat-dialog-content>
+      
+      <!-- Section Identification -->
+      <mat-card class="form-section">
+        <mat-card-header>
+          <mat-card-title>Identification</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Hostname</mat-label>
+              <input matInput formControlName="hostname" placeholder="server01.example.com">
+              <mat-error>{{ getErrorMessage('hostname') }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Adresse IP</mat-label>
+              <input matInput formControlName="ipAddress" placeholder="192.168.1.100">
+              <mat-error>{{ getErrorMessage('ipAddress') }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Type d'Asset</mat-label>
+              <mat-select formControlName="type">
+                <mat-option *ngFor="let type of assetTypes" [value]="type">
+                  {{ type }}
+                </mat-option>
+              </mat-select>
+              <mat-error>{{ getErrorMessage('type') }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Port SNMP</mat-label>
+              <input matInput type="number" formControlName="port" placeholder="161">
+              <mat-error>{{ getErrorMessage('port') }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description" rows="3" 
+                        placeholder="Description de l'asset..."></textarea>
+              <mat-error>{{ getErrorMessage('description') }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-checkbox formControlName="active">Asset actif</mat-checkbox>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Section Configuration SNMP -->
+      <mat-card class="form-section">
+        <mat-card-header>
+          <mat-card-title>Configuration SNMP</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Version SNMP</mat-label>
+              <mat-select formControlName="snmpVersion">
+                <mat-option *ngFor="let version of snmpVersions" [value]="version">
+                  {{ version }}
+                </mat-option>
+              </mat-select>
+              <mat-error>{{ getErrorMessage('snmpVersion') }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Configuration SNMP v1/v2c -->
+          <div *ngIf="isSnmpV1OrV2C" class="snmp-v2c-config">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Community String</mat-label>
+                <input matInput formControlName="community" placeholder="public">
+                <mat-icon matSuffix>security</mat-icon>
+                <mat-error>{{ getErrorMessage('community') }}</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Configuration SNMP v3 -->
+          <div *ngIf="isSnmpV3" class="snmp-v3-config">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Nom d'utilisateur SNMP v3</mat-label>
+                <input matInput formControlName="username" placeholder="admin">
+                <mat-icon matSuffix>person</mat-icon>
+                <mat-error>{{ getErrorMessage('username') }}</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Protocole d'authentification</mat-label>
+                <mat-select formControlName="authProtocol" (selectionChange)="onAuthProtocolChange()">
+                  <mat-option value="">Aucun</mat-option>
+                  <mat-option *ngFor="let protocol of authProtocols" [value]="protocol">
+                    {{ protocol }}
+                  </mat-option>
+                </mat-select>
+                <mat-error>{{ getErrorMessage('authProtocol') }}</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="half-width" 
+                              *ngIf="assetForm.get('authProtocol')?.value">
+                <mat-label>Mot de passe d'authentification</mat-label>
+                <input matInput type="password" formControlName="authPassword" 
+                       placeholder="Mot de passe (min. 8 caractères)">
+                <mat-icon matSuffix>lock</mat-icon>
+                <mat-error>{{ getErrorMessage('authPassword') }}</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Protocole de chiffrement</mat-label>
+                <mat-select formControlName="privProtocol" (selectionChange)="onPrivProtocolChange()">
+                  <mat-option value="">Aucun</mat-option>
+                  <mat-option *ngFor="let protocol of privProtocols" [value]="protocol">
+                    {{ protocol }}
+                  </mat-option>
+                </mat-select>
+                <mat-error>{{ getErrorMessage('privProtocol') }}</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="half-width" 
+                              *ngIf="assetForm.get('privProtocol')?.value">
+                <mat-label>Mot de passe de chiffrement</mat-label>
+                <input matInput type="password" formControlName="privPassword" 
+                       placeholder="Mot de passe (min. 8 caractères)">
+                <mat-icon matSuffix>enhanced_encryption</mat-icon>
+                <mat-error>{{ getErrorMessage('privPassword') }}</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Erreurs de validation globales -->
+      <mat-error *ngIf="assetForm.errors?.['hostnameOrIpRequired'] && assetForm.touched" 
+                 class="global-error">
+        Au moins un hostname ou une adresse IP doit être spécifié
+      </mat-error>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="dialog-actions">
+      <!-- Bouton Test de Connexion -->
+      <button mat-stroked-button type="button" 
+              [disabled]="assetForm.invalid || isTestingConnection || isLoading"
+              (click)="testConnection()"
+              class="test-button">
+        <mat-icon *ngIf="!isTestingConnection">wifi_tethering</mat-icon>
+        <mat-spinner *ngIf="isTestingConnection" diameter="20"></mat-spinner>
+        {{ isTestingConnection ? 'Test en cours...' : 'Tester la connexion' }}
+      </button>
+
+      <div class="spacer"></div>
+
+      <!-- Boutons d'action -->
+      <button mat-button type="button" (click)="onCancel()" [disabled]="isLoading">
+        Annuler
+      </button>
+      
+      <button mat-raised-button color="primary" type="submit" 
+              [disabled]="assetForm.invalid || isLoading">
+        <mat-icon *ngIf="!isLoading">{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+        <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+        {{ isLoading ? 'Sauvegarde...' : (isEditMode ? 'Mettre à jour' : 'Créer') }}
+      </button>
+    </mat-dialog-actions>
+  </form>
+</div>

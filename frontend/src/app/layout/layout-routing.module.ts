@@ -51,6 +51,11 @@ const routes: Routes = [
         path: 'remediation-plans',
         loadChildren: () => import('../features/remediation-plan/remediation-plan.module').then(m => m.RemediationPlanModule),
         data: { roles: ['admin', 'compliance_officer', 'risk_manager', 'auditor', 'user'] }
+      },
+      {
+        path: 'snmp',
+        loadChildren: () => import('../features/snmp/snmp.module').then(m => m.SnmpModule),
+        data: { roles: ['admin', 'risk_manager'] }
       }
     ]
   }

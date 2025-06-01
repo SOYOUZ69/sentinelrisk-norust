@@ -1,0 +1,13 @@
+{
+  "id": 4,
+  "hostname": "test-server.example.com",
+  "ipAddress": "192.168.1.100",
+  "type": "SERVER",
+  "snmpVersion": "V2C",
+  "port": 161,
+  "community": "public",
+  "active": true,
+  "description": "Serveur de test pour démonstration SNMP",
+  "createdAt": "2024-01-15T14:30:00Z",
+  "updatedAt": "2024-01-15T14:30:00Z"
+} 

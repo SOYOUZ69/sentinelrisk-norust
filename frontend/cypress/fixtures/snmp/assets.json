@@ -1,0 +1,43 @@
+[
+  {
+    "id": 1,
+    "hostname": "server01.example.com",
+    "ipAddress": "192.168.1.100",
+    "type": "SERVER",
+    "snmpVersion": "V2C",
+    "port": 161,
+    "community": "public",
+    "active": true,
+    "description": "Serveur de production principal",
+    "createdAt": "2024-01-15T10:30:00Z",
+    "updatedAt": "2024-01-15T10:30:00Z"
+  },
+  {
+    "id": 2,
+    "hostname": "switch01.example.com",
+    "ipAddress": "192.168.1.10",
+    "type": "SWITCH",
+    "snmpVersion": "V3",
+    "port": 161,
+    "snmpV3User": "admin",
+    "authProtocol": "SHA",
+    "privProtocol": "AES128",
+    "active": true,
+    "description": "Switch principal du réseau",
+    "createdAt": "2024-01-15T11:00:00Z",
+    "updatedAt": "2024-01-15T11:00:00Z"
+  },
+  {
+    "id": 3,
+    "hostname": "printer01.example.com",
+    "ipAddress": "192.168.1.200",
+    "type": "PRINTER",
+    "snmpVersion": "V1",
+    "port": 161,
+    "community": "public",
+    "active": false,
+    "description": "Imprimante réseau bureau",
+    "createdAt": "2024-01-15T12:00:00Z",
+    "updatedAt": "2024-01-15T12:00:00Z"
+  }
+] 

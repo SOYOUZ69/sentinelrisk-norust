@@ -1,0 +1,525 @@
+{
+  "info": {
+    "name": "SentinelRisk SNMP API",
+    "description": "Collection complète pour tester l'API SNMP de SentinelRisk",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "asset_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "config_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "result_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Get JWT Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "value": "password"
+                },
+                {
+                  "key": "client_id",
+                  "value": "sentinelrisk-frontend"
+                },
+                {
+                  "key": "username",
+                  "value": "teste-admin"
+                },
+                {
+                  "key": "password",
+                  "value": "password123"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8081/realms/sentinelrisk/protocol/openid-connect/token",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["realms", "sentinelrisk", "protocol", "openid-connect", "token"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('jwt_token', response.access_token);",
+                  "    console.log('JWT Token set successfully');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "SNMP Assets",
+      "item": [
+        {
+          "name": "Get All Assets",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/snmp/assets",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "assets"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create Asset - Server SNMP v2c",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hostname\": \"server01.example.com\",\n  \"ipAddress\": \"192.168.1.100\",\n  \"type\": \"SERVER\",\n  \"snmpVersion\": \"V2C\",\n  \"port\": 161,\n  \"community\": \"public\",\n  \"description\": \"Serveur de production principal\",\n  \"active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/snmp/assets",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "assets"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('asset_id', response.id);",
+                  "    pm.test('Asset created with ID', function () {",
+                  "        pm.expect(response.id).to.exist;",
+                  "        pm.expect(response.hostname).to.eql('server01.example.com');",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create Asset - Switch SNMP v3",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hostname\": \"switch01.example.com\",\n  \"ipAddress\": \"192.168.1.10\",\n  \"type\": \"SWITCH\",\n  \"snmpVersion\": \"V3\",\n  \"port\": 161,\n  \"snmpV3User\": \"admin\",\n  \"authProtocol\": \"SHA\",\n  \"authPass\": \"authpassword\",\n  \"privProtocol\": \"AES\",\n  \"privPass\": \"privpassword\",\n  \"description\": \"Switch principal du réseau\",\n  \"active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/snmp/assets",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "assets"]
+            }
+          }
+        },
+        {
+          "name": "Get Asset by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/snmp/assets/{{asset_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "assets", "{{asset_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Active Assets",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/snmp/assets/active",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "assets", "active"]
+            }
+          }
+        },
+        {
+          "name": "Get Assets by Type",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/snmp/assets/type/SERVER",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "assets", "type", "SERVER"]
+            }
+          }
+        },
+        {
+          "name": "Toggle Asset Status",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{base_url}}/api/snmp/assets/{{asset_id}}/toggle-status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "assets", "{{asset_id}}", "toggle-status"]
+            }
+          }
+        },
+        {
+          "name": "Get Asset Statistics",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/snmp/assets/statistics/by-type",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "assets", "statistics", "by-type"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "SNMP Configurations",
+      "item": [
+        {
+          "name": "Get All Configs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/snmp/configs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "configs"]
+            }
+          }
+        },
+        {
+          "name": "Create Config - CPU Monitoring",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"CPU Monitoring - Server01\",\n  \"asset\": {\n    \"id\": {{asset_id}}\n  },\n  \"intervalMinutes\": 5,\n  \"oids\": [\n    \"1.3.6.1.4.1.2021.11.9.0\",\n    \"1.3.6.1.4.1.2021.11.10.0\",\n    \"1.3.6.1.4.1.2021.11.11.0\"\n  ],\n  \"severityThresholds\": {\n    \"1.3.6.1.4.1.2021.11.9.0\": {\n      \"oid\": \"1.3.6.1.4.1.2021.11.9.0\",\n      \"operator\": \"GREATER_THAN\",\n      \"value\": 80,\n      \"severity\": \"HIGH\"\n    }\n  },\n  \"description\": \"Surveillance CPU avec seuil d'alerte à 80%\",\n  \"active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/snmp/configs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "configs"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('config_id', response.id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Config by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/snmp/configs/{{config_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "configs", "{{config_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Run Manual Scan",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/api/snmp/configs/{{config_id}}/run",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "configs", "{{config_id}}", "run"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('result_id', response.id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Configs by Asset",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/snmp/configs/asset/{{asset_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "configs", "asset", "{{asset_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "SNMP Results",
+      "item": [
+        {
+          "name": "Get All Results (Paginated)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/snmp/results?page=0&size=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "results"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Result by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/snmp/results/{{result_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "results", "{{result_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Results by Asset",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/snmp/results/asset/{{asset_id}}?page=0&size=5",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "results", "asset", "{{asset_id}}"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Results by Status",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/snmp/results/status/SUCCESS?page=0&size=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "results", "status", "SUCCESS"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Latest Result by Asset",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/snmp/results/latest/asset/{{asset_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "results", "latest", "asset", "{{asset_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Success Rate",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/snmp/results/statistics/success-rate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "results", "statistics", "success-rate"]
+            }
+          }
+        },
+        {
+          "name": "Get Statistics by Status",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/snmp/results/statistics/by-status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "results", "statistics", "by-status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error Cases",
+      "item": [
+        {
+          "name": "Create Asset - Invalid Data",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"INVALID_TYPE\",\n  \"snmpVersion\": \"V2C\",\n  \"port\": -1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/snmp/assets",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "assets"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Non-existent Asset",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/snmp/assets/99999",
+              "host": ["{{base_url}}"],
+              "path": ["api", "snmp", "assets", "99999"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 404', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+} 

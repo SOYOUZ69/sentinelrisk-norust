@@ -62,6 +62,35 @@ import { KeycloakService } from '../../core/auth/keycloak.service';
           </a>
         </mat-nav-list>
       </mat-expansion-panel>
+
+      <!-- Menu SNMP avec sous-menus -->
+      <mat-expansion-panel class="mat-elevation-z0" *appHasRole="['admin', 'risk_manager']">
+        <mat-expansion-panel-header expandedHeight="48px" collapsedHeight="48px">
+          <mat-panel-title class="sidebar-menu-title">
+            <mat-icon>router</mat-icon>
+            <span>SNMP</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        
+        <mat-nav-list class="sub-menu">
+          <a mat-list-item routerLink="/snmp" routerLinkActive="active">
+            <mat-icon matListItemIcon>devices</mat-icon>
+            <span matListItemTitle>Assets</span>
+          </a>
+          <a mat-list-item routerLink="/snmp/configs" routerLinkActive="active">
+            <mat-icon matListItemIcon>settings</mat-icon>
+            <span matListItemTitle>Configurations</span>
+          </a>
+          <a mat-list-item routerLink="/snmp/run" routerLinkActive="active">
+            <mat-icon matListItemIcon>play_circle</mat-icon>
+            <span matListItemTitle>Scan Manuel</span>
+          </a>
+          <a mat-list-item routerLink="/snmp/results" routerLinkActive="active">
+            <mat-icon matListItemIcon>history</mat-icon>
+            <span matListItemTitle>Historique</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
     </mat-nav-list>
   `,
   styles: [`

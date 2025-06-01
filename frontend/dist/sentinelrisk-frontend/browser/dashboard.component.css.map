@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["angular:styles/component:css;8fc5eeaf479764571701ecc917af7c80f68099f5ec8c0324e6a22bee06a83b72;/Users/omar/Desktop/pfe2025/sentinelrisk-norust/frontend/src/app/pages/dashboard/dashboard.component.ts"],
+  "sourcesContent": ["\n    .dashboard-container {\n      padding: 20px;\n    }\n    mat-card {\n      max-width: 800px;\n      margin: 0 auto;\n    }\n  "],
+  "mappings": ";AACI,CAAC;AACC,WAAS;AACX;AACA;AACE,aAAW;AACX,UAAQ,EAAE;AACZ;",
+  "names": []
+}

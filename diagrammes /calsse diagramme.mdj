@@ -1,0 +1,1673 @@
+{
+  "type": "PROJECT",
+  "id": "project_1",
+  "owner": "staruml3",
+  "name": "DiagrammeClasses",
+  "version": "3.0",
+  "children": [
+    {
+      "type": "UML:Model",
+      "id": "model_1",
+      "name": "Model",
+      "children": [
+        {
+          "type": "UML:Package",
+          "id": "package_1",
+          "name": "Default",
+          "children": [
+            {
+              "type": "UML:Class",
+              "id": "class_Utilisateur",
+              "name": "Utilisateur",
+              "attributes": [
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Utilisateur_id",
+                  "name": "id",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Utilisateur_nomUtilisateur",
+                  "name": "nomUtilisateur",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Utilisateur_email",
+                  "name": "email",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Utilisateur_role",
+                  "name": "role",
+                  "type": "String"
+                }
+              ],
+              "operations": [
+                {
+                  "type": "UML:Operation",
+                  "id": "op_Utilisateur_seConnecter",
+                  "name": "seConnecter",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_Utilisateur_seConnecter_return",
+                      "name": "return",
+                      "type": "boolean",
+                      "direction": "return"
+                    }
+                  ]
+                },
+                {
+                  "type": "UML:Operation",
+                  "id": "op_Utilisateur_deconnecter",
+                  "name": "deconnecter",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_Utilisateur_deconnecter_return",
+                      "name": "return",
+                      "type": "void",
+                      "direction": "return"
+                    }
+                  ]
+                },
+                {
+                  "type": "UML:Operation",
+                  "id": "op_Utilisateur_creerUtilisateur",
+                  "name": "creerUtilisateur",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_Utilisateur_creerUtilisateur_u",
+                      "name": "u",
+                      "type": "Utilisateur",
+                      "direction": "in"
+                    },
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_Utilisateur_creerUtilisateur_return",
+                      "name": "return",
+                      "type": "Utilisateur",
+                      "direction": "return"
+                    }
+                  ]
+                },
+                {
+                  "type": "UML:Operation",
+                  "id": "op_Utilisateur_modifierUtilisateur",
+                  "name": "modifierUtilisateur",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_Utilisateur_modifierUtilisateur_u",
+                      "name": "u",
+                      "type": "Utilisateur",
+                      "direction": "in"
+                    },
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_Utilisateur_modifierUtilisateur_return",
+                      "name": "return",
+                      "type": "Utilisateur",
+                      "direction": "return"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "UML:Class",
+              "id": "class_Risque",
+              "name": "Risque",
+              "attributes": [
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Risque_id",
+                  "name": "id",
+                  "type": "Long"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Risque_nom",
+                  "name": "nom",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Risque_description",
+                  "name": "description",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Risque_niveauImpact",
+                  "name": "niveauImpact",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Risque_niveauProbabilite",
+                  "name": "niveauProbabilite",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Risque_statut",
+                  "name": "statut",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Risque_score",
+                  "name": "score",
+                  "type": "Double"
+                }
+              ],
+              "operations": [
+                {
+                  "type": "UML:Operation",
+                  "id": "op_Risque_creerRisque",
+                  "name": "creerRisque",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_Risque_creerRisque_return",
+                      "name": "return",
+                      "type": "Risque",
+                      "direction": "return"
+                    }
+                  ]
+                },
+                {
+                  "type": "UML:Operation",
+                  "id": "op_Risque_modifierRisque",
+                  "name": "modifierRisque",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_Risque_modifierRisque_return",
+                      "name": "return",
+                      "type": "Risque",
+                      "direction": "return"
+                    }
+                  ]
+                },
+                {
+                  "type": "UML:Operation",
+                  "id": "op_Risque_supprimerRisque",
+                  "name": "supprimerRisque",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_Risque_supprimerRisque_return",
+                      "name": "return",
+                      "type": "void",
+                      "direction": "return"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "UML:Class",
+              "id": "class_PlanAction",
+              "name": "PlanAction",
+              "attributes": [
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_PlanAction_id",
+                  "name": "id",
+                  "type": "Long"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_PlanAction_titre",
+                  "name": "titre",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_PlanAction_description",
+                  "name": "description",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_PlanAction_dateEcheance",
+                  "name": "dateEcheance",
+                  "type": "Date"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_PlanAction_statut",
+                  "name": "statut",
+                  "type": "String"
+                }
+              ],
+              "operations": [
+                {
+                  "type": "UML:Operation",
+                  "id": "op_PlanAction_creerPlan",
+                  "name": "creerPlan",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_PlanAction_creerPlan_return",
+                      "name": "return",
+                      "type": "PlanAction",
+                      "direction": "return"
+                    }
+                  ]
+                },
+                {
+                  "type": "UML:Operation",
+                  "id": "op_PlanAction_modifierPlan",
+                  "name": "modifierPlan",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_PlanAction_modifierPlan_return",
+                      "name": "return",
+                      "type": "PlanAction",
+                      "direction": "return"
+                    }
+                  ]
+                },
+                {
+                  "type": "UML:Operation",
+                  "id": "op_PlanAction_mettreAjourStatut",
+                  "name": "mettreAjourStatut",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_PlanAction_mettreAjourStatut_return",
+                      "name": "return",
+                      "type": "void",
+                      "direction": "return"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "UML:Class",
+              "id": "class_ActifSNMP",
+              "name": "ActifSNMP",
+              "attributes": [
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_ActifSNMP_id",
+                  "name": "id",
+                  "type": "Long"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_ActifSNMP_nomHote",
+                  "name": "nomHote",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_ActifSNMP_adresseIP",
+                  "name": "adresseIP",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_ActifSNMP_type",
+                  "name": "type",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_ActifSNMP_version",
+                  "name": "version",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_ActifSNMP_communaute",
+                  "name": "communaute",
+                  "type": "String"
+                }
+              ],
+              "operations": [
+                {
+                  "type": "UML:Operation",
+                  "id": "op_ActifSNMP_creerActif",
+                  "name": "creerActif",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_ActifSNMP_creerActif_return",
+                      "name": "return",
+                      "type": "ActifSNMP",
+                      "direction": "return"
+                    }
+                  ]
+                },
+                {
+                  "type": "UML:Operation",
+                  "id": "op_ActifSNMP_modifierActif",
+                  "name": "modifierActif",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_ActifSNMP_modifierActif_return",
+                      "name": "return",
+                      "type": "ActifSNMP",
+                      "direction": "return"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "UML:Class",
+              "id": "class_Controle",
+              "name": "Controle",
+              "attributes": [
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Controle_id",
+                  "name": "id",
+                  "type": "Long"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Controle_nom",
+                  "name": "nom",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Controle_type",
+                  "name": "type",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Controle_frequence",
+                  "name": "frequence",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Controle_statut",
+                  "name": "statut",
+                  "type": "String"
+                }
+              ],
+              "operations": [
+                {
+                  "type": "UML:Operation",
+                  "id": "op_Controle_creerControle",
+                  "name": "creerControle",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_Controle_creerControle_return",
+                      "name": "return",
+                      "type": "Controle",
+                      "direction": "return"
+                    }
+                  ]
+                },
+                {
+                  "type": "UML:Operation",
+                  "id": "op_Controle_modifierControle",
+                  "name": "modifierControle",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_Controle_modifierControle_return",
+                      "name": "return",
+                      "type": "Controle",
+                      "direction": "return"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "UML:Class",
+              "id": "class_Evaluation",
+              "name": "Evaluation",
+              "attributes": [
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Evaluation_id",
+                  "name": "id",
+                  "type": "Long"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Evaluation_statut",
+                  "name": "statut",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Evaluation_dateEvaluation",
+                  "name": "dateEvaluation",
+                  "type": "Date"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Evaluation_conclusions",
+                  "name": "conclusions",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Evaluation_recommandations",
+                  "name": "recommandations",
+                  "type": "String"
+                }
+              ],
+              "operations": [
+                {
+                  "type": "UML:Operation",
+                  "id": "op_Evaluation_lancerEvaluation",
+                  "name": "lancerEvaluation",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_Evaluation_lancerEvaluation_return",
+                      "name": "return",
+                      "type": "Evaluation",
+                      "direction": "return"
+                    }
+                  ]
+                },
+                {
+                  "type": "UML:Operation",
+                  "id": "op_Evaluation_cloreEvaluation",
+                  "name": "cloreEvaluation",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_Evaluation_cloreEvaluation_return",
+                      "name": "return",
+                      "type": "void",
+                      "direction": "return"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "UML:Class",
+              "id": "class_Categorie",
+              "name": "Categorie",
+              "attributes": [
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Categorie_id",
+                  "name": "id",
+                  "type": "Long"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Categorie_nom",
+                  "name": "nom",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_Categorie_description",
+                  "name": "description",
+                  "type": "String"
+                }
+              ],
+              "operations": [
+                {
+                  "type": "UML:Operation",
+                  "id": "op_Categorie_creerCategorie",
+                  "name": "creerCategorie",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_Categorie_creerCategorie_return",
+                      "name": "return",
+                      "type": "Categorie",
+                      "direction": "return"
+                    }
+                  ]
+                },
+                {
+                  "type": "UML:Operation",
+                  "id": "op_Categorie_modifierCategorie",
+                  "name": "modifierCategorie",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_Categorie_modifierCategorie_return",
+                      "name": "return",
+                      "type": "Categorie",
+                      "direction": "return"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "UML:Class",
+              "id": "class_FrameworkConformite",
+              "name": "FrameworkConformite",
+              "attributes": [
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_FrameworkConformite_id",
+                  "name": "id",
+                  "type": "Long"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_FrameworkConformite_nom",
+                  "name": "nom",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_FrameworkConformite_version",
+                  "name": "version",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_FrameworkConformite_description",
+                  "name": "description",
+                  "type": "String"
+                }
+              ],
+              "operations": [
+                {
+                  "type": "UML:Operation",
+                  "id": "op_FrameworkConformite_creerFramework",
+                  "name": "creerFramework",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_FrameworkConformite_creerFramework_return",
+                      "name": "return",
+                      "type": "FrameworkConformite",
+                      "direction": "return"
+                    }
+                  ]
+                },
+                {
+                  "type": "UML:Operation",
+                  "id": "op_FrameworkConformite_modifierFramework",
+                  "name": "modifierFramework",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_FrameworkConformite_modifierFramework_return",
+                      "name": "return",
+                      "type": "FrameworkConformite",
+                      "direction": "return"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "UML:Class",
+              "id": "class_MappingRisqueConforme",
+              "name": "MappingRisqueConforme",
+              "attributes": [
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_MappingRisqueConforme_id",
+                  "name": "id",
+                  "type": "Long"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_MappingRisqueConforme_statut",
+                  "name": "statut",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_MappingRisqueConforme_preuve",
+                  "name": "preuve",
+                  "type": "String"
+                }
+              ],
+              "operations": [
+                {
+                  "type": "UML:Operation",
+                  "id": "op_MappingRisqueConforme_creerMapping",
+                  "name": "creerMapping",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_MappingRisqueConforme_creerMapping_return",
+                      "name": "return",
+                      "type": "MappingRisqueConforme",
+                      "direction": "return"
+                    }
+                  ]
+                },
+                {
+                  "type": "UML:Operation",
+                  "id": "op_MappingRisqueConforme_modifierMapping",
+                  "name": "modifierMapping",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_MappingRisqueConforme_modifierMapping_return",
+                      "name": "return",
+                      "type": "MappingRisqueConforme",
+                      "direction": "return"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "UML:Class",
+              "id": "class_ExigenceConformite",
+              "name": "ExigenceConformite",
+              "attributes": [
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_ExigenceConformite_id",
+                  "name": "id",
+                  "type": "Long"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_ExigenceConformite_code",
+                  "name": "code",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_ExigenceConformite_description",
+                  "name": "description",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_ExigenceConformite_type",
+                  "name": "type",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_ExigenceConformite_seuil",
+                  "name": "seuil",
+                  "type": "Double"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_ExigenceConformite_operateurSeuil",
+                  "name": "operateurSeuil",
+                  "type": "String"
+                }
+              ],
+              "operations": [
+                {
+                  "type": "UML:Operation",
+                  "id": "op_ExigenceConformite_creerExigence",
+                  "name": "creerExigence",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_ExigenceConformite_creerExigence_return",
+                      "name": "return",
+                      "type": "ExigenceConformite",
+                      "direction": "return"
+                    }
+                  ]
+                },
+                {
+                  "type": "UML:Operation",
+                  "id": "op_ExigenceConformite_modifierExigence",
+                  "name": "modifierExigence",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_ExigenceConformite_modifierExigence_return",
+                      "name": "return",
+                      "type": "ExigenceConformite",
+                      "direction": "return"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "UML:Class",
+              "id": "class_ConfigurationScan",
+              "name": "ConfigurationScan",
+              "attributes": [
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_ConfigurationScan_id",
+                  "name": "id",
+                  "type": "Long"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_ConfigurationScan_nom",
+                  "name": "nom",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_ConfigurationScan_intervalleMinutes",
+                  "name": "intervalleMinutes",
+                  "type": "Integer"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_ConfigurationScan_oids",
+                  "name": "oids",
+                  "type": "List<String>"
+                }
+              ],
+              "operations": [
+                {
+                  "type": "UML:Operation",
+                  "id": "op_ConfigurationScan_creerConfig",
+                  "name": "creerConfig",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_ConfigurationScan_creerConfig_return",
+                      "name": "return",
+                      "type": "ConfigurationScan",
+                      "direction": "return"
+                    }
+                  ]
+                },
+                {
+                  "type": "UML:Operation",
+                  "id": "op_ConfigurationScan_modifierConfig",
+                  "name": "modifierConfig",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_ConfigurationScan_modifierConfig_return",
+                      "name": "return",
+                      "type": "ConfigurationScan",
+                      "direction": "return"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "UML:Class",
+              "id": "class_ResultatScan",
+              "name": "ResultatScan",
+              "attributes": [
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_ResultatScan_id",
+                  "name": "id",
+                  "type": "Long"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_ResultatScan_dateScan",
+                  "name": "dateScan",
+                  "type": "Date"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_ResultatScan_scoreGlobal",
+                  "name": "scoreGlobal",
+                  "type": "Double"
+                }
+              ],
+              "operations": [
+                {
+                  "type": "UML:Operation",
+                  "id": "op_ResultatScan_lancerScanManuel",
+                  "name": "lancerScanManuel",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_ResultatScan_lancerScanManuel_return",
+                      "name": "return",
+                      "type": "ResultatScan",
+                      "direction": "return"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "UML:Class",
+              "id": "class_MesureOID",
+              "name": "MesureOID",
+              "attributes": [
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_MesureOID_id",
+                  "name": "id",
+                  "type": "Long"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_MesureOID_oid",
+                  "name": "oid",
+                  "type": "String"
+                },
+                {
+                  "type": "UML:Attribute",
+                  "id": "attr_MesureOID_valeur",
+                  "name": "valeur",
+                  "type": "String"
+                }
+              ],
+              "operations": [
+                {
+                  "type": "UML:Operation",
+                  "id": "op_MesureOID_ajouterMesure",
+                  "name": "ajouterMesure",
+                  "visibility": "public",
+                  "parameters": [
+                    {
+                      "type": "UML:Parameter",
+                      "id": "param_MesureOID_ajouterMesure_return",
+                      "name": "return",
+                      "type": "MesureOID",
+                      "direction": "return"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "UML:Association",
+              "id": "assoc_Utilisateur_Risque",
+              "name": "",
+              "ownedEnds": [
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_Utilisateur_Risque_Utilisateur",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "1",
+                  "type": "class_Utilisateur"
+                },
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_Utilisateur_Risque_Risque",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "0..*",
+                  "type": "class_Risque"
+                }
+              ]
+            },
+            {
+              "type": "UML:Association",
+              "id": "assoc_Utilisateur_PlanAction",
+              "name": "",
+              "ownedEnds": [
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_Utilisateur_PlanAction_Utilisateur",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "1",
+                  "type": "class_Utilisateur"
+                },
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_Utilisateur_PlanAction_PlanAction",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "0..*",
+                  "type": "class_PlanAction"
+                }
+              ]
+            },
+            {
+              "type": "UML:Association",
+              "id": "assoc_Utilisateur_ActifSNMP",
+              "name": "",
+              "ownedEnds": [
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_Utilisateur_ActifSNMP_Utilisateur",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "1",
+                  "type": "class_Utilisateur"
+                },
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_Utilisateur_ActifSNMP_ActifSNMP",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "0..*",
+                  "type": "class_ActifSNMP"
+                }
+              ]
+            },
+            {
+              "type": "UML:Association",
+              "id": "assoc_Utilisateur_FrameworkConformite",
+              "name": "",
+              "ownedEnds": [
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_Utilisateur_FrameworkConformite_Utilisateur",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "1",
+                  "type": "class_Utilisateur"
+                },
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_Utilisateur_FrameworkConformite_FrameworkConformite",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "0..*",
+                  "type": "class_FrameworkConformite"
+                }
+              ]
+            },
+            {
+              "type": "UML:Association",
+              "id": "assoc_Utilisateur_ConfigurationScan",
+              "name": "",
+              "ownedEnds": [
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_Utilisateur_ConfigurationScan_Utilisateur",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "1",
+                  "type": "class_Utilisateur"
+                },
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_Utilisateur_ConfigurationScan_ConfigurationScan",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "0..*",
+                  "type": "class_ConfigurationScan"
+                }
+              ]
+            },
+            {
+              "type": "UML:Association",
+              "id": "assoc_Risque_Categorie",
+              "name": "",
+              "ownedEnds": [
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_Risque_Categorie_Risque",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "1",
+                  "type": "class_Risque"
+                },
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_Risque_Categorie_Categorie",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "0..*",
+                  "type": "class_Categorie"
+                }
+              ]
+            },
+            {
+              "type": "UML:Association",
+              "id": "assoc_Risque_Evaluation",
+              "name": "",
+              "ownedEnds": [
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_Risque_Evaluation_Risque",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "0..*",
+                  "type": "class_Risque"
+                },
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_Risque_Evaluation_Evaluation",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "0..*",
+                  "type": "class_Evaluation"
+                }
+              ]
+            },
+            {
+              "type": "UML:Association",
+              "id": "assoc_Risque_Controle",
+              "name": "",
+              "ownedEnds": [
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_Risque_Controle_Risque",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "0..*",
+                  "type": "class_Risque"
+                },
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_Risque_Controle_Controle",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "0..*",
+                  "type": "class_Controle"
+                }
+              ]
+            },
+            {
+              "type": "UML:Association",
+              "id": "assoc_Risque_MappingRisqueConforme",
+              "name": "",
+              "ownedEnds": [
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_Risque_MappingRisqueConforme_Risque",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "0..*",
+                  "type": "class_Risque"
+                },
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_Risque_MappingRisqueConforme_MappingRisqueConforme",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "1",
+                  "type": "class_MappingRisqueConforme"
+                }
+              ]
+            },
+            {
+              "type": "UML:Association",
+              "id": "assoc_FrameworkConformite_PlanAction",
+              "name": "",
+              "ownedEnds": [
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_FrameworkConformite_PlanAction_FrameworkConformite",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "1",
+                  "type": "class_FrameworkConformite"
+                },
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_FrameworkConformite_PlanAction_PlanAction",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "0..*",
+                  "type": "class_PlanAction"
+                }
+              ]
+            },
+            {
+              "type": "UML:Association",
+              "id": "assoc_FrameworkConformite_MappingRisqueConforme",
+              "name": "",
+              "ownedEnds": [
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_FrameworkConformite_MappingRisqueConforme_FrameworkConformite",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "1",
+                  "type": "class_FrameworkConformite"
+                },
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_FrameworkConformite_MappingRisqueConforme_MappingRisqueConforme",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "0..*",
+                  "type": "class_MappingRisqueConforme"
+                }
+              ]
+            },
+            {
+              "type": "UML:Association",
+              "id": "assoc_MappingRisqueConforme_ExigenceConformite",
+              "name": "",
+              "ownedEnds": [
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_MappingRisqueConforme_ExigenceConformite_MappingRisqueConforme",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "1",
+                  "type": "class_MappingRisqueConforme"
+                },
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_MappingRisqueConforme_ExigenceConformite_ExigenceConformite",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "0..*",
+                  "type": "class_ExigenceConformite"
+                }
+              ]
+            },
+            {
+              "type": "UML:Association",
+              "id": "assoc_ConfigurationScan_ResultatScan",
+              "name": "",
+              "ownedEnds": [
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_ConfigurationScan_ResultatScan_ConfigurationScan",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "1",
+                  "type": "class_ConfigurationScan"
+                },
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_ConfigurationScan_ResultatScan_ResultatScan",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "0..*",
+                  "type": "class_ResultatScan"
+                }
+              ]
+            },
+            {
+              "type": "UML:Association",
+              "id": "assoc_ResultatScan_MesureOID",
+              "name": "",
+              "ownedEnds": [
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_ResultatScan_MesureOID_ResultatScan",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "1",
+                  "type": "class_ResultatScan"
+                },
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_ResultatScan_MesureOID_MesureOID",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "0..*",
+                  "type": "class_MesureOID"
+                }
+              ]
+            },
+            {
+              "type": "UML:Association",
+              "id": "assoc_ConfigurationScan_ActifSNMP",
+              "name": "",
+              "ownedEnds": [
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_ConfigurationScan_ActifSNMP_ConfigurationScan",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "0..*",
+                  "type": "class_ConfigurationScan"
+                },
+                {
+                  "type": "UML:AssociationEnd",
+                  "id": "end_ConfigurationScan_ActifSNMP_ActifSNMP",
+                  "name": "",
+                  "visibility": "public",
+                  "isNavigable": true,
+                  "aggregation": "none",
+                  "multiplicity": "0..*",
+                  "type": "class_ActifSNMP"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "views": [
+        {
+          "type": "UML:Diagram",
+          "id": "diagram_1",
+          "name": "DiagrammeClasses",
+          "diagramType": "ClassDiagram",
+          "children": [
+            {
+              "type": "UML:DiagramClass",
+              "id": "diagClass_Utilisateur",
+              "subject": "class_Utilisateur",
+              "layoutConstraint": {
+                "type": "UML:Bounds",
+                "x": 100,
+                "y": 50,
+                "width": 140,
+                "height": 160
+              }
+            },
+            {
+              "type": "UML:DiagramClass",
+              "id": "diagClass_Risque",
+              "subject": "class_Risque",
+              "layoutConstraint": {
+                "type": "UML:Bounds",
+                "x": 300,
+                "y": 50,
+                "width": 140,
+                "height": 180
+              }
+            },
+            {
+              "type": "UML:DiagramClass",
+              "id": "diagClass_PlanAction",
+              "subject": "class_PlanAction",
+              "layoutConstraint": {
+                "type": "UML:Bounds",
+                "x": 520,
+                "y": 50,
+                "width": 140,
+                "height": 160
+              }
+            },
+            {
+              "type": "UML:DiagramClass",
+              "id": "diagClass_ActifSNMP",
+              "subject": "class_ActifSNMP",
+              "layoutConstraint": {
+                "type": "UML:Bounds",
+                "x": 740,
+                "y": 50,
+                "width": 140,
+                "height": 180
+              }
+            },
+            {
+              "type": "UML:DiagramClass",
+              "id": "diagClass_Controle",
+              "subject": "class_Controle",
+              "layoutConstraint": {
+                "type": "UML:Bounds",
+                "x": 100,
+                "y": 260,
+                "width": 140,
+                "height": 140
+              }
+            },
+            {
+              "type": "UML:DiagramClass",
+              "id": "diagClass_Evaluation",
+              "subject": "class_Evaluation",
+              "layoutConstraint": {
+                "type": "UML:Bounds",
+                "x": 300,
+                "y": 260,
+                "width": 140,
+                "height": 160
+              }
+            },
+            {
+              "type": "UML:DiagramClass",
+              "id": "diagClass_Categorie",
+              "subject": "class_Categorie",
+              "layoutConstraint": {
+                "type": "UML:Bounds",
+                "x": 520,
+                "y": 260,
+                "width": 140,
+                "height": 140
+              }
+            },
+            {
+              "type": "UML:DiagramClass",
+              "id": "diagClass_FrameworkConformite",
+              "subject": "class_FrameworkConformite",
+              "layoutConstraint": {
+                "type": "UML:Bounds",
+                "x": 740,
+                "y": 260,
+                "width": 140,
+                "height": 160
+              }
+            },
+            {
+              "type": "UML:DiagramClass",
+              "id": "diagClass_MappingRisqueConforme",
+              "subject": "class_MappingRisqueConforme",
+              "layoutConstraint": {
+                "type": "UML:Bounds",
+                "x": 300,
+                "y": 480,
+                "width": 140,
+                "height": 140
+              }
+            },
+            {
+              "type": "UML:DiagramClass",
+              "id": "diagClass_ExigenceConformite",
+              "subject": "class_ExigenceConformite",
+              "layoutConstraint": {
+                "type": "UML:Bounds",
+                "x": 520,
+                "y": 480,
+                "width": 140,
+                "height": 160
+              }
+            },
+            {
+              "type": "UML:DiagramClass",
+              "id": "diagClass_ConfigurationScan",
+              "subject": "class_ConfigurationScan",
+              "layoutConstraint": {
+                "type": "UML:Bounds",
+                "x": 740,
+                "y": 480,
+                "width": 140,
+                "height": 160
+              }
+            },
+            {
+              "type": "UML:DiagramClass",
+              "id": "diagClass_ResultatScan",
+              "subject": "class_ResultatScan",
+              "layoutConstraint": {
+                "type": "UML:Bounds",
+                "x": 920,
+                "y": 480,
+                "width": 140,
+                "height": 140
+              }
+            },
+            {
+              "type": "UML:DiagramClass",
+              "id": "diagClass_MesureOID",
+              "subject": "class_MesureOID",
+              "layoutConstraint": {
+                "type": "UML:Bounds",
+                "x": 920,
+                "y": 660,
+                "width": 140,
+                "height": 140
+              }
+            },
+            {
+              "type": "UML:DiagramAssociation",
+              "id": "diagAssoc_Utilisateur_Risque",
+              "subject": "assoc_Utilisateur_Risque",
+              "layoutConstraint": {
+                "type": "UML:Points",
+                "points": [
+                  { "x": 180, "y": 120 },
+                  { "x": 300, "y": 120 }
+                ]
+              }
+            },
+            {
+              "type": "UML:DiagramAssociation",
+              "id": "diagAssoc_Utilisateur_PlanAction",
+              "subject": "assoc_Utilisateur_PlanAction",
+              "layoutConstraint": {
+                "type": "UML:Points",
+                "points": [
+                  { "x": 180, "y": 120 },
+                  { "x": 520, "y": 120 }
+                ]
+              }
+            },
+            {
+              "type": "UML:DiagramAssociation",
+              "id": "diagAssoc_Utilisateur_ActifSNMP",
+              "subject": "assoc_Utilisateur_ActifSNMP",
+              "layoutConstraint": {
+                "type": "UML:Points",
+                "points": [
+                  { "x": 180, "y": 120 },
+                  { "x": 740, "y": 120 }
+                ]
+              }
+            },
+            {
+              "type": "UML:DiagramAssociation",
+              "id": "diagAssoc_Utilisateur_FrameworkConformite",
+              "subject": "assoc_Utilisateur_FrameworkConformite",
+              "layoutConstraint": {
+                "type": "UML:Points",
+                "points": [
+                  { "x": 180, "y": 120 },
+                  { "x": 740, "y": 340 }
+                ]
+              }
+            },
+            {
+              "type": "UML:DiagramAssociation",
+              "id": "diagAssoc_Utilisateur_ConfigurationScan",
+              "subject": "assoc_Utilisateur_ConfigurationScan",
+              "layoutConstraint": {
+                "type": "UML:Points",
+                "points": [
+                  { "x": 180, "y": 120 },
+                  { "x": 740, "y": 520 }
+                ]
+              }
+            },
+            {
+              "type": "UML:DiagramAssociation",
+              "id": "diagAssoc_Risque_Categorie",
+              "subject": "assoc_Risque_Categorie",
+              "layoutConstraint": {
+                "type": "UML:Points",
+                "points": [
+                  { "x": 370, "y": 120 },
+                  { "x": 520, "y": 340 }
+                ]
+              }
+            },
+            {
+              "type": "UML:DiagramAssociation",
+              "id": "diagAssoc_Risque_Evaluation",
+              "subject": "assoc_Risque_Evaluation",
+              "layoutConstraint": {
+                "type": "UML:Points",
+                "points": [
+                  { "x": 370, "y": 120 },
+                  { "x": 370, "y": 340 }
+                ]
+              }
+            },
+            {
+              "type": "UML:DiagramAssociation",
+              "id": "diagAssoc_Risque_Controle",
+              "subject": "assoc_Risque_Controle",
+              "layoutConstraint": {
+                "type": "UML:Points",
+                "points": [
+                  { "x": 370, "y": 120 },
+                  { "x": 180, "y": 340 }
+                ]
+              }
+            },
+            {
+              "type": "UML:DiagramAssociation",
+              "id": "diagAssoc_Risque_MappingRisqueConforme",
+              "subject": "assoc_Risque_MappingRisqueConforme",
+              "layoutConstraint": {
+                "type": "UML:Points",
+                "points": [
+                  { "x": 370, "y": 120 },
+                  { "x": 370, "y": 520 }
+                ]
+              }
+            },
+            {
+              "type": "UML:DiagramAssociation",
+              "id": "diagAssoc_FrameworkConformite_PlanAction",
+              "subject": "assoc_FrameworkConformite_PlanAction",
+              "layoutConstraint": {
+                "type": "UML:Points",
+                "points": [
+                  { "x": 780, "y": 120 },
+                  { "x": 520, "y": 120 }
+                ]
+              }
+            },
+            {
+              "type": "UML:DiagramAssociation",
+              "id": "diagAssoc_FrameworkConformite_MappingRisqueConforme",
+              "subject": "assoc_FrameworkConformite_MappingRisqueConforme",
+              "layoutConstraint": {
+                "type": "UML:Points",
+                "points": [
+                  { "x": 780, "y": 340 },
+                  { "x": 370, "y": 520 }
+                ]
+              }
+            },
+            {
+              "type": "UML:DiagramAssociation",
+              "id": "diagAssoc_MappingRisqueConforme_ExigenceConformite",
+              "subject": "assoc_MappingRisqueConforme_ExigenceConformite",
+              "layoutConstraint": {
+                "type": "UML:Points",
+                "points": [
+                  { "x": 370, "y": 520 },
+                  { "x": 520, "y": 520 }
+                ]
+              }
+            },
+            {
+              "type": "UML:DiagramAssociation",
+              "id": "diagAssoc_ConfigurationScan_ResultatScan",
+              "subject": "assoc_ConfigurationScan_ResultatScan",
+              "layoutConstraint": {
+                "type": "UML:Points",
+                "points": [
+                  { "x": 780, "y": 520 },
+                  { "x": 920, "y": 520 }
+                ]
+              }
+            },
+            {
+              "type": "UML:DiagramAssociation",
+              "id": "diagAssoc_ResultatScan_MesureOID",
+              "subject": "assoc_ResultatScan_MesureOID",
+              "layoutConstraint": {
+                "type": "UML:Points",
+                "points": [
+                  { "x": 920, "y": 520 },
+                  { "x": 920, "y": 660 }
+                ]
+              }
+            },
+            {
+              "type": "UML:DiagramAssociation",
+              "id": "diagAssoc_ConfigurationScan_ActifSNMP",
+              "subject": "assoc_ConfigurationScan_ActifSNMP",
+              "layoutConstraint": {
+                "type": "UML:Points",
+                "points": [
+                  { "x": 740, "y": 520 },
+                  { "x": 740, "y": 120 }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

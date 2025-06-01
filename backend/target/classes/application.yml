@@ -50,4 +50,13 @@ springdoc:
     filter: true
     disable-swagger-default-url: true
   api-docs:
-    path: /v3/api-docs 
+    path: /v3/api-docs
+
+# Configuration SNMP
+snmp:
+  scheduler:
+    enabled: true
+    interval: 300000  # 5 minutes en millisecondes
+  cleanup:
+    cron: "0 0 2 * * ?"  # Tous les jours à 2h du matin
+    retention-days: 30   # Conserver les résultats pendant 30 jours 
