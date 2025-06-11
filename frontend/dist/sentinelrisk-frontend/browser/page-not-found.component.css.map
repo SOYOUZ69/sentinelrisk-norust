@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["angular:styles/component:css;35139d6ba80adae88a0e4d8869c2766b686dfe3091817f91a956c995c96e8114;/Users/omar/Desktop/pfe2025/sentinelrisk-norust/frontend/src/app/shared/components/page-not-found/page-not-found.component.ts"],
-  "sourcesContent": ["\n    .not-found-container {\n      display: flex;\n      flex-direction: column;\n      align-items: center;\n      justify-content: center;\n      text-align: center;\n      height: 100vh;\n      padding: 0 20px;\n    }\n    \n    h1 {\n      font-size: 120px;\n      font-weight: 700;\n      margin: 0;\n      color: #3f51b5;\n    }\n    \n    h2 {\n      font-size: 28px;\n      font-weight: 500;\n      margin: 0 0 20px;\n    }\n    \n    p {\n      font-size: 18px;\n      margin-bottom: 30px;\n      color: rgba(0, 0, 0, 0.6);\n    }\n  "],
-  "mappings": ";AACI,CAAC;AACC,WAAS;AACT,kBAAgB;AAChB,eAAa;AACb,mBAAiB;AACjB,cAAY;AACZ,UAAQ;AACR,WAAS,EAAE;AACb;AAEA;AACE,aAAW;AACX,eAAa;AACb,UAAQ;AACR,SAAO;AACT;AAEA;AACE,aAAW;AACX,eAAa;AACb,UAAQ,EAAE,EAAE;AACd;AAEA;AACE,aAAW;AACX,iBAAe;AACf,SAAO,KAAK,CAAC,EAAE,CAAC,EAAE,CAAC,EAAE;AACvB;",
-  "names": []
-}

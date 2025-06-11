@@ -33,10 +33,10 @@
         <mat-card *ngFor="let config of configs" class="config-card">
           <mat-card-header>
             <mat-card-title>{{ config.name }}</mat-card-title>
-            <mat-card-subtitle>Asset: {{ config.asset?.hostname || config.asset?.ipAddress }}</mat-card-subtitle>
+            <mat-card-subtitle>Asset: {{ config.asset.hostname || config.asset.ipAddress }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
-            <p><strong>OIDs:</strong> {{ config.oids?.length || 0 }} configurés</p>
+            <p><strong>OIDs:</strong> {{ config.oids.length || 0 }} configurés</p>
             <p><strong>Statut:</strong> 
               <mat-chip [color]="config.active ? 'primary' : 'warn'" selected>
                 {{ config.active ? 'Actif' : 'Inactif' }}

@@ -20,12 +20,12 @@
 
   <mat-card *ngIf="assessment && !isLoading" class="assessment-card">
     <mat-card-header>
-      <div mat-card-avatar [ngClass]="'status-badge ' + assessment.status?.toLowerCase()">
+      <div mat-card-avatar [ngClass]="'status-badge ' + assessment.status.toLowerCase()">
         <mat-icon>assessment</mat-icon>
       </div>
       <mat-card-title>Évaluation #{{assessment.id}}</mat-card-title>
       <mat-card-subtitle>
-        <span [ngClass]="'status-pill ' + assessment.status?.toLowerCase()">
+        <span [ngClass]="'status-pill ' + assessment.status.toLowerCase()">
           {{assessment.status}}
         </span>
       </mat-card-subtitle>
@@ -36,7 +36,7 @@
         <h3>Informations générales</h3>
         <div class="detail-item">
           <span class="label">Risque:</span>
-          <span class="value">{{assessment.risk?.name || 'Non défini'}}</span>
+          <span class="value">{{assessment.risk.name || 'Non défini'}}</span>
         </div>
         <div class="detail-item">
           <span class="label">Date d'évaluation:</span>

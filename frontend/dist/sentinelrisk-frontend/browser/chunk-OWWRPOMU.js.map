@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/features/admin/shared/admin-shared.module.ts"],
-  "sourcesContent": ["import { NgModule } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { MatDialogModule } from '@angular/material/dialog';\nimport { MatButtonModule } from '@angular/material/button';\nimport { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';\n\n@NgModule({\n  declarations: [\n    ConfirmDialogComponent\n  ],\n  imports: [\n    CommonModule,\n    MatDialogModule,\n    MatButtonModule\n  ],\n  exports: [\n    ConfirmDialogComponent\n  ]\n})\nexport class AdminSharedModule { } "],
-  "mappings": ";;;;;;;;;;;;;AAmBM,IAAO,oBAAP,MAAO,mBAAiB;;;uBAAjB,oBAAiB;IAAA;EAAA;;wEAAjB,mBAAiB,CAAA;EAAA;;;MAR1B;MACA;MACA;IAAe,EAAA,CAAA;EAAA;;",
-  "names": []
-}

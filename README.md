@@ -131,6 +131,7 @@ Les services suivants devraient être opérationnels :
    - [x] Configuration de Spring Security avec Keycloak
    - [x] Mise en place des entités de base
    - [x] Développement des APIs REST
+   - [x] **Endpoints Dashboard** : Implémentation des endpoints `/api/dashboard/summary/*` (risks, compliance, snmp, plans, global)
 4. [ ] Développement du frontend Angular
    - [x] Initialisation du projet Angular
      - [x] Création avec routing activé et SCSS
@@ -159,13 +160,13 @@ Les services suivants devraient être opérationnels :
      - [x] Services spécifiques : UserService, RiskService, etc.
      - [x] Gestion automatique des tokens
    - [ ] Développement des pages
-     - [ ] Dashboard
+     - [x] **Dashboard** : Interface complète avec graphiques ngx-charts (actuellement en mode statique temporaire)
      - [x] Utilisateurs (liste, création, édition, suppression)
      - [x] Risques (liste, création, édition, suppression)
      - [ ] Contrôles
      - [ ] Catégories
      - [ ] Évaluations
-     - [ ] Conformité : module de mappings prédéfinis (ISO 27001, NIST, SOC 2, GDPR)
+     - [ ] Conformité : module de mappings prédéfinis (ISO 27001, NIST, SOC 2, GDPR)
    - [ ] Gestion des rôles côté UI
      - [ ] Lecture des rôles depuis le token JWT
      - [ ] Affichage conditionnel selon rôle
@@ -179,6 +180,119 @@ Les services suivants devraient être opérationnels :
 5. [ ] Configuration des rôles et permissions
 6. [ ] Mise en place des tests
 7. [ ] Configuration du déploiement Kubernetes
+
+## 🚧 Mode Statique Temporaire du Dashboard
+
+**Statut actuel** : Le Dashboard frontend fonctionne en mode statique avec des données fictives.
+
+### Contexte
+Les endpoints backend `/api/dashboard/summary/*` sont implémentés mais nécessitent une authentification JWT. Pour permettre le développement de l'interface utilisateur sans dépendre du backend, le Dashboard a été temporairement basculé en mode statique.
+
+### Fonctionnalités en Mode Statique
+- ✅ **Affichage immédiat** : Toutes les cartes KPI et graphiques s'affichent instantanément
+- ✅ **Données réalistes** : 4 sections avec des métriques cohérentes (Risques, Conformité, SNMP, Plans d'action)
+- ✅ **Graphiques interactifs** : Utilisation complète de ngx-charts avec animations
+- ✅ **Graphiques optimisés** : Rendu et redimensionnement corrigés (pas de re-rendering en boucle)
+- ✅ **Indicateur visuel** : Chip "MODE DÉMO" avec animation pour clarifier le statut
+- ✅ **Filtres désactivés** : Interface complète mais non fonctionnelle (mode démo)
+- ✅ **Aucune erreur réseau** : Pas d'appels HTTP, pas d'erreurs dans la console
+
+### Données Statiques Utilisées
+- **Risques** : 36 total (30 ouverts, 6 fermés) répartis par niveau et catégorie
+- **Conformité** : 60 contrôles (66.7% de conformité) sur ISO 27001, NIST, SOC 2
+- **SNMP** : 55 actifs (88% de taux de succès) par type (serveurs, commutateurs, etc.)
+- **Plans d'Action** : 23 plans (52.2% de complétion) avec statuts détaillés
+
+### Test du Mode Statique
+```bash
+# Lancer le frontend
+cd frontend
+npm start
+
+# Accéder au Dashboard
+# http://localhost:4200/dashboard
+```
+
+Voir le fichier `frontend/test-dashboard-static.md` pour les détails complets des tests.
+
+### Retour au Mode Dynamique
+Une fois les endpoints backend opérationnels avec l'authentification :
+1. Décommenter les appels HTTP dans `dashboard.component.ts`
+2. Réactiver la réactivité des filtres
+3. Supprimer l'indicateur "MODE DÉMO"
+4. Remettre les champs de filtres en mode actif
+
+## 🎯 Optimisations des Graphiques Dashboard
+
+**Statut** : Problèmes de rendu et redimensionnement résolus.
+
+### Problèmes Corrigés
+- ❌ **Graphiques trop petits** au chargement initial
+- ❌ **Re-rendering en boucle** lors du redimensionnement de la fenêtre
+- ❌ **Performance dégradée** avec cycles de détection excessifs
+- ❌ **Redimensionnement instable** avec clignotements
+
+### Solutions Implémentées
+
+#### 1. **Système de Dimensions Fixes**
+- **ViewChild** : Références directes aux containers de graphiques
+- **Calcul dynamique** : Dimensions calculées via `getBoundingClientRect()`
+- **Propriétés [view]** : Dimensions fixes passées à chaque graphique ngx-charts
+- **Dimensions minimales** : 300x250px garanties sur mobile
+
+#### 2. **Optimisations de Performance**
+- **ChangeDetectionStrategy.OnPush** : Réduction des cycles de détection
+- **ResizeObserver** : Gestion intelligente du redimensionnement
+- **Throttling** : Maximum 1 recalcul toutes les 300ms
+- **ChangeDetectorRef** : Contrôle manuel des mises à jour
+
+#### 3. **Structure Optimisée**
+```typescript
+// Dimensions calculées une seule fois
+riskLevelChartView: [number, number] = [400, 300];
+
+// Calcul après initialisation de la vue
+ngAfterViewInit(): void {
+  setTimeout(() => {
+    this.calculateChartDimensions();
+    this.setupResizeObserver();
+  }, 100);
+}
+```
+
+#### 4. **Template Structuré**
+```html
+<div class="chart-container" #riskLevelChartContainer>
+  <h3 class="chart-title">Distribution par niveau de risque</h3>
+  <div class="chart-wrapper">
+    <ngx-charts-pie-chart
+      [view]="riskLevelChartView"
+      [results]="riskLevelChart">
+    </ngx-charts-pie-chart>
+  </div>
+</div>
+```
+
+### Résultats Obtenus
+- ✅ **Affichage optimal** : Graphiques de taille appropriée dès le chargement
+- ✅ **Redimensionnement stable** : Une seule fois par changement de taille
+- ✅ **Performance améliorée** : Pas de re-rendering continu
+- ✅ **Responsive fluide** : Adaptation aux breakpoints sans saccades
+- ✅ **Budget CSS respecté** : Réduction de 8.05 kB à 6.60 kB
+
+### Tests de Validation
+Voir le fichier `frontend/test-charts-optimization.md` pour les procédures de test complètes.
+
+```bash
+# Test rapide
+cd frontend
+npm run build  # ✅ Compilation sans erreurs
+npm start      # ✅ Serveur opérationnel
+# Ouvrir http://localhost:4200/dashboard
+# Redimensionner la fenêtre → Pas de clignotement
+```
+
+---
 
 ## Structure des Entités
 

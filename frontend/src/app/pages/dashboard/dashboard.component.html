@@ -1,1 +1,384 @@
- 
+<div class="dashboard-container">
+  <!-- Header Section -->
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">
+      <mat-icon class="title-icon">dashboard</mat-icon>
+      Tableau de Bord
+      <!-- Indicateur mode démo -->
+      <mat-chip class="demo-chip" color="accent">MODE DÉMO</mat-chip>
+    </h1>
+    
+    <!-- Refresh Button -->
+    <button 
+      mat-fab 
+      color="primary" 
+      class="refresh-btn"
+      [disabled]="isLoading"
+      (click)="onRefresh()"
+      matTooltip="Actualiser les données (mode démo)">
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </div>
+
+  <!-- Filters Section -->
+  <mat-card class="filters-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>filter_list</mat-icon>
+        Filtres (Mode démo - non fonctionnels)
+      </mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <form [formGroup]="filterForm" class="filters-form">
+        <div class="filter-row">
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Date de début</mat-label>
+            <input matInput [matDatepicker]="startPicker" formControlName="startDate" [disabled]="true">
+            <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Date de fin</mat-label>
+            <input matInput [matDatepicker]="endPicker" formControlName="endDate" [disabled]="true">
+            <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Référentiel de conformité</mat-label>
+            <mat-select formControlName="framework" [disabled]="true">
+              <mat-option *ngFor="let option of frameworkOptions" [value]="option.value">
+                {{option.label}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Rôle utilisateur</mat-label>
+            <mat-select formControlName="role" [disabled]="true">
+              <mat-option *ngFor="let option of roleOptions" [value]="option.value">
+                {{option.label}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button 
+            mat-raised-button 
+            color="warn" 
+            type="button" 
+            (click)="onResetFilters()"
+            class="reset-btn"
+            [disabled]="true">
+            <mat-icon>clear</mat-icon>
+            Réinitialiser
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Loading Spinner - Masqué en mode statique -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p class="loading-text">Chargement des données...</p>
+  </div>
+
+  <!-- Error Message - Masqué en mode statique -->
+  <mat-card *ngIf="error && !isLoading" class="error-card">
+    <mat-card-content>
+      <div class="error-content">
+        <mat-icon color="warn">error</mat-icon>
+        <span>{{error}}</span>
+        <button mat-button color="primary" (click)="onRefresh()">
+          <mat-icon>refresh</mat-icon>
+          Réessayer
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Dashboard Content - Toujours affiché en mode statique -->
+  <div class="dashboard-content">
+    
+    <!-- Risks Section -->
+    <div class="dashboard-section">
+      <mat-card class="section-card">
+        <mat-card-header>
+          <div mat-card-avatar class="section-avatar risks-avatar">
+            <mat-icon>warning</mat-icon>
+          </div>
+          <mat-card-title>Gestion des Risques</mat-card-title>
+          <mat-card-subtitle>Aperçu des risques identifiés et leur distribution</mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div class="section-content">
+            <!-- Risk Statistics -->
+            <div class="stats-grid">
+              <div class="stat-item">
+                <div class="stat-value">{{riskSummary.totalRisks}}</div>
+                <div class="stat-label">Total des risques</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value open-risks">{{riskSummary.openRisks}}</div>
+                <div class="stat-label">Risques ouverts</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value closed-risks">{{riskSummary.closedRisks}}</div>
+                <div class="stat-label">Risques fermés</div>
+              </div>
+            </div>
+
+            <!-- Risk Level Chart -->
+            <div class="chart-container" #riskLevelChartContainer>
+              <h3 class="chart-title">Distribution par niveau de risque</h3>
+              <div class="chart-wrapper">
+                <ngx-charts-pie-chart
+                  [view]="riskLevelChartView"
+                  [results]="riskLevelChart"
+                  [scheme]="riskLevelColors"
+                  [legend]="showLegend"
+                  [explodeSlices]="false"
+                  [labels]="true"
+                  [doughnut]="false"
+                  [gradient]="gradient"
+                  [animations]="animations"
+                  (select)="onChartSelect($event)"
+                  (activate)="onChartActivate($event)"
+                  (deactivate)="onChartDeactivate($event)">
+                </ngx-charts-pie-chart>
+              </div>
+            </div>
+
+            <!-- Risk Category Chart -->
+            <div class="chart-container" #riskCategoryChartContainer>
+              <h3 class="chart-title">Distribution par catégorie</h3>
+              <div class="chart-wrapper">
+                <ngx-charts-bar-vertical
+                  [view]="riskCategoryChartView"
+                  [results]="riskCategoryChart"
+                  [scheme]="colorScheme"
+                  [xAxis]="showXAxis"
+                  [yAxis]="showYAxis"
+                  [legend]="showLegend"
+                  [showXAxisLabel]="showXAxisLabel"
+                  [showYAxisLabel]="showYAxisLabel"
+                  [gradient]="gradient"
+                  [animations]="animations"
+                  (select)="onChartSelect($event)">
+                </ngx-charts-bar-vertical>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Compliance Section -->
+    <div class="dashboard-section">
+      <mat-card class="section-card">
+        <mat-card-header>
+          <div mat-card-avatar class="section-avatar compliance-avatar">
+            <mat-icon>verified_user</mat-icon>
+          </div>
+          <mat-card-title>Conformité Réglementaire</mat-card-title>
+          <mat-card-subtitle>Suivi de la conformité aux différents référentiels</mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div class="section-content">
+            <!-- Compliance Statistics -->
+            <div class="stats-grid">
+              <div class="stat-item">
+                <div class="stat-value">{{complianceSummary.totalControls}}</div>
+                <div class="stat-label">Total des contrôles</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value compliant">{{complianceSummary.compliantControls}}</div>
+                <div class="stat-label">Conformes</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value non-compliant">{{complianceSummary.nonCompliantControls}}</div>
+                <div class="stat-label">Non conformes</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value compliance-rate">{{complianceSummary.complianceRate}}%</div>
+                <div class="stat-label">Taux de conformité</div>
+              </div>
+            </div>
+
+            <!-- Compliance Status Chart -->
+            <div class="chart-container" #complianceStatusChartContainer>
+              <h3 class="chart-title">Statut de conformité</h3>
+              <div class="chart-wrapper">
+                <ngx-charts-advanced-pie-chart
+                  [view]="complianceStatusChartView"
+                  [results]="complianceStatusChart"
+                  [scheme]="complianceColors"
+                  [gradient]="gradient"
+                  [animations]="animations"
+                  (select)="onChartSelect($event)">
+                </ngx-charts-advanced-pie-chart>
+              </div>
+            </div>
+
+            <!-- Compliance Framework Chart -->
+            <div class="chart-container" #complianceFrameworkChartContainer>
+              <h3 class="chart-title">Contrôles par référentiel</h3>
+              <div class="chart-wrapper">
+                <ngx-charts-bar-horizontal
+                  [view]="complianceFrameworkChartView"
+                  [results]="complianceFrameworkChart"
+                  [scheme]="colorScheme"
+                  [xAxis]="showXAxis"
+                  [yAxis]="showYAxis"
+                  [legend]="showLegend"
+                  [showXAxisLabel]="showXAxisLabel"
+                  [showYAxisLabel]="showYAxisLabel"
+                  [gradient]="gradient"
+                  [animations]="animations"
+                  (select)="onChartSelect($event)">
+                </ngx-charts-bar-horizontal>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- SNMP Section -->
+    <div class="dashboard-section">
+      <mat-card class="section-card">
+        <mat-card-header>
+          <div mat-card-avatar class="section-avatar snmp-avatar">
+            <mat-icon>devices</mat-icon>
+          </div>
+          <mat-card-title>Surveillance SNMP</mat-card-title>
+          <mat-card-subtitle>État des actifs et résultats des scans SNMP</mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div class="section-content">
+            <!-- SNMP Statistics -->
+            <div class="stats-grid">
+              <div class="stat-item">
+                <div class="stat-value">{{snmpSummary.totalAssets}}</div>
+                <div class="stat-label">Total des actifs</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value active-assets">{{snmpSummary.activeAssets}}</div>
+                <div class="stat-label">Actifs actifs</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value inactive-assets">{{snmpSummary.inactiveAssets}}</div>
+                <div class="stat-label">Actifs inactifs</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value success-rate">{{snmpSummary.successRate}}%</div>
+                <div class="stat-label">Taux de succès</div>
+              </div>
+            </div>
+
+            <!-- SNMP Type Chart -->
+            <div class="chart-container" #snmpTypeChartContainer>
+              <h3 class="chart-title">Répartition par type d'actif</h3>
+              <div class="chart-wrapper">
+                <ngx-charts-pie-chart
+                  [view]="snmpTypeChartView"
+                  [results]="snmpTypeChart"
+                  [scheme]="colorScheme"
+                  [legend]="showLegend"
+                  [explodeSlices]="false"
+                  [labels]="true"
+                  [doughnut]="true"
+                  [gradient]="gradient"
+                  [animations]="animations"
+                  (select)="onChartSelect($event)">
+                </ngx-charts-pie-chart>
+              </div>
+            </div>
+
+            <!-- SNMP Status Chart -->
+            <div class="chart-container" #snmpStatusChartContainer>
+              <h3 class="chart-title">État des scans</h3>
+              <div class="chart-wrapper">
+                <ngx-charts-advanced-pie-chart
+                  [view]="snmpStatusChartView"
+                  [results]="snmpStatusChart"
+                  [scheme]="snmpColors"
+                  [gradient]="gradient"
+                  [animations]="animations"
+                  (select)="onChartSelect($event)">
+                </ngx-charts-advanced-pie-chart>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Action Plans Section -->
+    <div class="dashboard-section">
+      <mat-card class="section-card">
+        <mat-card-header>
+          <div mat-card-avatar class="section-avatar plans-avatar">
+            <mat-icon>assignment</mat-icon>
+          </div>
+          <mat-card-title>Plans d'Action</mat-card-title>
+          <mat-card-subtitle>Suivi des plans d'action et de leur avancement</mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div class="section-content">
+            <!-- Plans Statistics -->
+            <div class="stats-grid">
+              <div class="stat-item">
+                <div class="stat-value">{{actionPlansSummary.totalPlans}}</div>
+                <div class="stat-label">Total des plans</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value active-plans">{{actionPlansSummary.activePlans}}</div>
+                <div class="stat-label">Plans actifs</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value completed-plans">{{actionPlansSummary.completedPlans}}</div>
+                <div class="stat-label">Plans terminés</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value overdue-plans">{{actionPlansSummary.overduePlans}}</div>
+                <div class="stat-label">Plans en retard</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value completion-rate">{{actionPlansSummary.completionRate}}%</div>
+                <div class="stat-label">Taux de complétion</div>
+              </div>
+            </div>
+
+            <!-- Plans Status Chart -->
+            <div class="chart-container" #planStatusChartContainer>
+              <h3 class="chart-title">Statut des plans d'action</h3>
+              <div class="chart-wrapper">
+                <ngx-charts-bar-vertical
+                  [view]="planStatusChartView"
+                  [results]="planStatusChart"
+                  [scheme]="colorScheme"
+                  [xAxis]="showXAxis"
+                  [yAxis]="showYAxis"
+                  [legend]="showLegend"
+                  [showXAxisLabel]="showXAxisLabel"
+                  [showYAxisLabel]="showYAxisLabel"
+                  [gradient]="gradient"
+                  [animations]="animations"
+                  (select)="onChartSelect($event)">
+                </ngx-charts-bar-vertical>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+  </div>
+</div> 

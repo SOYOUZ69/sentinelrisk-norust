@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/features/categories/components/category-form-dialog/category-form-dialog.component.scss"],
-  "sourcesContent": [".page-content {\n  max-width: 800px;\n  margin: 0 auto;\n  padding: 20px;\n}\n\n.dialog-content {\n  padding: 0 10px;\n}\n\n.page-title {\n  margin-bottom: 24px;\n  color: #3f51b5;\n  font-weight: 500;\n}\n\n.form-content {\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n}\n\n.full-width {\n  width: 100%;\n}\n\n.form-actions {\n  display: flex;\n  justify-content: flex-end;\n  margin-top: 24px;\n  gap: 8px;\n}\n\n.spinner {\n  display: inline-block;\n  margin-right: 8px;\n} "],
-  "mappings": ";AAAA,CAAA;AACE,aAAA;AACA,UAAA,EAAA;AACA,WAAA;;AAGF,CAAA;AACE,WAAA,EAAA;;AAGF,CAAA;AACE,iBAAA;AACA,SAAA;AACA,eAAA;;AAGF,CAAA;AACE,WAAA;AACA,kBAAA;AACA,OAAA;;AAGF,CAAA;AACE,SAAA;;AAGF,CAAA;AACE,WAAA;AACA,mBAAA;AACA,cAAA;AACA,OAAA;;AAGF,CAAA;AACE,WAAA;AACA,gBAAA;;",
-  "names": []
-}

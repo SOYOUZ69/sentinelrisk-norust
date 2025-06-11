@@ -5,6 +5,7 @@
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/controller/UserController.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/repository/RiskRepository.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/service/AssessmentRequestService.java
+/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/dto/DashboardSummaryDto.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/controller/SnmpAssetController.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/service/dto/compliance/GapAnalysisResponse.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/model/RiskLevel.java
@@ -18,6 +19,7 @@
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/dto/ConfigCreateRequest.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/service/compliance/ComplianceRequirementService.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/controller/RiskController.java
+/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/controller/DashboardController.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/service/dto/compliance/RiskComplianceMappingDTO.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/dto/ControlResponse.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/config/JacksonConfig.java
@@ -27,6 +29,7 @@
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/controller/RiskController.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/config/KeycloakAdminConfig.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/dto/ImportResult.java
+/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/service/DashboardService.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/SentinelRiskApplication.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/model/ComplianceControl.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/repository/SnmpScanResultRepository.java

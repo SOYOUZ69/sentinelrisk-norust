@@ -31,6 +31,7 @@ com/sentinelrisk/backend/model/Risk$ProbabilityLevel.class
 com/sentinelrisk/model/SnmpScanResult$ScanStatus.class
 com/sentinelrisk/backend/repository/compliance/RemediationPlanRepository.class
 com/sentinelrisk/model/SnmpScanConfig.class
+com/sentinelrisk/dto/DashboardSummaryDto$ActionPlansSummary.class
 com/sentinelrisk/repository/AssetRepository.class
 com/sentinelrisk/backend/service/RiskServiceWrapper.class
 com/sentinelrisk/backend/dto/BulkResponse$Error.class
@@ -46,6 +47,7 @@ com/sentinelrisk/backend/service/UserService.class
 com/sentinelrisk/backend/dto/ControlDTO.class
 com/sentinelrisk/model/ComplianceControl.class
 com/sentinelrisk/backend/web/rest/compliance/RemediationPlanResource.class
+com/sentinelrisk/backend/controller/DashboardController$1.class
 com/sentinelrisk/backend/model/Risk$ImpactLevel.class
 com/sentinelrisk/backend/service/ControlService.class
 com/sentinelrisk/model/User.class
@@ -85,14 +87,17 @@ com/sentinelrisk/backend/controller/UserController.class
 com/sentinelrisk/backend/domain/compliance/RiskComplianceMapping.class
 com/sentinelrisk/backend/service/CategoryService.class
 com/sentinelrisk/dto/RiskDTO.class
+com/sentinelrisk/dto/DashboardSummaryDto.class
 com/sentinelrisk/backend/controller/DebugController.class
 com/sentinelrisk/service/KeycloakUserService.class
 com/sentinelrisk/backend/domain/compliance/RiskComplianceMapping$ComplianceStatus.class
+com/sentinelrisk/backend/controller/DashboardController.class
 com/sentinelrisk/controller/SnmpConfigController.class
 com/sentinelrisk/backend/dto/ControlResponse.class
 com/sentinelrisk/controller/SnmpAssetController.class
 com/sentinelrisk/backend/service/mapper/RemediationPlanMapper.class
 com/sentinelrisk/backend/dto/ImportError.class
+com/sentinelrisk/dto/DashboardSummaryDto$RiskSummary.class
 com/sentinelrisk/backend/model/Risk.class
 com/sentinelrisk/backend/dto/AssessmentDTO$RiskDTO.class
 com/sentinelrisk/backend/SentinelRiskApplication.class
@@ -106,6 +111,7 @@ com/sentinelrisk/model/SnmpScanConfig$SeverityThreshold$SeverityLevel.class
 com/sentinelrisk/service/AssetService.class
 com/sentinelrisk/backend/dto/CategoryResponse.class
 com/sentinelrisk/exception/GlobalExceptionHandler.class
+com/sentinelrisk/dto/DashboardSummaryDto$SnmpSummary.class
 com/sentinelrisk/backend/controller/AssessmentController.class
 com/sentinelrisk/backend/controller/RiskController.class
 com/sentinelrisk/service/SnmpService$1.class
@@ -113,11 +119,13 @@ com/sentinelrisk/service/ComplianceControlService.class
 com/sentinelrisk/backend/dto/RiskResponse.class
 com/sentinelrisk/backend/model/Control$Status.class
 com/sentinelrisk/service/SnmpScanService$1.class
+com/sentinelrisk/backend/service/DashboardService.class
 com/sentinelrisk/backend/model/User$UserBuilder.class
 com/sentinelrisk/backend/service/dto/compliance/ComplianceRequirementDTO.class
 com/sentinelrisk/backend/service/compliance/RiskComplianceMappingService.class
 com/sentinelrisk/backend/repository/RiskRepository.class
 com/sentinelrisk/backend/domain/compliance/RemediationPlan$Status.class
+com/sentinelrisk/dto/DashboardSummaryDto$ComplianceSummary.class
 com/sentinelrisk/backend/repository/CategoryRepository.class
 com/sentinelrisk/model/Asset.class
 com/sentinelrisk/backend/mapper/ControlMapper.class

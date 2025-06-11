@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.sentinelrisk.backend.controller.DashboardControllerTest" time="2.18" tests="5" errors="0" skipped="0" failures="4">
+  <properties>
+    <property name="java.specification.version" value="17"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/target/test-classes:/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/target/classes:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-web/3.2.3/spring-boot-starter-web-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter/3.2.3/spring-boot-starter-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot/3.2.3/spring-boot-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-autoconfigure/3.2.3/spring-boot-autoconfigure-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-logging/3.2.3/spring-boot-starter-logging-3.2.3.jar:/Users/omar/.m2/repository/ch/qos/logback/logback-classic/1.4.14/logback-classic-1.4.14.jar:/Users/omar/.m2/repository/ch/qos/logback/logback-core/1.4.14/logback-core-1.4.14.jar:/Users/omar/.m2/repository/org/apache/logging/log4j/log4j-to-slf4j/2.21.1/log4j-to-slf4j-2.21.1.jar:/Users/omar/.m2/repository/org/slf4j/jul-to-slf4j/2.0.12/jul-to-slf4j-2.0.12.jar:/Users/omar/.m2/repository/jakarta/annotation/jakarta.annotation-api/2.1.1/jakarta.annotation-api-2.1.1.jar:/Users/omar/.m2/repository/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-json/3.2.3/spring-boot-starter-json-3.2.3.jar:/Users/omar/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.15.4/jackson-databind-2.15.4.jar:/Users/omar/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.15.4/jackson-datatype-jdk8-2.15.4.jar:/Users/omar/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.15.4/jackson-datatype-jsr310-2.15.4.jar:/Users/omar/.m2/repository/com/fasterxml/jackson/module/jackson-module-parameter-names/2.15.4/jackson-module-parameter-names-2.15.4.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-tomcat/3.2.3/spring-boot-starter-tomcat-3.2.3.jar:/Users/omar/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/10.1.19/tomcat-embed-core-10.1.19.jar:/Users/omar/.m2/repository/org/apache/tomcat/embed/tomcat-embed-websocket/10.1.19/tomcat-embed-websocket-10.1.19.jar:/Users/omar/.m2/repository/org/springframework/spring-web/6.1.4/spring-web-6.1.4.jar:/Users/omar/.m2/repository/org/springframework/spring-beans/6.1.4/spring-beans-6.1.4.jar:/Users/omar/.m2/repository/io/micrometer/micrometer-observation/1.12.3/micrometer-observation-1.12.3.jar:/Users/omar/.m2/repository/io/micrometer/micrometer-commons/1.12.3/micrometer-commons-1.12.3.jar:/Users/omar/.m2/repository/org/springframework/spring-webmvc/6.1.4/spring-webmvc-6.1.4.jar:/Users/omar/.m2/repository/org/springframework/spring-context/6.1.4/spring-context-6.1.4.jar:/Users/omar/.m2/repository/org/springframework/spring-expression/6.1.4/spring-expression-6.1.4.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-data-jpa/3.2.3/spring-boot-starter-data-jpa-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-aop/3.2.3/spring-boot-starter-aop-3.2.3.jar:/Users/omar/.m2/repository/org/aspectj/aspectjweaver/1.9.21/aspectjweaver-1.9.21.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-jdbc/3.2.3/spring-boot-starter-jdbc-3.2.3.jar:/Users/omar/.m2/repository/com/zaxxer/HikariCP/5.0.1/HikariCP-5.0.1.jar:/Users/omar/.m2/repository/org/springframework/spring-jdbc/6.1.4/spring-jdbc-6.1.4.jar:/Users/omar/.m2/repository/org/hibernate/orm/hibernate-core/6.4.4.Final/hibernate-core-6.4.4.Final.jar:/Users/omar/.m2/repository/jakarta/persistence/jakarta.persistence-api/3.1.0/jakarta.persistence-api-3.1.0.jar:/Users/omar/.m2/repository/jakarta/transaction/jakarta.transaction-api/2.0.1/jakarta.transaction-api-2.0.1.jar:/Users/omar/.m2/repository/org/jboss/logging/jboss-logging/3.5.3.Final/jboss-logging-3.5.3.Final.jar:/Users/omar/.m2/repository/org/hibernate/common/hibernate-commons-annotations/6.0.6.Final/hibernate-commons-annotations-6.0.6.Final.jar:/Users/omar/.m2/repository/io/smallrye/jandex/3.1.2/jandex-3.1.2.jar:/Users/omar/.m2/repository/com/fasterxml/classmate/1.6.0/classmate-1.6.0.jar:/Users/omar/.m2/repository/net/bytebuddy/byte-buddy/1.14.12/byte-buddy-1.14.12.jar:/Users/omar/.m2/repository/org/glassfish/jaxb/jaxb-runtime/4.0.4/jaxb-runtime-4.0.4.jar:/Users/omar/.m2/repository/org/antlr/antlr4-runtime/4.13.0/antlr4-runtime-4.13.0.jar:/Users/omar/.m2/repository/org/springframework/data/spring-data-jpa/3.2.3/spring-data-jpa-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/data/spring-data-commons/3.2.3/spring-data-commons-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/spring-orm/6.1.4/spring-orm-6.1.4.jar:/Users/omar/.m2/repository/org/springframework/spring-tx/6.1.4/spring-tx-6.1.4.jar:/Users/omar/.m2/repository/org/slf4j/slf4j-api/2.0.12/slf4j-api-2.0.12.jar:/Users/omar/.m2/repository/org/springframework/spring-aspects/6.1.4/spring-aspects-6.1.4.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-security/3.2.3/spring-boot-starter-security-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/spring-aop/6.1.4/spring-aop-6.1.4.jar:/Users/omar/.m2/repository/org/springframework/security/spring-security-config/6.2.2/spring-security-config-6.2.2.jar:/Users/omar/.m2/repository/org/springframework/security/spring-security-web/6.2.2/spring-security-web-6.2.2.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-oauth2-resource-server/3.2.3/spring-boot-starter-oauth2-resource-server-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/security/spring-security-core/6.2.2/spring-security-core-6.2.2.jar:/Users/omar/.m2/repository/org/springframework/security/spring-security-crypto/6.2.2/spring-security-crypto-6.2.2.jar:/Users/omar/.m2/repository/org/springframework/security/spring-security-oauth2-resource-server/6.2.2/spring-security-oauth2-resource-server-6.2.2.jar:/Users/omar/.m2/repository/org/springframework/security/spring-security-oauth2-core/6.2.2/spring-security-oauth2-core-6.2.2.jar:/Users/omar/.m2/repository/org/springframework/security/spring-security-oauth2-jose/6.2.2/spring-security-oauth2-jose-6.2.2.jar:/Users/omar/.m2/repository/com/nimbusds/nimbus-jose-jwt/9.24.4/nimbus-jose-jwt-9.24.4.jar:/Users/omar/.m2/repository/com/github/stephenc/jcip/jcip-annotations/1.0-1/jcip-annotations-1.0-1.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-validation/3.2.3/spring-boot-starter-validation-3.2.3.jar:/Users/omar/.m2/repository/org/apache/tomcat/embed/tomcat-embed-el/10.1.19/tomcat-embed-el-10.1.19.jar:/Users/omar/.m2/repository/org/hibernate/validator/hibernate-validator/8.0.1.Final/hibernate-validator-8.0.1.Final.jar:/Users/omar/.m2/repository/jakarta/validation/jakarta.validation-api/3.0.2/jakarta.validation-api-3.0.2.jar:/Users/omar/.m2/repository/org/postgresql/postgresql/42.6.1/postgresql-42.6.1.jar:/Users/omar/.m2/repository/org/checkerframework/checker-qual/3.31.0/checker-qual-3.31.0.jar:/Users/omar/.m2/repository/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-configuration-processor/3.2.3/spring-boot-configuration-processor-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-test/3.2.3/spring-boot-starter-test-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-test/3.2.3/spring-boot-test-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-test-autoconfigure/3.2.3/spring-boot-test-autoconfigure-3.2.3.jar:/Users/omar/.m2/repository/com/jayway/jsonpath/json-path/2.9.0/json-path-2.9.0.jar:/Users/omar/.m2/repository/jakarta/xml/bind/jakarta.xml.bind-api/4.0.1/jakarta.xml.bind-api-4.0.1.jar:/Users/omar/.m2/repository/jakarta/activation/jakarta.activation-api/2.1.2/jakarta.activation-api-2.1.2.jar:/Users/omar/.m2/repository/net/minidev/json-smart/2.5.0/json-smart-2.5.0.jar:/Users/omar/.m2/repository/net/minidev/accessors-smart/2.5.0/accessors-smart-2.5.0.jar:/Users/omar/.m2/repository/org/ow2/asm/asm/9.3/asm-9.3.jar:/Users/omar/.m2/repository/org/assertj/assertj-core/3.24.2/assertj-core-3.24.2.jar:/Users/omar/.m2/repository/org/awaitility/awaitility/4.2.0/awaitility-4.2.0.jar:/Users/omar/.m2/repository/org/hamcrest/hamcrest/2.2/hamcrest-2.2.jar:/Users/omar/.m2/repository/org/junit/jupiter/junit-jupiter/5.10.2/junit-jupiter-5.10.2.jar:/Users/omar/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.10.2/junit-jupiter-api-5.10.2.jar:/Users/omar/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/omar/.m2/repository/org/junit/platform/junit-platform-commons/1.10.2/junit-platform-commons-1.10.2.jar:/Users/omar/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/omar/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.10.2/junit-jupiter-params-5.10.2.jar:/Users/omar/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.10.2/junit-jupiter-engine-5.10.2.jar:/Users/omar/.m2/repository/org/junit/platform/junit-platform-engine/1.10.2/junit-platform-engine-1.10.2.jar:/Users/omar/.m2/repository/org/mockito/mockito-core/5.7.0/mockito-core-5.7.0.jar:/Users/omar/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.12/byte-buddy-agent-1.14.12.jar:/Users/omar/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/Users/omar/.m2/repository/org/mockito/mockito-junit-jupiter/5.7.0/mockito-junit-jupiter-5.7.0.jar:/Users/omar/.m2/repository/org/skyscreamer/jsonassert/1.5.1/jsonassert-1.5.1.jar:/Users/omar/.m2/repository/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar:/Users/omar/.m2/repository/org/springframework/spring-core/6.1.4/spring-core-6.1.4.jar:/Users/omar/.m2/repository/org/springframework/spring-jcl/6.1.4/spring-jcl-6.1.4.jar:/Users/omar/.m2/repository/org/springframework/spring-test/6.1.4/spring-test-6.1.4.jar:/Users/omar/.m2/repository/org/xmlunit/xmlunit-core/2.9.1/xmlunit-core-2.9.1.jar:/Users/omar/.m2/repository/org/springframework/security/spring-security-test/6.2.2/spring-security-test-6.2.2.jar:/Users/omar/.m2/repository/com/h2database/h2/2.2.224/h2-2.2.224.jar:/Users/omar/.m2/repository/org/springdoc/springdoc-openapi-starter-webmvc-ui/2.5.0/springdoc-openapi-starter-webmvc-ui-2.5.0.jar:/Users/omar/.m2/repository/org/springdoc/springdoc-openapi-starter-webmvc-api/2.5.0/springdoc-openapi-starter-webmvc-api-2.5.0.jar:/Users/omar/.m2/repository/org/springdoc/springdoc-openapi-starter-common/2.5.0/springdoc-openapi-starter-common-2.5.0.jar:/Users/omar/.m2/repository/io/swagger/core/v3/swagger-core-jakarta/2.2.21/swagger-core-jakarta-2.2.21.jar:/Users/omar/.m2/repository/org/apache/commons/commons-lang3/3.13.0/commons-lang3-3.13.0.jar:/Users/omar/.m2/repository/io/swagger/core/v3/swagger-annotations-jakarta/2.2.21/swagger-annotations-jakarta-2.2.21.jar:/Users/omar/.m2/repository/io/swagger/core/v3/swagger-models-jakarta/2.2.21/swagger-models-jakarta-2.2.21.jar:/Users/omar/.m2/repository/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.15.4/jackson-dataformat-yaml-2.15.4.jar:/Users/omar/.m2/repository/org/webjars/swagger-ui/5.13.0/swagger-ui-5.13.0.jar:/Users/omar/.m2/repository/org/apache/poi/poi/5.2.5/poi-5.2.5.jar:/Users/omar/.m2/repository/commons-codec/commons-codec/1.16.1/commons-codec-1.16.1.jar:/Users/omar/.m2/repository/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar:/Users/omar/.m2/repository/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar:/Users/omar/.m2/repository/commons-io/commons-io/2.15.0/commons-io-2.15.0.jar:/Users/omar/.m2/repository/com/zaxxer/SparseBitSet/1.3/SparseBitSet-1.3.jar:/Users/omar/.m2/repository/org/apache/logging/log4j/log4j-api/2.21.1/log4j-api-2.21.1.jar:/Users/omar/.m2/repository/org/apache/poi/poi-ooxml/5.2.5/poi-ooxml-5.2.5.jar:/Users/omar/.m2/repository/org/apache/poi/poi-ooxml-lite/5.2.5/poi-ooxml-lite-5.2.5.jar:/Users/omar/.m2/repository/org/apache/xmlbeans/xmlbeans/5.2.0/xmlbeans-5.2.0.jar:/Users/omar/.m2/repository/org/apache/commons/commons-compress/1.25.0/commons-compress-1.25.0.jar:/Users/omar/.m2/repository/com/github/virtuald/curvesapi/1.08/curvesapi-1.08.jar:/Users/omar/.m2/repository/org/keycloak/keycloak-admin-client/22.0.5/keycloak-admin-client-22.0.5.jar:/Users/omar/.m2/repository/org/keycloak/keycloak-core/22.0.5/keycloak-core-22.0.5.jar:/Users/omar/.m2/repository/org/keycloak/keycloak-common/22.0.5/keycloak-common-22.0.5.jar:/Users/omar/.m2/repository/org/jboss/resteasy/resteasy-client/6.2.4.Final/resteasy-client-6.2.4.Final.jar:/Users/omar/.m2/repository/org/jboss/resteasy/resteasy-client-api/6.2.4.Final/resteasy-client-api-6.2.4.Final.jar:/Users/omar/.m2/repository/org/jboss/resteasy/resteasy-core-spi/6.2.4.Final/resteasy-core-spi-6.2.4.Final.jar:/Users/omar/.m2/repository/org/jboss/resteasy/resteasy-core/6.2.4.Final/resteasy-core-6.2.4.Final.jar:/Users/omar/.m2/repository/org/jboss/jandex/2.4.3.Final/jandex-2.4.3.Final.jar:/Users/omar/.m2/repository/org/eclipse/angus/angus-activation/2.0.1/angus-activation-2.0.1.jar:/Users/omar/.m2/repository/com/ibm/async/asyncutil/0.1.0/asyncutil-0.1.0.jar:/Users/omar/.m2/repository/org/apache/httpcomponents/httpclient/4.5.14/httpclient-4.5.14.jar:/Users/omar/.m2/repository/org/apache/httpcomponents/httpcore/4.4.16/httpcore-4.4.16.jar:/Users/omar/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/Users/omar/.m2/repository/org/reactivestreams/reactive-streams/1.0.4/reactive-streams-1.0.4.jar:/Users/omar/.m2/repository/org/jboss/resteasy/resteasy-multipart-provider/6.2.4.Final/resteasy-multipart-provider-6.2.4.Final.jar:/Users/omar/.m2/repository/jakarta/mail/jakarta.mail-api/2.1.2/jakarta.mail-api-2.1.2.jar:/Users/omar/.m2/repository/org/eclipse/angus/angus-mail/2.0.2/angus-mail-2.0.2.jar:/Users/omar/.m2/repository/org/apache/james/apache-mime4j-dom/0.8.9/apache-mime4j-dom-0.8.9.jar:/Users/omar/.m2/repository/org/apache/james/apache-mime4j-core/0.8.9/apache-mime4j-core-0.8.9.jar:/Users/omar/.m2/repository/org/apache/james/apache-mime4j-storage/0.8.9/apache-mime4j-storage-0.8.9.jar:/Users/omar/.m2/repository/org/jboss/resteasy/resteasy-jackson2-provider/6.2.4.Final/resteasy-jackson2-provider-6.2.4.Final.jar:/Users/omar/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.15.4/jackson-core-2.15.4.jar:/Users/omar/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.15.4/jackson-annotations-2.15.4.jar:/Users/omar/.m2/repository/com/fasterxml/jackson/jakarta/rs/jackson-jakarta-rs-base/2.15.4/jackson-jakarta-rs-base-2.15.4.jar:/Users/omar/.m2/repository/com/fasterxml/jackson/jakarta/rs/jackson-jakarta-rs-json-provider/2.15.4/jackson-jakarta-rs-json-provider-2.15.4.jar:/Users/omar/.m2/repository/com/fasterxml/jackson/module/jackson-module-jakarta-xmlbind-annotations/2.15.4/jackson-module-jakarta-xmlbind-annotations-2.15.4.jar:/Users/omar/.m2/repository/com/github/java-json-tools/json-patch/1.13/json-patch-1.13.jar:/Users/omar/.m2/repository/com/github/java-json-tools/msg-simple/1.2/msg-simple-1.2.jar:/Users/omar/.m2/repository/com/github/java-json-tools/btf/1.3/btf-1.3.jar:/Users/omar/.m2/repository/com/github/java-json-tools/jackson-coreutils/2.0/jackson-coreutils-2.0.jar:/Users/omar/.m2/repository/org/jboss/resteasy/resteasy-jaxb-provider/6.2.4.Final/resteasy-jaxb-provider-6.2.4.Final.jar:/Users/omar/.m2/repository/org/glassfish/jaxb/codemodel/4.0.4/codemodel-4.0.4.jar:/Users/omar/.m2/repository/org/glassfish/jaxb/jaxb-core/4.0.4/jaxb-core-4.0.4.jar:/Users/omar/.m2/repository/org/glassfish/jaxb/jaxb-jxc/4.0.4/jaxb-jxc-4.0.4.jar:/Users/omar/.m2/repository/org/glassfish/jaxb/txw2/4.0.4/txw2-4.0.4.jar:/Users/omar/.m2/repository/org/glassfish/jaxb/jaxb-xjc/4.0.4/jaxb-xjc-4.0.4.jar:/Users/omar/.m2/repository/org/glassfish/jaxb/xsom/4.0.4/xsom-4.0.4.jar:/Users/omar/.m2/repository/com/sun/istack/istack-commons-runtime/4.1.2/istack-commons-runtime-4.1.2.jar:/Users/omar/.m2/repository/com/sun/istack/istack-commons-tools/4.1.2/istack-commons-tools-4.1.2.jar:/Users/omar/.m2/repository/com/sun/xml/bind/external/relaxng-datatype/4.0.2/relaxng-datatype-4.0.2.jar:/Users/omar/.m2/repository/com/sun/xml/bind/external/rngom/4.0.2/rngom-4.0.2.jar:/Users/omar/.m2/repository/jakarta/ws/rs/jakarta.ws.rs-api/3.1.0/jakarta.ws.rs-api-3.1.0.jar:/Users/omar/.m2/repository/org/glassfish/jersey/core/jersey-client/3.1.5/jersey-client-3.1.5.jar:/Users/omar/.m2/repository/org/glassfish/jersey/core/jersey-common/3.1.5/jersey-common-3.1.5.jar:/Users/omar/.m2/repository/org/glassfish/hk2/osgi-resource-locator/1.0.3/osgi-resource-locator-1.0.3.jar:/Users/omar/.m2/repository/jakarta/inject/jakarta.inject-api/2.0.1/jakarta.inject-api-2.0.1.jar:/Users/omar/.m2/repository/org/snmp4j/snmp4j/3.7.7/snmp4j-3.7.7.jar:"/>
+    <property name="java.vm.vendor" value="Homebrew"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://github.com/Homebrew/homebrew-core/issues"/>
+    <property name="user.timezone" value="Africa/Tunis"/>
+    <property name="org.jboss.logging.provider" value="slf4j"/>
+    <property name="os.name" value="Mac OS X"/>
+    <property name="java.vm.specification.version" value="17"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.boot.library.path" value="/opt/homebrew/Cellar/openjdk@17/17.0.15/libexec/openjdk.jdk/Contents/Home/lib"/>
+    <property name="sun.java.command" value="/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/target/surefire/surefirebooter-20250611230610487_3.jar /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/target/surefire 2025-06-11T23-06-10_439-jvmRun1 surefire-20250611230610487_1tmp surefire_0-20250611230610487_2tmp"/>
+    <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="test" value="DashboardControllerTest"/>
+    <property name="surefire.test.class.path" value="/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/target/test-classes:/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/target/classes:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-web/3.2.3/spring-boot-starter-web-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter/3.2.3/spring-boot-starter-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot/3.2.3/spring-boot-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-autoconfigure/3.2.3/spring-boot-autoconfigure-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-logging/3.2.3/spring-boot-starter-logging-3.2.3.jar:/Users/omar/.m2/repository/ch/qos/logback/logback-classic/1.4.14/logback-classic-1.4.14.jar:/Users/omar/.m2/repository/ch/qos/logback/logback-core/1.4.14/logback-core-1.4.14.jar:/Users/omar/.m2/repository/org/apache/logging/log4j/log4j-to-slf4j/2.21.1/log4j-to-slf4j-2.21.1.jar:/Users/omar/.m2/repository/org/slf4j/jul-to-slf4j/2.0.12/jul-to-slf4j-2.0.12.jar:/Users/omar/.m2/repository/jakarta/annotation/jakarta.annotation-api/2.1.1/jakarta.annotation-api-2.1.1.jar:/Users/omar/.m2/repository/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-json/3.2.3/spring-boot-starter-json-3.2.3.jar:/Users/omar/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.15.4/jackson-databind-2.15.4.jar:/Users/omar/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.15.4/jackson-datatype-jdk8-2.15.4.jar:/Users/omar/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.15.4/jackson-datatype-jsr310-2.15.4.jar:/Users/omar/.m2/repository/com/fasterxml/jackson/module/jackson-module-parameter-names/2.15.4/jackson-module-parameter-names-2.15.4.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-tomcat/3.2.3/spring-boot-starter-tomcat-3.2.3.jar:/Users/omar/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/10.1.19/tomcat-embed-core-10.1.19.jar:/Users/omar/.m2/repository/org/apache/tomcat/embed/tomcat-embed-websocket/10.1.19/tomcat-embed-websocket-10.1.19.jar:/Users/omar/.m2/repository/org/springframework/spring-web/6.1.4/spring-web-6.1.4.jar:/Users/omar/.m2/repository/org/springframework/spring-beans/6.1.4/spring-beans-6.1.4.jar:/Users/omar/.m2/repository/io/micrometer/micrometer-observation/1.12.3/micrometer-observation-1.12.3.jar:/Users/omar/.m2/repository/io/micrometer/micrometer-commons/1.12.3/micrometer-commons-1.12.3.jar:/Users/omar/.m2/repository/org/springframework/spring-webmvc/6.1.4/spring-webmvc-6.1.4.jar:/Users/omar/.m2/repository/org/springframework/spring-context/6.1.4/spring-context-6.1.4.jar:/Users/omar/.m2/repository/org/springframework/spring-expression/6.1.4/spring-expression-6.1.4.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-data-jpa/3.2.3/spring-boot-starter-data-jpa-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-aop/3.2.3/spring-boot-starter-aop-3.2.3.jar:/Users/omar/.m2/repository/org/aspectj/aspectjweaver/1.9.21/aspectjweaver-1.9.21.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-jdbc/3.2.3/spring-boot-starter-jdbc-3.2.3.jar:/Users/omar/.m2/repository/com/zaxxer/HikariCP/5.0.1/HikariCP-5.0.1.jar:/Users/omar/.m2/repository/org/springframework/spring-jdbc/6.1.4/spring-jdbc-6.1.4.jar:/Users/omar/.m2/repository/org/hibernate/orm/hibernate-core/6.4.4.Final/hibernate-core-6.4.4.Final.jar:/Users/omar/.m2/repository/jakarta/persistence/jakarta.persistence-api/3.1.0/jakarta.persistence-api-3.1.0.jar:/Users/omar/.m2/repository/jakarta/transaction/jakarta.transaction-api/2.0.1/jakarta.transaction-api-2.0.1.jar:/Users/omar/.m2/repository/org/jboss/logging/jboss-logging/3.5.3.Final/jboss-logging-3.5.3.Final.jar:/Users/omar/.m2/repository/org/hibernate/common/hibernate-commons-annotations/6.0.6.Final/hibernate-commons-annotations-6.0.6.Final.jar:/Users/omar/.m2/repository/io/smallrye/jandex/3.1.2/jandex-3.1.2.jar:/Users/omar/.m2/repository/com/fasterxml/classmate/1.6.0/classmate-1.6.0.jar:/Users/omar/.m2/repository/net/bytebuddy/byte-buddy/1.14.12/byte-buddy-1.14.12.jar:/Users/omar/.m2/repository/org/glassfish/jaxb/jaxb-runtime/4.0.4/jaxb-runtime-4.0.4.jar:/Users/omar/.m2/repository/org/antlr/antlr4-runtime/4.13.0/antlr4-runtime-4.13.0.jar:/Users/omar/.m2/repository/org/springframework/data/spring-data-jpa/3.2.3/spring-data-jpa-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/data/spring-data-commons/3.2.3/spring-data-commons-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/spring-orm/6.1.4/spring-orm-6.1.4.jar:/Users/omar/.m2/repository/org/springframework/spring-tx/6.1.4/spring-tx-6.1.4.jar:/Users/omar/.m2/repository/org/slf4j/slf4j-api/2.0.12/slf4j-api-2.0.12.jar:/Users/omar/.m2/repository/org/springframework/spring-aspects/6.1.4/spring-aspects-6.1.4.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-security/3.2.3/spring-boot-starter-security-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/spring-aop/6.1.4/spring-aop-6.1.4.jar:/Users/omar/.m2/repository/org/springframework/security/spring-security-config/6.2.2/spring-security-config-6.2.2.jar:/Users/omar/.m2/repository/org/springframework/security/spring-security-web/6.2.2/spring-security-web-6.2.2.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-oauth2-resource-server/3.2.3/spring-boot-starter-oauth2-resource-server-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/security/spring-security-core/6.2.2/spring-security-core-6.2.2.jar:/Users/omar/.m2/repository/org/springframework/security/spring-security-crypto/6.2.2/spring-security-crypto-6.2.2.jar:/Users/omar/.m2/repository/org/springframework/security/spring-security-oauth2-resource-server/6.2.2/spring-security-oauth2-resource-server-6.2.2.jar:/Users/omar/.m2/repository/org/springframework/security/spring-security-oauth2-core/6.2.2/spring-security-oauth2-core-6.2.2.jar:/Users/omar/.m2/repository/org/springframework/security/spring-security-oauth2-jose/6.2.2/spring-security-oauth2-jose-6.2.2.jar:/Users/omar/.m2/repository/com/nimbusds/nimbus-jose-jwt/9.24.4/nimbus-jose-jwt-9.24.4.jar:/Users/omar/.m2/repository/com/github/stephenc/jcip/jcip-annotations/1.0-1/jcip-annotations-1.0-1.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-validation/3.2.3/spring-boot-starter-validation-3.2.3.jar:/Users/omar/.m2/repository/org/apache/tomcat/embed/tomcat-embed-el/10.1.19/tomcat-embed-el-10.1.19.jar:/Users/omar/.m2/repository/org/hibernate/validator/hibernate-validator/8.0.1.Final/hibernate-validator-8.0.1.Final.jar:/Users/omar/.m2/repository/jakarta/validation/jakarta.validation-api/3.0.2/jakarta.validation-api-3.0.2.jar:/Users/omar/.m2/repository/org/postgresql/postgresql/42.6.1/postgresql-42.6.1.jar:/Users/omar/.m2/repository/org/checkerframework/checker-qual/3.31.0/checker-qual-3.31.0.jar:/Users/omar/.m2/repository/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-configuration-processor/3.2.3/spring-boot-configuration-processor-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-starter-test/3.2.3/spring-boot-starter-test-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-test/3.2.3/spring-boot-test-3.2.3.jar:/Users/omar/.m2/repository/org/springframework/boot/spring-boot-test-autoconfigure/3.2.3/spring-boot-test-autoconfigure-3.2.3.jar:/Users/omar/.m2/repository/com/jayway/jsonpath/json-path/2.9.0/json-path-2.9.0.jar:/Users/omar/.m2/repository/jakarta/xml/bind/jakarta.xml.bind-api/4.0.1/jakarta.xml.bind-api-4.0.1.jar:/Users/omar/.m2/repository/jakarta/activation/jakarta.activation-api/2.1.2/jakarta.activation-api-2.1.2.jar:/Users/omar/.m2/repository/net/minidev/json-smart/2.5.0/json-smart-2.5.0.jar:/Users/omar/.m2/repository/net/minidev/accessors-smart/2.5.0/accessors-smart-2.5.0.jar:/Users/omar/.m2/repository/org/ow2/asm/asm/9.3/asm-9.3.jar:/Users/omar/.m2/repository/org/assertj/assertj-core/3.24.2/assertj-core-3.24.2.jar:/Users/omar/.m2/repository/org/awaitility/awaitility/4.2.0/awaitility-4.2.0.jar:/Users/omar/.m2/repository/org/hamcrest/hamcrest/2.2/hamcrest-2.2.jar:/Users/omar/.m2/repository/org/junit/jupiter/junit-jupiter/5.10.2/junit-jupiter-5.10.2.jar:/Users/omar/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.10.2/junit-jupiter-api-5.10.2.jar:/Users/omar/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/omar/.m2/repository/org/junit/platform/junit-platform-commons/1.10.2/junit-platform-commons-1.10.2.jar:/Users/omar/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/omar/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.10.2/junit-jupiter-params-5.10.2.jar:/Users/omar/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.10.2/junit-jupiter-engine-5.10.2.jar:/Users/omar/.m2/repository/org/junit/platform/junit-platform-engine/1.10.2/junit-platform-engine-1.10.2.jar:/Users/omar/.m2/repository/org/mockito/mockito-core/5.7.0/mockito-core-5.7.0.jar:/Users/omar/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.12/byte-buddy-agent-1.14.12.jar:/Users/omar/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/Users/omar/.m2/repository/org/mockito/mockito-junit-jupiter/5.7.0/mockito-junit-jupiter-5.7.0.jar:/Users/omar/.m2/repository/org/skyscreamer/jsonassert/1.5.1/jsonassert-1.5.1.jar:/Users/omar/.m2/repository/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar:/Users/omar/.m2/repository/org/springframework/spring-core/6.1.4/spring-core-6.1.4.jar:/Users/omar/.m2/repository/org/springframework/spring-jcl/6.1.4/spring-jcl-6.1.4.jar:/Users/omar/.m2/repository/org/springframework/spring-test/6.1.4/spring-test-6.1.4.jar:/Users/omar/.m2/repository/org/xmlunit/xmlunit-core/2.9.1/xmlunit-core-2.9.1.jar:/Users/omar/.m2/repository/org/springframework/security/spring-security-test/6.2.2/spring-security-test-6.2.2.jar:/Users/omar/.m2/repository/com/h2database/h2/2.2.224/h2-2.2.224.jar:/Users/omar/.m2/repository/org/springdoc/springdoc-openapi-starter-webmvc-ui/2.5.0/springdoc-openapi-starter-webmvc-ui-2.5.0.jar:/Users/omar/.m2/repository/org/springdoc/springdoc-openapi-starter-webmvc-api/2.5.0/springdoc-openapi-starter-webmvc-api-2.5.0.jar:/Users/omar/.m2/repository/org/springdoc/springdoc-openapi-starter-common/2.5.0/springdoc-openapi-starter-common-2.5.0.jar:/Users/omar/.m2/repository/io/swagger/core/v3/swagger-core-jakarta/2.2.21/swagger-core-jakarta-2.2.21.jar:/Users/omar/.m2/repository/org/apache/commons/commons-lang3/3.13.0/commons-lang3-3.13.0.jar:/Users/omar/.m2/repository/io/swagger/core/v3/swagger-annotations-jakarta/2.2.21/swagger-annotations-jakarta-2.2.21.jar:/Users/omar/.m2/repository/io/swagger/core/v3/swagger-models-jakarta/2.2.21/swagger-models-jakarta-2.2.21.jar:/Users/omar/.m2/repository/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.15.4/jackson-dataformat-yaml-2.15.4.jar:/Users/omar/.m2/repository/org/webjars/swagger-ui/5.13.0/swagger-ui-5.13.0.jar:/Users/omar/.m2/repository/org/apache/poi/poi/5.2.5/poi-5.2.5.jar:/Users/omar/.m2/repository/commons-codec/commons-codec/1.16.1/commons-codec-1.16.1.jar:/Users/omar/.m2/repository/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar:/Users/omar/.m2/repository/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar:/Users/omar/.m2/repository/commons-io/commons-io/2.15.0/commons-io-2.15.0.jar:/Users/omar/.m2/repository/com/zaxxer/SparseBitSet/1.3/SparseBitSet-1.3.jar:/Users/omar/.m2/repository/org/apache/logging/log4j/log4j-api/2.21.1/log4j-api-2.21.1.jar:/Users/omar/.m2/repository/org/apache/poi/poi-ooxml/5.2.5/poi-ooxml-5.2.5.jar:/Users/omar/.m2/repository/org/apache/poi/poi-ooxml-lite/5.2.5/poi-ooxml-lite-5.2.5.jar:/Users/omar/.m2/repository/org/apache/xmlbeans/xmlbeans/5.2.0/xmlbeans-5.2.0.jar:/Users/omar/.m2/repository/org/apache/commons/commons-compress/1.25.0/commons-compress-1.25.0.jar:/Users/omar/.m2/repository/com/github/virtuald/curvesapi/1.08/curvesapi-1.08.jar:/Users/omar/.m2/repository/org/keycloak/keycloak-admin-client/22.0.5/keycloak-admin-client-22.0.5.jar:/Users/omar/.m2/repository/org/keycloak/keycloak-core/22.0.5/keycloak-core-22.0.5.jar:/Users/omar/.m2/repository/org/keycloak/keycloak-common/22.0.5/keycloak-common-22.0.5.jar:/Users/omar/.m2/repository/org/jboss/resteasy/resteasy-client/6.2.4.Final/resteasy-client-6.2.4.Final.jar:/Users/omar/.m2/repository/org/jboss/resteasy/resteasy-client-api/6.2.4.Final/resteasy-client-api-6.2.4.Final.jar:/Users/omar/.m2/repository/org/jboss/resteasy/resteasy-core-spi/6.2.4.Final/resteasy-core-spi-6.2.4.Final.jar:/Users/omar/.m2/repository/org/jboss/resteasy/resteasy-core/6.2.4.Final/resteasy-core-6.2.4.Final.jar:/Users/omar/.m2/repository/org/jboss/jandex/2.4.3.Final/jandex-2.4.3.Final.jar:/Users/omar/.m2/repository/org/eclipse/angus/angus-activation/2.0.1/angus-activation-2.0.1.jar:/Users/omar/.m2/repository/com/ibm/async/asyncutil/0.1.0/asyncutil-0.1.0.jar:/Users/omar/.m2/repository/org/apache/httpcomponents/httpclient/4.5.14/httpclient-4.5.14.jar:/Users/omar/.m2/repository/org/apache/httpcomponents/httpcore/4.4.16/httpcore-4.4.16.jar:/Users/omar/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/Users/omar/.m2/repository/org/reactivestreams/reactive-streams/1.0.4/reactive-streams-1.0.4.jar:/Users/omar/.m2/repository/org/jboss/resteasy/resteasy-multipart-provider/6.2.4.Final/resteasy-multipart-provider-6.2.4.Final.jar:/Users/omar/.m2/repository/jakarta/mail/jakarta.mail-api/2.1.2/jakarta.mail-api-2.1.2.jar:/Users/omar/.m2/repository/org/eclipse/angus/angus-mail/2.0.2/angus-mail-2.0.2.jar:/Users/omar/.m2/repository/org/apache/james/apache-mime4j-dom/0.8.9/apache-mime4j-dom-0.8.9.jar:/Users/omar/.m2/repository/org/apache/james/apache-mime4j-core/0.8.9/apache-mime4j-core-0.8.9.jar:/Users/omar/.m2/repository/org/apache/james/apache-mime4j-storage/0.8.9/apache-mime4j-storage-0.8.9.jar:/Users/omar/.m2/repository/org/jboss/resteasy/resteasy-jackson2-provider/6.2.4.Final/resteasy-jackson2-provider-6.2.4.Final.jar:/Users/omar/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.15.4/jackson-core-2.15.4.jar:/Users/omar/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.15.4/jackson-annotations-2.15.4.jar:/Users/omar/.m2/repository/com/fasterxml/jackson/jakarta/rs/jackson-jakarta-rs-base/2.15.4/jackson-jakarta-rs-base-2.15.4.jar:/Users/omar/.m2/repository/com/fasterxml/jackson/jakarta/rs/jackson-jakarta-rs-json-provider/2.15.4/jackson-jakarta-rs-json-provider-2.15.4.jar:/Users/omar/.m2/repository/com/fasterxml/jackson/module/jackson-module-jakarta-xmlbind-annotations/2.15.4/jackson-module-jakarta-xmlbind-annotations-2.15.4.jar:/Users/omar/.m2/repository/com/github/java-json-tools/json-patch/1.13/json-patch-1.13.jar:/Users/omar/.m2/repository/com/github/java-json-tools/msg-simple/1.2/msg-simple-1.2.jar:/Users/omar/.m2/repository/com/github/java-json-tools/btf/1.3/btf-1.3.jar:/Users/omar/.m2/repository/com/github/java-json-tools/jackson-coreutils/2.0/jackson-coreutils-2.0.jar:/Users/omar/.m2/repository/org/jboss/resteasy/resteasy-jaxb-provider/6.2.4.Final/resteasy-jaxb-provider-6.2.4.Final.jar:/Users/omar/.m2/repository/org/glassfish/jaxb/codemodel/4.0.4/codemodel-4.0.4.jar:/Users/omar/.m2/repository/org/glassfish/jaxb/jaxb-core/4.0.4/jaxb-core-4.0.4.jar:/Users/omar/.m2/repository/org/glassfish/jaxb/jaxb-jxc/4.0.4/jaxb-jxc-4.0.4.jar:/Users/omar/.m2/repository/org/glassfish/jaxb/txw2/4.0.4/txw2-4.0.4.jar:/Users/omar/.m2/repository/org/glassfish/jaxb/jaxb-xjc/4.0.4/jaxb-xjc-4.0.4.jar:/Users/omar/.m2/repository/org/glassfish/jaxb/xsom/4.0.4/xsom-4.0.4.jar:/Users/omar/.m2/repository/com/sun/istack/istack-commons-runtime/4.1.2/istack-commons-runtime-4.1.2.jar:/Users/omar/.m2/repository/com/sun/istack/istack-commons-tools/4.1.2/istack-commons-tools-4.1.2.jar:/Users/omar/.m2/repository/com/sun/xml/bind/external/relaxng-datatype/4.0.2/relaxng-datatype-4.0.2.jar:/Users/omar/.m2/repository/com/sun/xml/bind/external/rngom/4.0.2/rngom-4.0.2.jar:/Users/omar/.m2/repository/jakarta/ws/rs/jakarta.ws.rs-api/3.1.0/jakarta.ws.rs-api-3.1.0.jar:/Users/omar/.m2/repository/org/glassfish/jersey/core/jersey-client/3.1.5/jersey-client-3.1.5.jar:/Users/omar/.m2/repository/org/glassfish/jersey/core/jersey-common/3.1.5/jersey-common-3.1.5.jar:/Users/omar/.m2/repository/org/glassfish/hk2/osgi-resource-locator/1.0.3/osgi-resource-locator-1.0.3.jar:/Users/omar/.m2/repository/jakarta/inject/jakarta.inject-api/2.0.1/jakarta.inject-api-2.0.1.jar:/Users/omar/.m2/repository/org/snmp4j/snmp4j/3.7.7/snmp4j-3.7.7.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/Users/omar"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2025-04-15"/>
+    <property name="java.home" value="/opt/homebrew/Cellar/openjdk@17/17.0.15/libexec/openjdk.jdk/Contents/Home"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="FILE_LOG_CHARSET" value="UTF-8"/>
+    <property name="java.awt.headless" value="true"/>
+    <property name="surefire.real.class.path" value="/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/target/surefire/surefirebooter-20250611230610487_3.jar"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="java.runtime.version" value="17.0.15+0"/>
+    <property name="user.name" value="omar"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="15.4.1"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="Homebrew"/>
+    <property name="localRepository" value="/Users/omar/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/Homebrew/homebrew-core/issues"/>
+    <property name="java.io.tmpdir" value="/var/folders/3m/gf60bx356n36w711jv8z65th0000gn/T/"/>
+    <property name="java.version" value="17.0.15"/>
+    <property name="user.dir" value="/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend"/>
+    <property name="os.arch" value="aarch64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="PID" value="44326"/>
+    <property name="CONSOLE_LOG_CHARSET" value="UTF-8"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/Users/omar/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="java.vendor" value="Homebrew"/>
+    <property name="java.vm.version" value="17.0.15+0"/>
+    <property name="java.specification.maintenance.version" value="1"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
+    <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="java.class.version" value="61.0"/>
+    <property name="LOGGED_APPLICATION_NAME" value="[sentinelrisk-backend] "/>
+  </properties>
+  <testcase name="testGetSnmpSummary" classname="com.sentinelrisk.backend.controller.DashboardControllerTest" time="0.103">
+    <failure message="No value at JSON path &quot;$.totalAssets&quot;" type="java.lang.AssertionError"><![CDATA[java.lang.AssertionError: No value at JSON path "$.totalAssets"
+	at org.springframework.test.util.JsonPathExpectationsHelper.evaluateJsonPath(JsonPathExpectationsHelper.java:302)
+	at org.springframework.test.util.JsonPathExpectationsHelper.assertValue(JsonPathExpectationsHelper.java:99)
+	at org.springframework.test.web.servlet.result.JsonPathResultMatchers.lambda$value$2(JsonPathResultMatchers.java:111)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.sentinelrisk.backend.controller.DashboardControllerTest.testGetSnmpSummary(DashboardControllerTest.java:96)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: java.lang.IllegalArgumentException: json can not be null or empty
+	at com.jayway.jsonpath.internal.Utils.notEmpty(Utils.java:401)
+	at com.jayway.jsonpath.JsonPath.read(JsonPath.java:390)
+	at com.jayway.jsonpath.JsonPath.read(JsonPath.java:377)
+	at org.springframework.test.util.JsonPathExpectationsHelper.evaluateJsonPath(JsonPathExpectationsHelper.java:299)
+	... 7 more
+]]></failure>
+    <system-out><![CDATA[23:06:10.987 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.sentinelrisk.backend.controller.DashboardControllerTest]: DashboardControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+23:06:11.111 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.sentinelrisk.backend.SentinelRiskApplication for test class com.sentinelrisk.backend.controller.DashboardControllerTest
+23:06:10,912 |-INFO in ch.qos.logback.classic.LoggerContext[default] - This is logback-classic version 1.4.14
+23:06:10,913 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2e140e59 - Here is a list of configurators discovered as a service, by rank: 
+23:06:10,913 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2e140e59 -   org.springframework.boot.logging.logback.RootLogLevelConfigurator
+23:06:10,913 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2e140e59 - They will be invoked in order until ExecutionStatus.DO_NOT_INVOKE_NEXT_IF_ANY is returned.
+23:06:10,913 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2e140e59 - Constructed configurator of type class org.springframework.boot.logging.logback.RootLogLevelConfigurator
+23:06:10,918 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2e140e59 - org.springframework.boot.logging.logback.RootLogLevelConfigurator.configure() call lasted 1 milliseconds. ExecutionStatus=INVOKE_NEXT_IF_ANY
+23:06:10,918 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2e140e59 - Trying to configure with ch.qos.logback.classic.joran.SerializedModelConfigurator
+23:06:10,919 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2e140e59 - Constructed configurator of type class ch.qos.logback.classic.joran.SerializedModelConfigurator
+23:06:10,920 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Could NOT find resource [logback-test.scmo]
+23:06:10,920 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Could NOT find resource [logback.scmo]
+23:06:10,920 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2e140e59 - ch.qos.logback.classic.joran.SerializedModelConfigurator.configure() call lasted 1 milliseconds. ExecutionStatus=INVOKE_NEXT_IF_ANY
+23:06:10,920 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2e140e59 - Trying to configure with ch.qos.logback.classic.util.DefaultJoranConfigurator
+23:06:10,920 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2e140e59 - Constructed configurator of type class ch.qos.logback.classic.util.DefaultJoranConfigurator
+23:06:10,920 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Could NOT find resource [logback-test.xml]
+23:06:10,921 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Could NOT find resource [logback.xml]
+23:06:10,921 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2e140e59 - ch.qos.logback.classic.util.DefaultJoranConfigurator.configure() call lasted 1 milliseconds. ExecutionStatus=INVOKE_NEXT_IF_ANY
+23:06:10,921 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2e140e59 - Trying to configure with ch.qos.logback.classic.BasicConfigurator
+23:06:10,921 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2e140e59 - Constructed configurator of type class ch.qos.logback.classic.BasicConfigurator
+23:06:10,921 |-INFO in ch.qos.logback.classic.BasicConfigurator@49a71302 - Setting up default configuration.
+23:06:10,929 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2e140e59 - ch.qos.logback.classic.BasicConfigurator.configure() call lasted 8 milliseconds. ExecutionStatus=NEUTRAL
+23:06:11,321 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - Processing appender named [Console]
+23:06:11,321 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - About to instantiate appender of type [ch.qos.logback.core.ConsoleAppender]
+23:06:11,329 |-WARN in ch.qos.logback.core.ConsoleAppender[Console] - This appender no longer admits a layout as a sub-component, set an encoder instead.
+23:06:11,329 |-WARN in ch.qos.logback.core.ConsoleAppender[Console] - To ensure compatibility, wrapping your layout in LayoutWrappingEncoder.
+23:06:11,329 |-WARN in ch.qos.logback.core.ConsoleAppender[Console] - See also http://logback.qos.ch/codes.html#layoutInsteadOfEncoder for details
+23:06:11,329 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - Processing appender named [RiskApiDebug]
+23:06:11,329 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - About to instantiate appender of type [ch.qos.logback.core.rolling.RollingFileAppender]
+23:06:11,334 |-INFO in c.q.l.core.rolling.TimeBasedRollingPolicy@1557534595 - No compression will be used
+23:06:11,334 |-INFO in c.q.l.core.rolling.TimeBasedRollingPolicy@1557534595 - Will use the pattern ./logs/archived/risk-api-debug-%d{yyyy-MM-dd}.%i.log for the active file
+23:06:11,346 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@59429fac - The date pattern is 'yyyy-MM-dd' from file name pattern './logs/archived/risk-api-debug-%d{yyyy-MM-dd}.%i.log'.
+23:06:11,346 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@59429fac - Roll-over at midnight.
+23:06:11,350 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@59429fac - Setting initial period to 2025-05-06T21:20:02.265Z
+23:06:11,350 |-WARN in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@59429fac - SizeAndTimeBasedFNATP is deprecated. Use SizeAndTimeBasedRollingPolicy instead
+23:06:11,350 |-WARN in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@59429fac - For more information see http://logback.qos.ch/manual/appenders.html#SizeAndTimeBasedRollingPolicy
+23:06:11,352 |-INFO in ch.qos.logback.core.rolling.RollingFileAppender[RiskApiDebug] - Active log file name: ./logs/risk-api-debug.log
+23:06:11,352 |-INFO in ch.qos.logback.core.rolling.RollingFileAppender[RiskApiDebug] - File property is set to [./logs/risk-api-debug.log]
+23:06:11,353 |-INFO in ch.qos.logback.classic.model.processor.LoggerModelHandler - Setting level of logger [com.sentinelrisk.backend.controller.RiskController] to DEBUG
+23:06:11,353 |-INFO in ch.qos.logback.classic.jul.LevelChangePropagator@57aa341b - Propagating DEBUG level on Logger[com.sentinelrisk.backend.controller.RiskController] onto the JUL framework
+23:06:11,354 |-INFO in ch.qos.logback.classic.model.processor.LoggerModelHandler - Setting additivity of logger [com.sentinelrisk.backend.controller.RiskController] to false
+23:06:11,354 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [RiskApiDebug] to Logger[com.sentinelrisk.backend.controller.RiskController]
+23:06:11,354 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [Console] to Logger[com.sentinelrisk.backend.controller.RiskController]
+23:06:11,354 |-INFO in ch.qos.logback.classic.model.processor.LoggerModelHandler - Setting level of logger [com.sentinelrisk.backend.service.RiskService] to DEBUG
+23:06:11,354 |-INFO in ch.qos.logback.classic.jul.LevelChangePropagator@57aa341b - Propagating DEBUG level on Logger[com.sentinelrisk.backend.service.RiskService] onto the JUL framework
+23:06:11,354 |-INFO in ch.qos.logback.classic.model.processor.LoggerModelHandler - Setting additivity of logger [com.sentinelrisk.backend.service.RiskService] to false
+23:06:11,354 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [RiskApiDebug] to Logger[com.sentinelrisk.backend.service.RiskService]
+23:06:11,354 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [Console] to Logger[com.sentinelrisk.backend.service.RiskService]
+23:06:11,354 |-INFO in ch.qos.logback.classic.model.processor.RootLoggerModelHandler - Setting level of ROOT logger to INFO
+23:06:11,354 |-INFO in ch.qos.logback.classic.jul.LevelChangePropagator@57aa341b - Propagating INFO level on Logger[ROOT] onto the JUL framework
+23:06:11,354 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [Console] to Logger[ROOT]
+23:06:11,354 |-INFO in ch.qos.logback.core.model.processor.DefaultProcessor@26e412ef - End of configuration.
+23:06:11,355 |-INFO in org.springframework.boot.logging.logback.SpringBootJoranConfigurator@4ae263bf - Registering current configuration as safe fallback point
+
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.3)
+
+2025-06-11 23:06:11,378 &amp#27;[34mINFO &amp#27;[0;39m [&amp#27;[34mbackground-preinit&amp#27;[0;39m] &amp#27;[33mo.h.v.i.u.Version&amp#27;[0;39m: HV000001: Hibernate Validator 8.0.1.Final
+2025-06-11 23:06:11,405 &amp#27;[34mINFO &amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.b.StartupInfoLogger&amp#27;[0;39m: Starting DashboardControllerTest using Java 17.0.15 with PID 44326 (started by omar in /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend)
+2025-06-11 23:06:11,405 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.b.StartupInfoLogger&amp#27;[0;39m: Running with Spring Boot v3.2.3, Spring v6.1.4
+2025-06-11 23:06:11,406 &amp#27;[34mINFO &amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.b.SpringApplication&amp#27;[0;39m: No active profile set, falling back to 1 default profile: "default"
+2025-06-11 23:06:12,808 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.c.a.a.b.AuthenticationManagerBuilder&amp#27;[0;39m: No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2025-06-11 23:06:12,856 &amp#27;[34mINFO &amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.DefaultSecurityFilterChain&amp#27;[0;39m: Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@261a66b8, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@adc8683, org.springframework.security.web.context.SecurityContextHolderFilter@681d704e, org.springframework.security.web.header.HeaderWriterFilter@1c8e8fed, org.springframework.web.filter.CorsFilter@4eac65db, org.springframework.security.web.csrf.CsrfFilter@1d622556, org.springframework.security.web.authentication.logout.LogoutFilter@45bf93bb, org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter@5342eec5, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@3c3ab672, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@3e6acec2, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@dde6f87, org.springframework.security.web.access.ExceptionTranslationFilter@21540255, org.springframework.security.web.access.intercept.AuthorizationFilter@5477d90e]
+2025-06-11 23:06:12,891 &amp#27;[34mINFO &amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.m.w.MockServletContext&amp#27;[0;39m: Initializing Spring TestDispatcherServlet ''
+2025-06-11 23:06:12,891 &amp#27;[34mINFO &amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.w.s.FrameworkServlet&amp#27;[0;39m: Initializing Servlet ''
+2025-06-11 23:06:12,892 &amp#27;[34mINFO &amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.w.s.FrameworkServlet&amp#27;[0;39m: Completed initialization in 1 ms
+2025-06-11 23:06:12,907 &amp#27;[34mINFO &amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.b.StartupInfoLogger&amp#27;[0;39m: Started DashboardControllerTest in 1.76 seconds (process running for 2.367)
+2025-06-11 23:06:12,946 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.c.HttpSessionSecurityContextRepository$SaveToSessionResponseWrapper&amp#27;[0;39m: Created HttpSession as SecurityContext is non-default
+2025-06-11 23:06:12,946 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.c.HttpSessionSecurityContextRepository&amp#27;[0;39m: Stored SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=user, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_risk_manager]], Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ROLE_risk_manager]]] to HttpSession [org.springframework.mock.web.MockHttpSession@71ee2fff]
+2025-06-11 23:06:12,951 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.FilterChainProxy&amp#27;[0;39m: Securing GET /api/dashboard/summary/snmp
+2025-06-11 23:06:12,956 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.c.HttpSessionSecurityContextRepository&amp#27;[0;39m: Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=user, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_risk_manager]], Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ROLE_risk_manager]]]
+2025-06-11 23:06:12,956 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.FilterChainProxy&amp#27;[0;39m: Secured GET /api/dashboard/summary/snmp
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /api/dashboard/summary/snmp
+       Parameters = {}
+          Headers = []
+             Body = null
+    Session Attrs = {SPRING_SECURITY_CONTEXT=SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=user, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_risk_manager]], Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ROLE_risk_manager]]]}
+
+Handler:
+             Type = com.sentinelrisk.backend.controller.DashboardController
+           Method = com.sentinelrisk.backend.controller.DashboardController#getSnmpSummary(LocalDateTime, LocalDateTime, String)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+]]></system-out>
+  </testcase>
+  <testcase name="testGetRiskSummary" classname="com.sentinelrisk.backend.controller.DashboardControllerTest" time="0.01">
+    <failure message="No value at JSON path &quot;$.totalRisks&quot;" type="java.lang.AssertionError"><![CDATA[java.lang.AssertionError: No value at JSON path "$.totalRisks"
+	at org.springframework.test.util.JsonPathExpectationsHelper.evaluateJsonPath(JsonPathExpectationsHelper.java:302)
+	at org.springframework.test.util.JsonPathExpectationsHelper.assertValue(JsonPathExpectationsHelper.java:99)
+	at org.springframework.test.web.servlet.result.JsonPathResultMatchers.lambda$value$2(JsonPathResultMatchers.java:111)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.sentinelrisk.backend.controller.DashboardControllerTest.testGetRiskSummary(DashboardControllerTest.java:49)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: java.lang.IllegalArgumentException: json can not be null or empty
+	at com.jayway.jsonpath.internal.Utils.notEmpty(Utils.java:401)
+	at com.jayway.jsonpath.JsonPath.read(JsonPath.java:390)
+	at com.jayway.jsonpath.JsonPath.read(JsonPath.java:377)
+	at org.springframework.test.util.JsonPathExpectationsHelper.evaluateJsonPath(JsonPathExpectationsHelper.java:299)
+	... 7 more
+]]></failure>
+    <system-out><![CDATA[2025-06-11 23:06:13,022 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.c.HttpSessionSecurityContextRepository$SaveToSessionResponseWrapper&amp#27;[0;39m: Created HttpSession as SecurityContext is non-default
+2025-06-11 23:06:13,022 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.c.HttpSessionSecurityContextRepository&amp#27;[0;39m: Stored SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=user, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_admin]], Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ROLE_admin]]] to HttpSession [org.springframework.mock.web.MockHttpSession@322ab6ce]
+2025-06-11 23:06:13,023 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.FilterChainProxy&amp#27;[0;39m: Securing GET /api/dashboard/summary/risks
+2025-06-11 23:06:13,023 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.c.HttpSessionSecurityContextRepository&amp#27;[0;39m: Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=user, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_admin]], Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ROLE_admin]]]
+2025-06-11 23:06:13,023 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.FilterChainProxy&amp#27;[0;39m: Secured GET /api/dashboard/summary/risks
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /api/dashboard/summary/risks
+       Parameters = {}
+          Headers = []
+             Body = null
+    Session Attrs = {SPRING_SECURITY_CONTEXT=SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=user, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_admin]], Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ROLE_admin]]]}
+
+Handler:
+             Type = com.sentinelrisk.backend.controller.DashboardController
+           Method = com.sentinelrisk.backend.controller.DashboardController#getRiskSummary(LocalDateTime, LocalDateTime, String)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+]]></system-out>
+  </testcase>
+  <testcase name="testGetActionPlansSummary" classname="com.sentinelrisk.backend.controller.DashboardControllerTest" time="0.007">
+    <failure message="No value at JSON path &quot;$.totalPlans&quot;" type="java.lang.AssertionError"><![CDATA[java.lang.AssertionError: No value at JSON path "$.totalPlans"
+	at org.springframework.test.util.JsonPathExpectationsHelper.evaluateJsonPath(JsonPathExpectationsHelper.java:302)
+	at org.springframework.test.util.JsonPathExpectationsHelper.assertValue(JsonPathExpectationsHelper.java:99)
+	at org.springframework.test.web.servlet.result.JsonPathResultMatchers.lambda$value$2(JsonPathResultMatchers.java:111)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.sentinelrisk.backend.controller.DashboardControllerTest.testGetActionPlansSummary(DashboardControllerTest.java:116)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: java.lang.IllegalArgumentException: json can not be null or empty
+	at com.jayway.jsonpath.internal.Utils.notEmpty(Utils.java:401)
+	at com.jayway.jsonpath.JsonPath.read(JsonPath.java:390)
+	at com.jayway.jsonpath.JsonPath.read(JsonPath.java:377)
+	at org.springframework.test.util.JsonPathExpectationsHelper.evaluateJsonPath(JsonPathExpectationsHelper.java:299)
+	... 7 more
+]]></failure>
+    <system-out><![CDATA[2025-06-11 23:06:13,033 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.c.HttpSessionSecurityContextRepository$SaveToSessionResponseWrapper&amp#27;[0;39m: Created HttpSession as SecurityContext is non-default
+2025-06-11 23:06:13,033 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.c.HttpSessionSecurityContextRepository&amp#27;[0;39m: Stored SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=user, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_compliance_officer]], Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ROLE_compliance_officer]]] to HttpSession [org.springframework.mock.web.MockHttpSession@77fceac6]
+2025-06-11 23:06:13,033 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.FilterChainProxy&amp#27;[0;39m: Securing GET /api/dashboard/summary/plans
+2025-06-11 23:06:13,033 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.c.HttpSessionSecurityContextRepository&amp#27;[0;39m: Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=user, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_compliance_officer]], Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ROLE_compliance_officer]]]
+2025-06-11 23:06:13,034 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.FilterChainProxy&amp#27;[0;39m: Secured GET /api/dashboard/summary/plans
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /api/dashboard/summary/plans
+       Parameters = {}
+          Headers = []
+             Body = null
+    Session Attrs = {SPRING_SECURITY_CONTEXT=SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=user, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_compliance_officer]], Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ROLE_compliance_officer]]]}
+
+Handler:
+             Type = com.sentinelrisk.backend.controller.DashboardController
+           Method = com.sentinelrisk.backend.controller.DashboardController#getActionPlansSummary(LocalDateTime, LocalDateTime, String)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+]]></system-out>
+  </testcase>
+  <testcase name="testUnauthorizedAccess" classname="com.sentinelrisk.backend.controller.DashboardControllerTest" time="0.008">
+    <system-out><![CDATA[2025-06-11 23:06:13,041 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.FilterChainProxy&amp#27;[0;39m: Securing GET /api/dashboard/summary/risks
+2025-06-11 23:06:13,042 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.a.AnonymousAuthenticationFilter&amp#27;[0;39m: Set SecurityContextHolder to anonymous SecurityContext
+2025-06-11 23:06:13,045 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.s.HttpSessionRequestCache&amp#27;[0;39m: Saved request http://localhost/api/dashboard/summary/risks?continue to session
+]]></system-out>
+  </testcase>
+  <testcase name="testGetComplianceSummary" classname="com.sentinelrisk.backend.controller.DashboardControllerTest" time="0.007">
+    <failure message="No value at JSON path &quot;$.totalControls&quot;" type="java.lang.AssertionError"><![CDATA[java.lang.AssertionError: No value at JSON path "$.totalControls"
+	at org.springframework.test.util.JsonPathExpectationsHelper.evaluateJsonPath(JsonPathExpectationsHelper.java:302)
+	at org.springframework.test.util.JsonPathExpectationsHelper.assertValue(JsonPathExpectationsHelper.java:99)
+	at org.springframework.test.web.servlet.result.JsonPathResultMatchers.lambda$value$2(JsonPathResultMatchers.java:111)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.sentinelrisk.backend.controller.DashboardControllerTest.testGetComplianceSummary(DashboardControllerTest.java:73)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: java.lang.IllegalArgumentException: json can not be null or empty
+	at com.jayway.jsonpath.internal.Utils.notEmpty(Utils.java:401)
+	at com.jayway.jsonpath.JsonPath.read(JsonPath.java:390)
+	at com.jayway.jsonpath.JsonPath.read(JsonPath.java:377)
+	at org.springframework.test.util.JsonPathExpectationsHelper.evaluateJsonPath(JsonPathExpectationsHelper.java:299)
+	... 7 more
+]]></failure>
+    <system-out><![CDATA[2025-06-11 23:06:13,050 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.c.HttpSessionSecurityContextRepository$SaveToSessionResponseWrapper&amp#27;[0;39m: Created HttpSession as SecurityContext is non-default
+2025-06-11 23:06:13,051 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.c.HttpSessionSecurityContextRepository&amp#27;[0;39m: Stored SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=user, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_compliance_officer]], Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ROLE_compliance_officer]]] to HttpSession [org.springframework.mock.web.MockHttpSession@4604e051]
+2025-06-11 23:06:13,051 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.FilterChainProxy&amp#27;[0;39m: Securing GET /api/dashboard/summary/compliance
+2025-06-11 23:06:13,051 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.c.HttpSessionSecurityContextRepository&amp#27;[0;39m: Retrieved SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=user, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_compliance_officer]], Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ROLE_compliance_officer]]]
+2025-06-11 23:06:13,051 &amp#27;[39mDEBUG&amp#27;[0;39m [&amp#27;[34mmain&amp#27;[0;39m] &amp#27;[33mo.s.s.w.FilterChainProxy&amp#27;[0;39m: Secured GET /api/dashboard/summary/compliance
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /api/dashboard/summary/compliance
+       Parameters = {}
+          Headers = []
+             Body = null
+    Session Attrs = {SPRING_SECURITY_CONTEXT=SecurityContextImpl [Authentication=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=user, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, CredentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_compliance_officer]], Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ROLE_compliance_officer]]]}
+
+Handler:
+             Type = com.sentinelrisk.backend.controller.DashboardController
+           Method = com.sentinelrisk.backend.controller.DashboardController#getComplianceSummary(LocalDateTime, LocalDateTime, String)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+]]></system-out>
+  </testcase>
+</testsuite>
