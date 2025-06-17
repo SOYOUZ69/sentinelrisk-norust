@@ -2,16 +2,152 @@
   <mat-card>
     <mat-card-header>
       <mat-card-title>
-        <mat-icon>play_circle</mat-icon>
+        <mat-icon>play_circle_outline</mat-icon>
         Scan Manuel SNMP
       </mat-card-title>
+      <div class="header-actions">
+        <mat-chip color="accent" selected>
+          <mat-icon>info</mat-icon>
+          MODE DÉMO
+        </mat-chip>
+      </div>
     </mat-card-header>
+
     <mat-card-content>
-      <p>Interface de lancement de scan manuel SNMP (à implémenter)</p>
-      <button mat-raised-button color="primary">
-        <mat-icon>play_arrow</mat-icon>
-        Lancer un scan
-      </button>
+      <!-- Formulaire de scan -->
+      <form [formGroup]="scanForm" (ngSubmit)="onSubmit()" class="scan-form">
+        <div class="form-section">
+          <h3>Sélection de l'asset</h3>
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Choisir un asset</mat-label>
+            <mat-select formControlName="assetId" [disabled]="isScanning">
+              <mat-option *ngFor="let asset of assets" [value]="asset.id">
+                <div class="asset-option">
+                  <span class="asset-name">{{ getAssetDisplayName(asset) }}</span>
+                  <mat-chip size="small" [color]="'primary'" selected>
+                    {{ getAssetTypeLabel(asset.type) }}
+                  </mat-chip>
+                </div>
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="scanForm.get('assetId')?.hasError('required')">
+              Veuillez sélectionner un asset
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button mat-raised-button 
+                  color="primary" 
+                  type="submit"
+                  [disabled]="scanForm.invalid || isScanning"
+                  class="scan-button">
+            <mat-icon>{{ isScanning ? 'hourglass_empty' : 'play_arrow' }}</mat-icon>
+            {{ isScanning ? 'Scan en cours...' : 'Lancer le scan' }}
+          </button>
+
+          <button mat-button 
+                  type="button"
+                  (click)="resetScan()"
+                  [disabled]="isScanning">
+            <mat-icon>refresh</mat-icon>
+            Réinitialiser
+          </button>
+        </div>
+      </form>
+
+      <!-- Indicateur de progression -->
+      <div *ngIf="isScanning" class="scanning-indicator">
+        <mat-card class="progress-card">
+          <mat-card-content>
+            <div class="progress-content">
+              <mat-spinner diameter="40"></mat-spinner>
+              <div class="progress-text">
+                <h4>Scan en cours...</h4>
+                <p>Analyse de l'asset sélectionné</p>
+              </div>
+            </div>
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Résultats de scan -->
+      <div *ngIf="showResult && scanResult" class="scan-results">
+        <mat-card class="result-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>assessment</mat-icon>
+              Résultat de scan
+            </mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <div class="result-grid">
+              <div class="result-item">
+                <mat-icon class="result-icon">schedule</mat-icon>
+                <div class="result-details">
+                  <span class="result-label">Date</span>
+                  <span class="result-value">{{ scanResult.date }}</span>
+                </div>
+              </div>
+
+              <div class="result-item">
+                <mat-icon class="result-icon" 
+                         [class.success]="scanResult.statut === 'Terminé'"
+                         [class.warning]="scanResult.statut === 'En cours'"
+                         [class.error]="scanResult.statut === 'Échec'">
+                  {{ scanResult.statut === 'Terminé' ? 'check_circle' : 
+                     scanResult.statut === 'En cours' ? 'hourglass_empty' : 'error' }}
+                </mat-icon>
+                <div class="result-details">
+                  <span class="result-label">Statut</span>
+                  <mat-chip [color]="scanResult.statut === 'Terminé' ? 'primary' : 
+                                   scanResult.statut === 'En cours' ? 'accent' : 'warn'" 
+                           selected>
+                    {{ scanResult.statut }}
+                  </mat-chip>
+                </div>
+              </div>
+
+              <div class="result-item">
+                <mat-icon class="result-icon score-icon"
+                         [class.high-score]="scanResult.scoreGlobal >= 80"
+                         [class.medium-score]="scanResult.scoreGlobal >= 60 && scanResult.scoreGlobal < 80"
+                         [class.low-score]="scanResult.scoreGlobal < 60">
+                  trending_up
+                </mat-icon>
+                <div class="result-details">
+                  <span class="result-label">Score global</span>
+                  <div class="score-display">
+                    <span class="score-value" 
+                          [class.high-score]="scanResult.scoreGlobal >= 80"
+                          [class.medium-score]="scanResult.scoreGlobal >= 60 && scanResult.scoreGlobal < 80"
+                          [class.low-score]="scanResult.scoreGlobal < 60">
+                      {{ scanResult.scoreGlobal }}
+                    </span>
+                    <span class="score-max">/100</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="result-item">
+                <mat-icon class="result-icon warning-icon"
+                         [class.has-anomalies]="scanResult.anomalies > 0">
+                  {{ scanResult.anomalies > 0 ? 'warning' : 'check' }}
+                </mat-icon>
+                <div class="result-details">
+                  <span class="result-label">Anomalies détectées</span>
+                  <mat-chip [color]="scanResult.anomalies > 0 ? 'warn' : 'primary'" selected>
+                    {{ scanResult.anomalies }}
+                  </mat-chip>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
     </mat-card-content>
   </mat-card>
 </div>

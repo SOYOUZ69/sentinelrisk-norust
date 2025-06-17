@@ -12,6 +12,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -55,6 +56,7 @@ import { ScanDetailComponent } from './components/scan-detail/scan-detail.compon
     MatChipsModule,
     MatBadgeModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     MatPaginatorModule,
     MatSortModule,
     MatDialogModule,

@@ -9,13 +9,23 @@ import { ScanHistoryComponent } from './components/scan-history/scan-history.com
 import { ScanDetailComponent } from './components/scan-detail/scan-detail.component';
 
 const routes: Routes = [
-  { path: '', component: AssetListComponent },
+  // Route par défaut : liste des assets (/snmp/assets)
+  { path: '', redirectTo: 'assets', pathMatch: 'full' },
+  
+  // 1. AssetListComponent (/snmp/assets)
+  { path: 'assets', component: AssetListComponent },
   { path: 'assets/new', component: AssetFormComponent },
   { path: 'assets/edit/:id', component: AssetFormComponent },
+  
+  // 2. ConfigListComponent (/snmp/configs)
   { path: 'configs', component: ConfigListComponent },
   { path: 'configs/new', component: ConfigFormComponent },
   { path: 'configs/edit/:id', component: ConfigFormComponent },
+  
+  // 3. ManualScanComponent (/snmp/run)
   { path: 'run', component: ManualScanComponent },
+  
+  // 4. ScanHistoryComponent (/snmp/results)
   { path: 'results', component: ScanHistoryComponent },
   { path: 'results/:id', component: ScanDetailComponent }
 ];

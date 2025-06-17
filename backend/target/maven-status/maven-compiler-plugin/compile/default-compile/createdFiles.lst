@@ -46,7 +46,6 @@ com/sentinelrisk/backend/dto/RiskRequest.class
 com/sentinelrisk/backend/service/UserService.class
 com/sentinelrisk/backend/dto/ControlDTO.class
 com/sentinelrisk/model/ComplianceControl.class
-com/sentinelrisk/backend/web/rest/compliance/RemediationPlanResource.class
 com/sentinelrisk/backend/controller/DashboardController$1.class
 com/sentinelrisk/backend/model/Risk$ImpactLevel.class
 com/sentinelrisk/backend/service/ControlService.class
@@ -82,7 +81,6 @@ com/sentinelrisk/repository/RiskRepository.class
 com/sentinelrisk/dto/ConfigCreateRequest$SeverityThresholdDto.class
 com/sentinelrisk/backend/controller/CategoryController.class
 com/sentinelrisk/backend/service/dto/compliance/RiskComplianceMappingDTO.class
-com/sentinelrisk/backend/web/rest/compliance/RiskComplianceMappingResource.class
 com/sentinelrisk/backend/controller/UserController.class
 com/sentinelrisk/backend/domain/compliance/RiskComplianceMapping.class
 com/sentinelrisk/backend/service/CategoryService.class
