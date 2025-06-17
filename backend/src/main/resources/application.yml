@@ -5,7 +5,7 @@ server:
 
 spring:
   application:
-    name: sentinelrisk-backend
+    name: sentinelrisk
   datasource:
     url: jdbc:postgresql://localhost:5432/sentinelrisk
     username: postgres
@@ -32,6 +32,9 @@ logging:
     com.sentinelrisk: DEBUG
     org.springframework.security: DEBUG
     org.springdoc: DEBUG
+    org.springframework.web: INFO
+    org.hibernate: INFO
+    org.keycloak: DEBUG
 
 keycloak:
   auth-server-url: ${KEYCLOAK_URL:http://localhost:8081}
@@ -59,4 +62,9 @@ snmp:
     interval: 300000  # 5 minutes en millisecondes
   cleanup:
     cron: "0 0 2 * * ?"  # Tous les jours à 2h du matin
-    retention-days: 30   # Conserver les résultats pendant 30 jours 
+    retention-days: 30   # Conserver les résultats pendant 30 jours
+
+zabbix:
+  url: http://localhost:8082
+  username: Admin
+  password: zabbix 
