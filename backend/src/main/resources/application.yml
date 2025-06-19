@@ -64,7 +64,10 @@ snmp:
     cron: "0 0 2 * * ?"  # Tous les jours à 2h du matin
     retention-days: 30   # Conserver les résultats pendant 30 jours
 
+# Configuration Zabbix - Intégration réelle
 zabbix:
-  url: http://localhost:8082
-  username: Admin
-  password: zabbix 
+  url: ${ZABBIX_URL:http://localhost:8082}  # URL de l'interface web Zabbix avec API
+  username: ${ZABBIX_USERNAME:Admin}
+  password: ${ZABBIX_PASSWORD:zabbix}
+  timeout: 30000  # Timeout en millisecondes
+  retry-attempts: 3  # Nombre de tentatives en cas d'échec 

@@ -30,7 +30,7 @@ class ZabbixClientTest {
     void setUp() {
         restTemplate = mock(RestTemplate.class);
         objectMapper = new ObjectMapper();
-        zabbixClient = new ZabbixClient(restTemplate, objectMapper, TEST_URL, TEST_USERNAME, TEST_PASSWORD);
+        zabbixClient = new ZabbixClient(restTemplate, objectMapper, TEST_URL, TEST_USERNAME, TEST_PASSWORD, 30000L, 3);
     }
 
     @Test

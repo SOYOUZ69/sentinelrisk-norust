@@ -49,6 +49,10 @@ public class SecurityConfig {
         "/api/test/**"
     };
 
+    private static final String[] SNMP_WHITELIST = {
+        "/api/snmp/**"
+    };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -61,6 +65,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(SWAGGER_WHITELIST).permitAll()
                 .requestMatchers(DEBUG_WHITELIST).permitAll()
+                .requestMatchers(SNMP_WHITELIST).permitAll()
                 // Toutes les autres requêtes nécessitent une authentification
                 // mais les permissions spécifiques sont gérées par les annotations @PreAuthorize
                 .anyRequest().authenticated()

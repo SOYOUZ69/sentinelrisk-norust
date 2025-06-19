@@ -1,0 +1,35 @@
+.assets-container {
+  padding: 20px;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    h2 {
+      margin: 0;
+    }
+  }
+
+  table {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .mat-column-actions {
+    width: 120px;
+    text-align: center;
+  }
+
+  .no-data {
+    text-align: center;
+    padding: 20px;
+    color: rgba(0, 0, 0, 0.54);
+  }
+
+  mat-chip {
+    min-width: 80px;
+    justify-content: center;
+  }
+} 
