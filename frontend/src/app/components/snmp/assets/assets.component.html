@@ -1,9 +1,16 @@
 <div class="assets-container">
   <div class="header">
     <h2>Assets SNMP</h2>
-    <button mat-raised-button color="primary" (click)="toggleDemoMode()">
-      {{ snmpService.isDemoMode ? 'Mode Réel' : 'Mode Démo' }}
-    </button>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="toggleDemoMode()">
+        {{ snmpService.isDemoMode ? 'Mode Réel' : 'Mode Démo' }}
+      </button>
+      <button mat-raised-button color="accent" (click)="syncAllAssets()" 
+              [disabled]="assets.filter(a => !a.synchronizedWithZabbix).length === 0">
+        <mat-icon>sync</mat-icon>
+        Synchroniser Tout
+      </button>
+    </div>
   </div>
 
   <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
@@ -39,10 +46,37 @@
       </td>
     </ng-container>
 
+    <!-- Sync Column -->
+    <ng-container matColumnDef="sync">
+      <th mat-header-cell *matHeaderCellDef>Synchronisation</th>
+      <td mat-cell *matCellDef="let asset">
+        <div class="sync-status">
+          <mat-icon [color]="getSyncStatusColor(asset)" 
+                   [class.spinning]="asset.syncInProgress"
+                   [matTooltip]="getSyncStatusText(asset)">
+            {{getSyncStatusIcon(asset)}}
+          </mat-icon>
+          <span class="sync-text" [ngClass]="getSyncStatusColor(asset) + '-text'">
+            {{getSyncStatusText(asset)}}
+          </span>
+        </div>
+      </td>
+    </ng-container>
+
     <!-- Actions Column -->
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let asset">
+        <!-- Bouton de synchronisation (visible seulement si non synchronisé) -->
+        <button mat-icon-button color="accent" 
+                (click)="syncAsset(asset)" 
+                [disabled]="asset.syncInProgress || asset.synchronizedWithZabbix"
+                *ngIf="!asset.synchronizedWithZabbix"
+                matTooltip="Synchroniser avec Zabbix">
+          <mat-icon>sync</mat-icon>
+        </button>
+        
+        <!-- Actions existantes -->
         <button mat-icon-button color="primary" (click)="pauseAsset(asset)" matTooltip="Pause">
           <mat-icon>pause</mat-icon>
         </button>

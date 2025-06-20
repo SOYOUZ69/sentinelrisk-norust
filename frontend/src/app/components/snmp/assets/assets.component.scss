@@ -7,6 +7,17 @@
     align-items: center;
     margin-bottom: 20px;
 
+    .header-actions {
+      display: flex;
+      gap: 10px;
+
+      button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+    }
+
     h2 {
       margin: 0;
     }
@@ -14,7 +25,45 @@
 
   table {
     width: 100%;
+    margin-top: 20px;
     margin-bottom: 20px;
+
+    .mat-column-sync {
+      width: 200px;
+    }
+
+    .sync-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .sync-text {
+        font-size: 12px;
+        font-weight: 500;
+
+        &.primary-text {
+          color: #1976d2;
+        }
+
+        &.accent-text {
+          color: #ff4081;
+        }
+
+        &.warn-text {
+          color: #f44336;
+        }
+      }
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+
+        &.spinning {
+          animation: spin 1s linear infinite;
+        }
+      }
+    }
   }
 
   .mat-column-actions {
@@ -24,12 +73,36 @@
 
   .no-data {
     text-align: center;
-    padding: 20px;
-    color: rgba(0, 0, 0, 0.54);
+    padding: 40px;
+    color: #666;
+    font-style: italic;
   }
 
   mat-chip {
     min-width: 80px;
     justify-content: center;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Styles pour les snackbars
+::ng-deep {
+  .success-snackbar {
+    background-color: #4caf50 !important;
+    color: white !important;
+  }
+
+  .error-snackbar {
+    background-color: #f44336 !important;
+    color: white !important;
+  }
+
+  .warning-snackbar {
+    background-color: #ff9800 !important;
+    color: white !important;
   }
 } 

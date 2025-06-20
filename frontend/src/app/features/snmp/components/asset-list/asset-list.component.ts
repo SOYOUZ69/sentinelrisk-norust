@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Asset, AssetType, SnmpVersion } from '../../models/asset.model';
+import { SnmpService } from '../../../../services/snmp.service';
+import { SnmpAsset } from '../../../../models/snmp.model';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-asset-list',
@@ -9,142 +11,209 @@ import { Asset, AssetType, SnmpVersion } from '../../models/asset.model';
   styleUrls: ['./asset-list.component.css']
 })
 export class AssetListComponent implements OnInit {
-  // Mock-data statiques comme demandé par l'utilisateur
-  assets: Asset[] = [
-    { 
-      id: 1, 
-      hostname: 'Serveur de base', 
-      ipAddress: '10.0.0.12', 
-      type: AssetType.SERVER, 
-      snmpVersion: SnmpVersion.V2C,
-      port: 161,
-      active: true,
-      createdAt: new Date('2023-11-01'),
-      updatedAt: new Date('2023-12-01')
-    },
-    { 
-      id: 2, 
-      hostname: 'Poste Utilisateur', 
-      ipAddress: '10.0.0.35', 
-      type: AssetType.PC, 
-      snmpVersion: SnmpVersion.V3,
-      port: 161,
-      active: true,
-      createdAt: new Date('2023-11-05'),
-      updatedAt: new Date('2023-12-02')
-    },
-    { 
-      id: 3, 
-      hostname: 'Switch Core', 
-      ipAddress: '10.0.0.2', 
-      type: AssetType.SWITCH, 
-      snmpVersion: SnmpVersion.V2C,
-      port: 161,
-      active: true,
-      createdAt: new Date('2023-10-20'),
-      updatedAt: new Date('2023-11-30')
-    },
-    { 
-      id: 4, 
-      hostname: 'Routeur Bureautique', 
-      ipAddress: '10.0.1.1', 
-      type: AssetType.ROUTER, 
-      snmpVersion: SnmpVersion.V2C,
-      port: 161,
-      active: true,
-      createdAt: new Date('2023-10-15'),
-      updatedAt: new Date('2023-11-25')
-    },
-    { 
-      id: 5, 
-      hostname: 'Imprimante Réseau', 
-      ipAddress: '10.0.0.50', 
-      type: AssetType.PRINTER, 
-      snmpVersion: SnmpVersion.V1,
-      port: 161,
-      active: true,
-      createdAt: new Date('2023-11-10'),
-      updatedAt: new Date('2023-12-05')
-    }
-  ];
-
+  assets: SnmpAsset[] = [];
   loading = false;
-  displayedColumns: string[] = ['id', 'hostname', 'type', 'ipAddress', 'snmpVersion', 'actions'];
+  syncingAssets = new Set<number>();
+  displayedColumns: string[] = ['host', 'ip', 'version', 'status', 'sync', 'actions'];
 
   constructor(
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private snmpService: SnmpService
   ) {}
 
   ngOnInit(): void {
-    // Pas de chargement d'API, les données sont déjà présentes
-    this.showStaticModeNotification();
+    this.loadAssets();
   }
 
-  showStaticModeNotification(): void {
-    this.snackBar.open('Mode statique : Données de démonstration', 'Fermer', {
-      duration: 4000,
-      panelClass: ['demo-mode-snackbar']
+  loadAssets(): void {
+    this.loading = true;
+    this.snmpService.getAssets().subscribe({
+      next: (data) => {
+        this.assets = data.map((asset, index) => ({
+          ...asset,
+          id: asset.id || index + 1, // Assigner un ID si manquant
+          synchronizedWithZabbix: false,
+          syncInProgress: false
+        }));
+        
+        // Vérifier le statut de synchronisation pour chaque asset
+        this.checkAllSyncStatuses();
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Erreur lors du chargement des assets SNMP:', error);
+        this.snackBar.open('Erreur lors du chargement des assets SNMP', 'Fermer', {
+          duration: 3000,
+          panelClass: ['error-snackbar']
+        });
+        this.loading = false;
+      }
     });
+  }
+
+  checkAllSyncStatuses(): void {
+    if (this.assets.length === 0) return;
+
+    const syncChecks = this.assets.map(asset => 
+      this.snmpService.checkSyncStatus(asset.id!)
+    );
+
+    forkJoin(syncChecks).subscribe({
+      next: (results) => {
+        results.forEach((result, index) => {
+          if (this.assets[index]) {
+            this.assets[index].synchronizedWithZabbix = result.synchronized;
+            this.assets[index].zabbixHostId = result.zabbixHostId;
+            this.assets[index].lastSyncCheck = result.lastChecked;
+          }
+        });
+      },
+      error: (error) => {
+        console.error('Erreur lors de la vérification des statuts de synchronisation:', error);
+      }
+    });
+  }
+
+  syncAsset(asset: SnmpAsset): void {
+    if (!asset.id || this.syncingAssets.has(asset.id)) {
+      return;
+    }
+
+    this.syncingAssets.add(asset.id);
+    asset.syncInProgress = true;
+
+    this.snmpService.syncAssetWithZabbix(asset.id).subscribe({
+      next: (result) => {
+        if (result.success) {
+          asset.synchronizedWithZabbix = true;
+          asset.zabbixHostId = result.zabbixHostId;
+          this.snackBar.open(`Asset ${asset.hostName || asset.name} synchronisé avec succès`, 'Fermer', {
+            duration: 3000,
+            panelClass: ['success-snackbar']
+          });
+        } else {
+          this.snackBar.open(`Échec de synchronisation: ${result.message}`, 'Fermer', {
+            duration: 5000,
+            panelClass: ['error-snackbar']
+          });
+        }
+      },
+      error: (error) => {
+        console.error('Erreur lors de la synchronisation:', error);
+        this.snackBar.open('Erreur lors de la synchronisation', 'Fermer', {
+          duration: 3000,
+          panelClass: ['error-snackbar']
+        });
+      },
+      complete: () => {
+        this.syncingAssets.delete(asset.id!);
+        asset.syncInProgress = false;
+      }
+    });
+  }
+
+  syncAllAssets(): void {
+    const unsyncedAssets = this.assets.filter(asset => !asset.synchronizedWithZabbix);
+    
+    if (unsyncedAssets.length === 0) {
+      this.snackBar.open('Tous les assets sont déjà synchronisés', 'Fermer', {
+        duration: 3000
+      });
+      return;
+    }
+
+    // Marquer tous les assets non synchronisés comme en cours
+    unsyncedAssets.forEach(asset => {
+      if (asset.id) {
+        this.syncingAssets.add(asset.id);
+        asset.syncInProgress = true;
+      }
+    });
+
+    this.snmpService.syncAllAssets().subscribe({
+      next: (result) => {
+        const message = `Synchronisation terminée: ${result.synchronized} réussies, ${result.failed} échecs`;
+        this.snackBar.open(message, 'Fermer', {
+          duration: 5000,
+          panelClass: result.failed > 0 ? ['warning-snackbar'] : ['success-snackbar']
+        });
+        
+        // Rafraîchir les statuts
+        this.checkAllSyncStatuses();
+      },
+      error: (error) => {
+        console.error('Erreur lors de la synchronisation en lot:', error);
+        this.snackBar.open('Erreur lors de la synchronisation en lot', 'Fermer', {
+          duration: 3000,
+          panelClass: ['error-snackbar']
+        });
+      },
+      complete: () => {
+        // Nettoyer les statuts de synchronisation en cours
+        unsyncedAssets.forEach(asset => {
+          if (asset.id) {
+            this.syncingAssets.delete(asset.id);
+            asset.syncInProgress = false;
+          }
+        });
+      }
+    });
+  }
+
+  getSyncStatusIcon(asset: SnmpAsset): string {
+    if (asset.syncInProgress) {
+      return 'sync';
+    } else if (asset.synchronizedWithZabbix) {
+      return 'check_circle';
+    } else {
+      return 'error';
+    }
+  }
+
+  getSyncStatusColor(asset: SnmpAsset): string {
+    if (asset.syncInProgress) {
+      return 'accent';
+    } else if (asset.synchronizedWithZabbix) {
+      return 'primary';
+    } else {
+      return 'warn';
+    }
+  }
+
+  getSyncStatusText(asset: SnmpAsset): string {
+    if (asset.syncInProgress) {
+      return 'Synchronisation...';
+    } else if (asset.synchronizedWithZabbix) {
+      return 'Synchronisé';
+    } else {
+      return 'Non synchronisé';
+    }
   }
 
   createAsset(): void {
-    this.snackBar.open('Fonctionnalité désactivée en mode statique', 'Fermer', {
-      duration: 3000
+    this.router.navigate(['/snmp/assets/new']);
+  }
+
+  editAsset(asset: SnmpAsset): void {
+    this.router.navigate(['/snmp/assets/edit', asset.id]);
+  }
+
+  pauseAsset(asset: SnmpAsset): void {
+    this.snackBar.open(`Pause de l'asset ${asset.hostName || asset.name}`, 'Fermer', {
+      duration: 2000
     });
   }
 
-  editAsset(asset: Asset): void {
-    this.snackBar.open('Fonctionnalité désactivée en mode statique', 'Fermer', {
-      duration: 3000
-    });
-  }
-
-  toggleAssetStatus(asset: Asset): void {
-    // Simulation d'un changement de statut en mode statique
-    asset.active = !asset.active;
-    asset.updatedAt = new Date();
-    
-    this.snackBar.open(
-      `Asset ${asset.active ? 'activé' : 'désactivé'} (mode statique)`, 
-      'Fermer', 
-      { duration: 3000 }
-    );
-  }
-
-  deleteAsset(asset: Asset): void {
-    if (confirm(`Êtes-vous sûr de vouloir supprimer l'asset ${asset.hostname || asset.ipAddress} ?`)) {
-      // Simulation de suppression en mode statique
-      const index = this.assets.findIndex(a => a.id === asset.id);
-      if (index !== -1) {
-        this.assets.splice(index, 1);
-      }
-      
-      this.snackBar.open('Asset supprimé (mode statique)', 'Fermer', {
-        duration: 3000
+  deleteAsset(asset: SnmpAsset): void {
+    if (confirm(`Êtes-vous sûr de vouloir supprimer l'asset ${asset.hostName || asset.name} ?`)) {
+      this.snackBar.open(`Suppression de l'asset ${asset.hostName || asset.name}`, 'Fermer', {
+        duration: 2000
       });
     }
   }
 
-  getAssetTypeLabel(type: AssetType): string {
-    const labels: { [key in AssetType]: string } = {
-      [AssetType.SERVER]: 'Serveur',
-      [AssetType.PC]: 'PC',
-      [AssetType.SWITCH]: 'Commutateur',
-      [AssetType.ROUTER]: 'Routeur',
-      [AssetType.PRINTER]: 'Imprimante',
-      [AssetType.FIREWALL]: 'Firewall',
-      [AssetType.OTHER]: 'Autre'
-    };
-    return labels[type] || type;
-  }
-
-  getSnmpVersionLabel(version: SnmpVersion): string {
-    const labels: { [key in SnmpVersion]: string } = {
-      [SnmpVersion.V1]: 'v1',
-      [SnmpVersion.V2C]: 'v2c',
-      [SnmpVersion.V3]: 'v3'
-    };
-    return labels[version] || version;
+  allAssetsAreSynchronized(): boolean {
+    return this.assets.filter(a => !a.synchronizedWithZabbix).length === 0;
   }
 }

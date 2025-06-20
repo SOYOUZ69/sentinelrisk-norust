@@ -6,13 +6,14 @@
         Assets SNMP
       </mat-card-title>
       <div class="header-actions">
-        <mat-chip color="accent" selected>
-          <mat-icon>info</mat-icon>
-          MODE DÉMO
-        </mat-chip>
         <button mat-raised-button color="primary" (click)="createAsset()">
           <mat-icon>add</mat-icon>
           Nouvel Asset
+        </button>
+        <button mat-raised-button color="accent" (click)="syncAllAssets()" 
+                [disabled]="allAssetsAreSynchronized()">
+          <mat-icon>sync</mat-icon>
+          Synchroniser Tout
         </button>
       </div>
     </mat-card-header>
@@ -35,57 +36,56 @@
 
       <div *ngIf="!loading && assets.length > 0" class="table-container">
         <table mat-table [dataSource]="assets" class="assets-table">
-          <!-- ID Column -->
-          <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef>ID</th>
+          <!-- Host Column -->
+          <ng-container matColumnDef="host">
+            <th mat-header-cell *matHeaderCellDef>Host</th>
             <td mat-cell *matCellDef="let asset">
-              {{ asset.id }}
+              <strong>{{asset.hostName || asset.name || '-'}}</strong>
             </td>
           </ng-container>
 
-          <!-- Hostname Column -->
-          <ng-container matColumnDef="hostname">
-            <th mat-header-cell *matHeaderCellDef>Nom</th>
+          <!-- IP Column -->
+          <ng-container matColumnDef="ip">
+            <th mat-header-cell *matHeaderCellDef>IP</th>
             <td mat-cell *matCellDef="let asset">
-              <strong>{{ asset.hostname || '-' }}</strong>
+              <code>{{asset.ipAddress || '-'}}</code>
             </td>
           </ng-container>
 
-          <!-- Type Column -->
-          <ng-container matColumnDef="type">
-            <th mat-header-cell *matHeaderCellDef>Type</th>
+          <!-- Version Column -->
+          <ng-container matColumnDef="version">
+            <th mat-header-cell *matHeaderCellDef>Version</th>
             <td mat-cell *matCellDef="let asset">
-              <mat-chip [color]="'primary'" selected>
-                {{ getAssetTypeLabel(asset.type) }}
+              <mat-chip [color]="asset.snmpVersion === 'v3' ? 'accent' : 'primary'" selected>
+                {{asset.snmpVersion || 'N/A'}}
               </mat-chip>
             </td>
           </ng-container>
 
-          <!-- IP Address Column -->
-          <ng-container matColumnDef="ipAddress">
-            <th mat-header-cell *matHeaderCellDef>Adresse IP</th>
-            <td mat-cell *matCellDef="let asset">
-              <code>{{ asset.ipAddress || '-' }}</code>
-            </td>
-          </ng-container>
-
-          <!-- SNMP Version Column -->
-          <ng-container matColumnDef="snmpVersion">
-            <th mat-header-cell *matHeaderCellDef>Version SNMP</th>
-            <td mat-cell *matCellDef="let asset">
-              <mat-chip [color]="asset.snmpVersion === 'V3' ? 'accent' : 'warn'" selected>
-                {{ getSnmpVersionLabel(asset.snmpVersion) }}
-              </mat-chip>
-            </td>
-          </ng-container>
-
-          <!-- Active Column -->
-          <ng-container matColumnDef="active">
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
             <th mat-header-cell *matHeaderCellDef>Statut</th>
             <td mat-cell *matCellDef="let asset">
-              <mat-chip [color]="asset.active ? 'primary' : 'warn'" selected>
-                {{ asset.active ? 'Actif' : 'Inactif' }}
+              <mat-chip [color]="asset.status === 'active' ? 'primary' : 'warn'" selected>
+                {{asset.status}}
               </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Sync Column -->
+          <ng-container matColumnDef="sync">
+            <th mat-header-cell *matHeaderCellDef>Synchronisation</th>
+            <td mat-cell *matCellDef="let asset">
+              <div class="sync-status">
+                <mat-icon [color]="getSyncStatusColor(asset)" 
+                         [class.spinning]="asset.syncInProgress"
+                         [matTooltip]="getSyncStatusText(asset)">
+                  {{getSyncStatusIcon(asset)}}
+                </mat-icon>
+                <span class="sync-text" [ngClass]="getSyncStatusColor(asset) + '-text'">
+                  {{getSyncStatusText(asset)}}
+                </span>
+              </div>
             </td>
           </ng-container>
 
@@ -93,24 +93,23 @@
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef>Actions</th>
             <td mat-cell *matCellDef="let asset">
-              <button mat-icon-button 
-                      [color]="asset.active ? 'warn' : 'primary'"
-                      (click)="toggleAssetStatus(asset)"
-                      [matTooltip]="asset.active ? 'Désactiver' : 'Activer'">
-                <mat-icon>{{ asset.active ? 'pause' : 'play_arrow' }}</mat-icon>
+              <!-- Bouton de synchronisation (visible seulement si non synchronisé) -->
+              <button mat-icon-button color="accent" 
+                      (click)="syncAsset(asset)" 
+                      [disabled]="asset.syncInProgress || asset.synchronizedWithZabbix"
+                      *ngIf="!asset.synchronizedWithZabbix"
+                      matTooltip="Synchroniser avec Zabbix">
+                <mat-icon>sync</mat-icon>
               </button>
               
-              <button mat-icon-button 
-                      color="primary"
-                      (click)="editAsset(asset)"
-                      matTooltip="Modifier">
+              <!-- Actions existantes -->
+              <button mat-icon-button color="primary" (click)="pauseAsset(asset)" matTooltip="Pause">
+                <mat-icon>pause</mat-icon>
+              </button>
+              <button mat-icon-button color="accent" (click)="editAsset(asset)" matTooltip="Éditer">
                 <mat-icon>edit</mat-icon>
               </button>
-              
-              <button mat-icon-button 
-                      color="warn"
-                      (click)="deleteAsset(asset)"
-                      matTooltip="Supprimer">
+              <button mat-icon-button color="warn" (click)="deleteAsset(asset)" matTooltip="Supprimer">
                 <mat-icon>delete</mat-icon>
               </button>
             </td>

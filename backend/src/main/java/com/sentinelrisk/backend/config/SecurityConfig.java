@@ -50,7 +50,8 @@ public class SecurityConfig {
     };
 
     private static final String[] SNMP_WHITELIST = {
-        "/api/snmp/**"
+        "/api/snmp/**",
+        "/api/snmp/zabbix/**"
     };
 
     @Bean

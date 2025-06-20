@@ -1,9 +1,27 @@
 export interface SnmpAsset {
-    hostid: string;
-    host: string;
-    ip: string;
-    version: string;
+    id: number;
+    zabbixHostId?: string;
+    hostName: string;
+    displayName?: string;
+    name?: string;
+    ipAddress: string;
     status: string;
+    snmpVersion?: string;
+    snmpCommunity?: string;
+    snmpPort: number;
+    description?: string;
+    location?: string;
+    deviceType?: string;
+    properties?: { [key: string]: any };
+    lastDiscovered?: string;
+    lastUpdated?: string;
+    createdAt: string;
+    updatedAt?: string;
+    
+    // Champs pour la synchronisation Zabbix (calculés côté frontend)
+    synchronizedWithZabbix?: boolean;
+    lastSyncCheck?: string;
+    syncInProgress?: boolean;
 }
 
 export interface SnmpScanConfig {

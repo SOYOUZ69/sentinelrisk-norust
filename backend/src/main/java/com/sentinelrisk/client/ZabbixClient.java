@@ -384,4 +384,128 @@ public class ZabbixClient {
             }
         }
     }
+
+    /**
+     * Récupère un hôte spécifique par son ID
+     */
+    public JsonNode getHostById(String hostId) {
+        logger.debug("Récupération de l'hôte par ID: {}", hostId);
+        
+        ObjectNode request = createAuthenticatedRequest("host.get");
+        ObjectNode params = request.putObject("params");
+        params.putArray("output").add("hostid").add("host").add("name").add("status").add("available");
+        params.putArray("selectInterfaces").add("interfaceid").add("type").add("ip").add("port");
+        params.putArray("hostids").add(hostId);
+
+        try {
+            JsonNode response = sendRequestWithRetry(request);
+            logger.debug("Recherche de l'hôte {} : {}", hostId, 
+                        response.has("result") && response.get("result").size() > 0 ? "trouvé" : "non trouvé");
+            return response;
+            
+        } catch (Exception e) {
+            logger.error("Erreur lors de la récupération de l'hôte {}: {}", hostId, e.getMessage(), e);
+            throw new RuntimeException("Impossible de récupérer l'hôte " + hostId, e);
+        }
+    }
+
+    /**
+     * Trouve un hôte par son adresse IP
+     */
+    public JsonNode getHostByIP(String ipAddress) {
+        logger.debug("Recherche d'hôte par IP: {}", ipAddress);
+        
+        ObjectNode request = createAuthenticatedRequest("host.get");
+        ObjectNode params = request.putObject("params");
+        params.putArray("output").add("hostid").add("host").add("name").add("status");
+        params.putArray("selectInterfaces").add("interfaceid").add("type").add("ip").add("port");
+        
+        // Filtrer par IP dans les interfaces
+        ObjectNode searchFilter = params.putObject("filter");
+        // Note: Zabbix ne permet pas de filtrer directement par IP d'interface
+        // On récupère tous les hôtes et on filtre côté client
+        
+        try {
+            JsonNode response = sendRequestWithRetry(request);
+            
+            if (response.has("result") && response.get("result").isArray()) {
+                // Filtrer les hôtes qui ont une interface avec l'IP recherchée
+                for (JsonNode host : response.get("result")) {
+                    if (host.has("interfaces") && host.get("interfaces").isArray()) {
+                        for (JsonNode iface : host.get("interfaces")) {
+                            if (iface.has("ip") && ipAddress.equals(iface.get("ip").asText())) {
+                                // Créer une réponse avec seulement cet hôte
+                                ObjectNode filteredResponse = objectMapper.createObjectNode();
+                                filteredResponse.put("jsonrpc", JSON_RPC_VERSION);
+                                filteredResponse.putArray("result").add(host);
+                                
+                                logger.debug("Hôte trouvé avec IP {}: {}", ipAddress, host.get("hostid").asText());
+                                return filteredResponse;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Aucun hôte trouvé avec cette IP
+            ObjectNode emptyResponse = objectMapper.createObjectNode();
+            emptyResponse.put("jsonrpc", JSON_RPC_VERSION);
+            emptyResponse.putArray("result");
+            
+            logger.debug("Aucun hôte trouvé avec l'IP: {}", ipAddress);
+            return emptyResponse;
+            
+        } catch (Exception e) {
+            logger.error("Erreur lors de la recherche d'hôte par IP {}: {}", ipAddress, e.getMessage(), e);
+            throw new RuntimeException("Impossible de rechercher l'hôte par IP " + ipAddress, e);
+        }
+    }
+
+    /**
+     * Crée un nouvel hôte sur Zabbix
+     */
+    public JsonNode createHost(String hostName, String ipAddress, Integer snmpPort, String snmpCommunity) {
+        logger.info("Création d'un nouvel hôte: {} ({}:{})", hostName, ipAddress, snmpPort);
+        
+        ObjectNode request = createAuthenticatedRequest("host.create");
+        ObjectNode params = request.putObject("params");
+        
+        // Paramètres de l'hôte
+        params.put("host", hostName)
+              .put("name", hostName);
+        
+        // Ajouter aux groupes par défaut (groupe "Linux servers" ou créer un groupe SNMP)
+        params.putArray("groups").addObject().put("groupid", "2"); // Groupe "Linux servers" par défaut
+        
+        // Créer l'interface SNMP
+        ObjectNode snmpInterface = params.putArray("interfaces").addObject();
+        snmpInterface.put("type", 2) // Type SNMP
+                    .put("main", 1) // Interface principale
+                    .put("useip", 1) // Utiliser IP
+                    .put("ip", ipAddress)
+                    .put("dns", "")
+                    .put("port", snmpPort != null ? snmpPort.toString() : "161");
+        
+        // Détails SNMP
+        ObjectNode snmpDetails = snmpInterface.putObject("details");
+        snmpDetails.put("version", 2) // SNMP v2c
+                  .put("community", snmpCommunity != null ? snmpCommunity : "public");
+
+        try {
+            JsonNode response = sendRequestWithRetry(request);
+            
+            if (response.has("result") && response.get("result").has("hostids")) {
+                String newHostId = response.get("result").get("hostids").get(0).asText();
+                logger.info("Hôte créé avec succès: {} -> ID {}", hostName, newHostId);
+            } else {
+                logger.error("Réponse inattendue lors de la création de l'hôte: {}", response);
+            }
+            
+            return response;
+            
+        } catch (Exception e) {
+            logger.error("Erreur lors de la création de l'hôte {} ({}): {}", hostName, ipAddress, e.getMessage(), e);
+            throw new RuntimeException("Impossible de créer l'hôte " + hostName, e);
+        }
+    }
 } 
