@@ -27,7 +27,7 @@ import java.util.Map;
  * Contrôleur pour la gestion CRUD des assets SNMP locaux
  */
 @RestController
-@RequestMapping("/api/snmp/local/assets")
+@RequestMapping("/snmp/local/assets")
 @Tag(name = "SNMP Assets Management", description = "Gestion des assets SNMP en base locale")
 public class SnmpAssetCrudController {
 

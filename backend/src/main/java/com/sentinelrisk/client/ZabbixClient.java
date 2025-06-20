@@ -300,7 +300,7 @@ public class ZabbixClient {
      */
     private JsonNode sendRequest(ObjectNode request) {
         try {
-            String url = zabbixUrl + API_ENDPOINT;
+            String url = zabbixUrl; // L'URL contient déjà API_ENDPOINT depuis le constructeur
             logger.debug("Envoi requête vers: {} - Méthode: {}", url, request.get("method"));
             
             HttpHeaders headers = new HttpHeaders();
@@ -420,11 +420,6 @@ public class ZabbixClient {
         params.putArray("output").add("hostid").add("host").add("name").add("status");
         params.putArray("selectInterfaces").add("interfaceid").add("type").add("ip").add("port");
         
-        // Filtrer par IP dans les interfaces
-        ObjectNode searchFilter = params.putObject("filter");
-        // Note: Zabbix ne permet pas de filtrer directement par IP d'interface
-        // On récupère tous les hôtes et on filtre côté client
-        
         try {
             JsonNode response = sendRequestWithRetry(request);
             
@@ -457,25 +452,81 @@ public class ZabbixClient {
             
         } catch (Exception e) {
             logger.error("Erreur lors de la recherche d'hôte par IP {}: {}", ipAddress, e.getMessage(), e);
-            throw new RuntimeException("Impossible de rechercher l'hôte par IP " + ipAddress, e);
+            throw new RuntimeException("Impossible de rechercher l'hôte par IP " + ipAddress + ": " + e.getMessage(), e);
         }
+    }
+
+    /**
+     * Nettoie un nom d'hôte pour Zabbix en supprimant les caractères problématiques
+     */
+    private String sanitizeHostName(String hostName) {
+        if (hostName == null) return null;
+        
+        // Remplacer les caractères spéciaux par des tirets
+        String cleaned = hostName
+                .replace("'", "-")  // apostrophes
+                .replace("\"", "-") // guillemets
+                .replace("\\", "-") // backslashes
+                .replace("/", "-")  // slashes
+                .replace(" ", "-")  // espaces
+                .replace("à", "a").replace("á", "a").replace("â", "a").replace("ä", "a") // accents a
+                .replace("è", "e").replace("é", "e").replace("ê", "e").replace("ë", "e") // accents e
+                .replace("ì", "i").replace("í", "i").replace("î", "i").replace("ï", "i") // accents i
+                .replace("ò", "o").replace("ó", "o").replace("ô", "o").replace("ö", "o") // accents o
+                .replace("ù", "u").replace("ú", "u").replace("û", "u").replace("ü", "u") // accents u
+                .replace("ç", "c").replace("ñ", "n") // autres caractères spéciaux
+                .replaceAll("[^a-zA-Z0-9\\-_\\.]", "-") // supprimer tout autre caractère spécial
+                .replaceAll("-+", "-") // remplacer les tirets multiples par un seul
+                .replaceAll("^-+|-+$", ""); // supprimer les tirets en début/fin
+        
+        // S'assurer que le nom n'est pas vide et respecte les limites de Zabbix
+        if (cleaned.isEmpty()) {
+            cleaned = "host-" + System.currentTimeMillis();
+        }
+        
+        // Limiter à 128 caractères (limite Zabbix)
+        if (cleaned.length() > 128) {
+            cleaned = cleaned.substring(0, 125) + "...";
+        }
+        
+        logger.debug("Nom d'hôte nettoyé: '{}' -> '{}'", hostName, cleaned);
+        return cleaned;
     }
 
     /**
      * Crée un nouvel hôte sur Zabbix
      */
     public JsonNode createHost(String hostName, String ipAddress, Integer snmpPort, String snmpCommunity) {
-        logger.info("Création d'un nouvel hôte: {} ({}:{})", hostName, ipAddress, snmpPort);
+        logger.info("🔄 ZabbixClient.createHost() - Début création hôte: '{}' ({}:{})", hostName, ipAddress, snmpPort);
+        
+        // Nettoyer le nom d'hôte avant de l'utiliser
+        String cleanedHostName = sanitizeHostName(hostName);
+        logger.info("📝 Nom d'hôte nettoyé: '{}' -> '{}'", hostName, cleanedHostName);
         
         ObjectNode request = createAuthenticatedRequest("host.create");
         ObjectNode params = request.putObject("params");
         
-        // Paramètres de l'hôte
-        params.put("host", hostName)
-              .put("name", hostName);
+        // Validation des paramètres d'entrée
+        if (cleanedHostName == null || cleanedHostName.trim().isEmpty()) {
+            throw new RuntimeException("Le nom d'hôte ne peut pas être vide");
+        }
+        if (ipAddress == null || ipAddress.trim().isEmpty()) {
+            throw new RuntimeException("L'adresse IP ne peut pas être vide");
+        }
         
-        // Ajouter aux groupes par défaut (groupe "Linux servers" ou créer un groupe SNMP)
-        params.putArray("groups").addObject().put("groupid", "2"); // Groupe "Linux servers" par défaut
+        logger.info("📋 Validation des paramètres:");
+        logger.info("   - hostName original: '{}' (longueur: {})", hostName, hostName.length());
+        logger.info("   - hostName nettoyé: '{}' (longueur: {})", cleanedHostName, cleanedHostName.length());
+        logger.info("   - ipAddress: '{}'", ipAddress);
+        logger.info("   - snmpPort: {}", snmpPort);
+        logger.info("   - snmpCommunity: '{}'", snmpCommunity);
+        
+        // Paramètres de l'hôte avec le nom nettoyé
+        params.put("host", cleanedHostName)
+              .put("name", cleanedHostName);
+        
+        // Ajouter aux groupes par défaut (groupe "Linux servers")
+        params.putArray("groups").addObject().put("groupid", "2");
         
         // Créer l'interface SNMP
         ObjectNode snmpInterface = params.putArray("interfaces").addObject();
@@ -491,21 +542,46 @@ public class ZabbixClient {
         snmpDetails.put("version", 2) // SNMP v2c
                   .put("community", snmpCommunity != null ? snmpCommunity : "public");
 
+        // Log de la requête complète avant envoi
+        logger.info("📤 Requête JSON-RPC complète envoyée à Zabbix:");
+        logger.info("   - URL: {}", zabbixUrl);
+        logger.info("   - Méthode: host.create");
+        logger.info("   - Payload JSON: {}", request.toString());
+        
         try {
             JsonNode response = sendRequestWithRetry(request);
             
+            logger.info("📥 Réponse complète de Zabbix pour host.create:");
+            logger.info("   - Status: SUCCESS");
+            logger.info("   - Response: {}", response.toString());
+            
             if (response.has("result") && response.get("result").has("hostids")) {
                 String newHostId = response.get("result").get("hostids").get(0).asText();
-                logger.info("Hôte créé avec succès: {} -> ID {}", hostName, newHostId);
+                logger.info("✅ Hôte créé avec succès: '{}' -> ID {}", cleanedHostName, newHostId);
             } else {
-                logger.error("Réponse inattendue lors de la création de l'hôte: {}", response);
+                logger.error("❌ Réponse inattendue - pas de hostids dans le résultat:");
+                logger.error("   - Has 'result': {}", response.has("result"));
+                if (response.has("result")) {
+                    logger.error("   - Result content: {}", response.get("result"));
+                    logger.error("   - Has 'hostids': {}", response.get("result").has("hostids"));
+                }
             }
             
             return response;
             
         } catch (Exception e) {
-            logger.error("Erreur lors de la création de l'hôte {} ({}): {}", hostName, ipAddress, e.getMessage(), e);
-            throw new RuntimeException("Impossible de créer l'hôte " + hostName, e);
+            logger.error("❌ Exception lors de l'appel host.create:");
+            logger.error("   - Exception: {} - {}", e.getClass().getSimpleName(), e.getMessage());
+            logger.error("   - Requête qui a échoué: {}", request.toString());
+            
+            // Log de la stacktrace complète pour debugging
+            logger.error("   - Stacktrace complète:", e);
+            
+            if (e.getCause() != null) {
+                logger.error("   - Cause racine: {} - {}", e.getCause().getClass().getSimpleName(), e.getCause().getMessage());
+            }
+            
+            throw new RuntimeException("Impossible de créer l'hôte " + cleanedHostName + " (" + e.getClass().getSimpleName() + "): " + e.getMessage(), e);
         }
     }
 } 

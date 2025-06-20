@@ -14,7 +14,7 @@ export class SnmpService {
 
   // Méthodes pour les assets SNMP - utilise notre API CRUD locale
   getAssets(): Observable<SnmpAsset[]> {
-    return this.http.get<SnmpAsset[]>(`${this.apiUrl}/api/snmp/local/assets`);
+    return this.http.get<SnmpAsset[]>(`${this.apiUrl}/snmp/local/assets`);
   }
 
   // Méthodes pour les configurations de scan
@@ -50,14 +50,14 @@ export class SnmpService {
 
   // Méthodes pour la synchronisation Zabbix
   checkSyncStatus(assetId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/api/snmp/zabbix/sync-status/${assetId}`);
+    return this.http.get(`${this.apiUrl}/snmp/zabbix/sync-status/${assetId}`);
   }
 
   syncAssetWithZabbix(assetId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/api/snmp/zabbix/sync/${assetId}`, {});
+    return this.http.post(`${this.apiUrl}/snmp/zabbix/sync/${assetId}`, {});
   }
 
   syncAllAssets(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/api/snmp/zabbix/sync-all`, {});
+    return this.http.post(`${this.apiUrl}/snmp/zabbix/sync-all`, {});
   }
 } 

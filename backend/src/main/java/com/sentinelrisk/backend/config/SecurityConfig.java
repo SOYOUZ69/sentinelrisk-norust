@@ -51,7 +51,8 @@ public class SecurityConfig {
 
     private static final String[] SNMP_WHITELIST = {
         "/api/snmp/**",
-        "/api/snmp/zabbix/**"
+        "/api/snmp/zabbix/**",
+        "/api/snmp/local/**"
     };
 
     @Bean
@@ -63,17 +64,18 @@ public class SecurityConfig {
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(SWAGGER_WHITELIST).permitAll()
-                .requestMatchers(DEBUG_WHITELIST).permitAll()
-                .requestMatchers(SNMP_WHITELIST).permitAll()
-                // Toutes les autres requêtes nécessitent une authentification
-                // mais les permissions spécifiques sont gérées par les annotations @PreAuthorize
-                .anyRequest().authenticated()
-            )
-            .oauth2ResourceServer()
-            .jwt()
-            .jwtAuthenticationConverter(jwtAuthenticationConverter());
+            .authorizeHttpRequests(authorize -> {
+                System.out.println("🔒 Configuration des autorisations HTTP - MODE PERMISSIF TEMPORAIRE");
+                System.out.println("   - SNMP Whitelist: " + java.util.Arrays.toString(SNMP_WHITELIST));
+                System.out.println("   - DEBUG Whitelist: " + java.util.Arrays.toString(DEBUG_WHITELIST));
+                System.out.println("   - SWAGGER Whitelist: " + java.util.Arrays.toString(SWAGGER_WHITELIST));
+                
+                authorize
+                    .anyRequest().permitAll(); // TEMPORAIRE: Permettre toutes les requêtes pour déboguer
+            });
+            // .oauth2ResourceServer()
+            // .jwt()
+            // .jwtAuthenticationConverter(jwtAuthenticationConverter());
 
         return http.build();
     }

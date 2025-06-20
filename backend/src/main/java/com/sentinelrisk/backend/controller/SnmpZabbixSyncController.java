@@ -22,7 +22,7 @@ import java.util.Map;
  * Contrôleur pour la synchronisation des assets SNMP avec Zabbix
  */
 @RestController
-@RequestMapping("/api/snmp/zabbix")
+@RequestMapping("/snmp/zabbix")
 @Tag(name = "SNMP Zabbix Sync", description = "Synchronisation des assets SNMP avec Zabbix")
 public class SnmpZabbixSyncController {
 
@@ -33,6 +33,16 @@ public class SnmpZabbixSyncController {
     @Autowired
     public SnmpZabbixSyncController(SnmpZabbixSyncService syncService) {
         this.syncService = syncService;
+    }
+
+    @GetMapping("/test")
+    @Operation(summary = "Test endpoint pour déboguer la sécurité")
+    public ResponseEntity<Map<String, Object>> testEndpoint() {
+        logger.info("Test endpoint appelé avec succès");
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Test endpoint fonctionne");
+        response.put("timestamp", java.time.LocalDateTime.now());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/sync-status/{id}")
@@ -178,5 +188,101 @@ public class SnmpZabbixSyncController {
             
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
+    }
+
+    @PostMapping("/sync-all")
+    @Operation(
+        summary = "Synchroniser tous les assets avec Zabbix",
+        description = "Lance la synchronisation en lot de tous les assets SNMP locaux non synchronisés avec Zabbix"
+    )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200", 
+            description = "Synchronisation en lot terminée",
+            content = @Content(
+                mediaType = "application/json",
+                examples = @ExampleObject(value = """
+                    {
+                      "totalAssets": 5,
+                      "synchronized": 3,
+                      "skipped": 1,
+                      "failed": 1,
+                      "message": "Synchronisation en lot terminée",
+                      "startedAt": "2025-06-20T10:30:00",
+                      "completedAt": "2025-06-20T10:32:15",
+                      "details": [
+                        {
+                          "assetId": 1,
+                          "status": "SUCCESS",
+                          "zabbixHostId": "10124"
+                        },
+                        {
+                          "assetId": 2,
+                          "status": "SKIPPED",
+                          "reason": "Already synchronized"
+                        }
+                      ]
+                    }
+                    """)
+            )
+        ),
+        @ApiResponse(responseCode = "500", description = "Erreur lors de la synchronisation en lot")
+    })
+    public ResponseEntity<Map<String, Object>> syncAllAssets() {
+        
+        logger.info("Demande de synchronisation en lot de tous les assets");
+        
+        try {
+            Map<String, Object> syncResult = syncService.syncAllAssets();
+            
+            int totalAssets = (Integer) syncResult.get("totalAssets");
+            int syncCount = (Integer) syncResult.get("synchronized");
+            int failed = (Integer) syncResult.get("failed");
+            
+            logger.info("Synchronisation en lot terminée: {} assets traités, {} synchronisés, {} échecs", 
+                       totalAssets, syncCount, failed);
+            
+            return ResponseEntity.ok(syncResult);
+            
+        } catch (Exception e) {
+            logger.error("Erreur lors de la synchronisation en lot: {}", e.getMessage(), e);
+            
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("error", "BATCH_SYNC_FAILED");
+            errorResponse.put("message", "Erreur lors de la synchronisation en lot: " + e.getMessage());
+            errorResponse.put("completedAt", java.time.LocalDateTime.now());
+            
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    @GetMapping("/debug-zabbix")
+    @Operation(summary = "Test debug des appels Zabbix")
+    public ResponseEntity<Map<String, Object>> debugZabbix() {
+        logger.info("Test debug Zabbix appelé");
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            // Test 1: Vérifier la connexion
+            boolean connected = syncService.testZabbixConnection();
+            response.put("connectionTest", connected);
+            
+            // Test 2: Rechercher un hôte par IP
+            String hostId = syncService.findHostByIpTest("192.168.1.99");
+            response.put("hostSearchTest", hostId != null ? "Trouvé: " + hostId : "Non trouvé");
+            
+            response.put("status", "SUCCESS");
+            response.put("timestamp", java.time.LocalDateTime.now());
+            
+        } catch (Exception e) {
+            response.put("status", "ERROR");
+            response.put("error", e.getMessage());
+            response.put("exception", e.getClass().getSimpleName());
+            response.put("timestamp", java.time.LocalDateTime.now());
+            logger.error("Erreur lors du test debug Zabbix:", e);
+        }
+        
+        return ResponseEntity.ok(response);
     }
 } 

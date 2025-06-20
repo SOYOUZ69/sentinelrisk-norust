@@ -10,7 +10,7 @@ import { SnmpScanResult, ScanStatus, ScanResultFilter } from '../models/scan-res
   providedIn: 'root'
 })
 export class SnmpService {
-  private readonly baseUrl = `${environment.apiUrl}/api/snmp`;
+  private readonly baseUrl = `${environment.apiUrl}/snmp`;
 
   constructor(private http: HttpClient) {}
 
