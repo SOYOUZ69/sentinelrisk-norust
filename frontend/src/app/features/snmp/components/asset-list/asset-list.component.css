@@ -1,143 +1,135 @@
 .asset-list-container {
   padding: 20px;
-  
-  mat-card {
-    margin-bottom: 20px;
-    
-    mat-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 16px;
-      
-      mat-card-title {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin: 0;
-      }
-      
-      .header-actions {
-        display: flex;
-        gap: 10px;
-        
-        button {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-      }
-    }
+}
+
+mat-card {
+  margin-bottom: 20px;
+}
+
+mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16px;
+}
+
+mat-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  gap: 16px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+    color: #ccc;
   }
 
-  .loading-container {
+  h3 {
+    margin: 16px 0 8px 0;
+    color: #333;
+  }
+
+  p {
+    margin-bottom: 24px;
+    color: #666;
+  }
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.assets-table {
+  width: 100%;
+  
+  .asset-name {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
-    
-    mat-spinner {
-      margin-bottom: 16px;
-    }
-  }
+    gap: 4px;
 
-  .empty-state {
-    text-align: center;
-    padding: 40px;
-    color: #666;
-    
-    mat-icon {
-      font-size: 48px;
-      height: 48px;
-      width: 48px;
-      margin-bottom: 16px;
-      color: #ccc;
+    strong {
+      font-weight: 500;
     }
-    
-    h3 {
-      margin: 16px 0 8px 0;
-      color: #333;
-    }
-    
-    p {
-      margin-bottom: 24px;
+
+    .asset-description {
       color: #666;
+      font-size: 0.8em;
+      line-height: 1.2;
     }
   }
 
-  .table-container {
-    overflow-x: auto;
+  .ip-info {
+    font-family: 'Courier New', monospace;
     
-    .assets-table {
-      width: 100%;
+    code {
+      background: none;
+      padding: 0;
+      font-size: inherit;
+    }
+    
+    .port-info {
+      color: #666;
+      font-size: 0.9em;
+    }
+  }
+
+  .snmp-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
+
+    .community {
+      color: #666;
+      font-size: 0.8em;
+    }
+  }
+
+  .sync-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .sync-text {
+      font-size: 0.9em;
       
-      .mat-column-sync {
-        width: 200px;
+      &.primary-text {
+        color: #1976d2;
       }
       
-      .sync-status {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        
-        .sync-text {
-          font-size: 12px;
-          font-weight: 500;
-          
-          &.primary-text {
-            color: #1976d2;
-          }
-          
-          &.accent-text {
-            color: #ff4081;
-          }
-          
-          &.warn-text {
-            color: #f44336;
-          }
-        }
-        
-        mat-icon {
-          font-size: 18px;
-          width: 18px;
-          height: 18px;
-          
-          &.spinning {
-            animation: spin 1s linear infinite;
-          }
-        }
+      &.accent-text {
+        color: #ff5722;
       }
       
-      .mat-cell, .mat-header-cell {
-        padding: 12px 8px;
+      &.warn-text {
+        color: #f44336;
       }
-      
-      code {
-        background-color: #f5f5f5;
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-family: 'Roboto Mono', monospace;
-        font-size: 12px;
-      }
-      
-      strong {
-        font-weight: 500;
-      }
-      
-      mat-chip {
-        font-size: 11px;
-        min-height: 24px;
-        line-height: 24px;
-      }
-      
-      button[mat-icon-button] {
-        margin-right: 4px;
-        
-        &:last-child {
-          margin-right: 0;
-        }
-      }
+    }
+
+    .spinning {
+      animation: spin 1s linear infinite;
     }
   }
 }
@@ -148,17 +140,19 @@
 }
 
 /* Styles pour les snackbars */
-::ng-deep .success-snackbar {
-  background-color: #4caf50 !important;
-  color: white !important;
-}
+:ng-deep {
+  .success-snackbar {
+    background-color: #4caf50 !important;
+    color: white !important;
+  }
 
-::ng-deep .error-snackbar {
-  background-color: #f44336 !important;
-  color: white !important;
-}
+  .error-snackbar {
+    background-color: #f44336 !important;
+    color: white !important;
+  }
 
-::ng-deep .warning-snackbar {
-  background-color: #ff9800 !important;
-  color: white !important;
+  .warning-snackbar {
+    background-color: #ff9800 !important;
+    color: white !important;
+  }
 }

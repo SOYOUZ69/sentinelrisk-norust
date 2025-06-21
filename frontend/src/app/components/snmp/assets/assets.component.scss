@@ -7,29 +7,59 @@
     align-items: center;
     margin-bottom: 20px;
 
-    .header-actions {
-      display: flex;
-      gap: 10px;
-
-      button {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-    }
-
     h2 {
       margin: 0;
+      color: #333;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
     }
   }
 
   table {
     width: 100%;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 16px;
 
-    .mat-column-sync {
-      width: 200px;
+    .asset-name {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      strong {
+        font-weight: 500;
+      }
+
+      .asset-description {
+        color: #666;
+        font-size: 0.8em;
+        line-height: 1.2;
+      }
+    }
+
+    .ip-info {
+      font-family: 'Courier New', monospace;
+      
+      .port-info {
+        color: #666;
+        font-size: 0.9em;
+      }
+    }
+
+    .snmp-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      .version {
+        font-weight: 500;
+      }
+
+      .community {
+        color: #666;
+        font-size: 0.8em;
+      }
     }
 
     .sync-status {
@@ -38,44 +68,54 @@
       gap: 8px;
 
       .sync-text {
-        font-size: 12px;
-        font-weight: 500;
-
+        font-size: 0.9em;
+        
         &.primary-text {
           color: #1976d2;
         }
-
+        
         &.accent-text {
-          color: #ff4081;
+          color: #ff5722;
         }
-
+        
         &.warn-text {
           color: #f44336;
         }
       }
 
-      mat-icon {
-        font-size: 18px;
-        width: 18px;
-        height: 18px;
-
-        &.spinning {
-          animation: spin 1s linear infinite;
-        }
+      .spinning {
+        animation: spin 1s linear infinite;
       }
+    }
+  }
+
+  .no-data {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      margin-bottom: 16px;
+      color: #ccc;
+    }
+
+    h3 {
+      margin: 16px 0 8px 0;
+      color: #333;
+    }
+
+    p {
+      margin-bottom: 24px;
+      color: #666;
     }
   }
 
   .mat-column-actions {
     width: 120px;
     text-align: center;
-  }
-
-  .no-data {
-    text-align: center;
-    padding: 40px;
-    color: #666;
-    font-style: italic;
   }
 
   mat-chip {
@@ -90,19 +130,17 @@
 }
 
 // Styles pour les snackbars
-::ng-deep {
-  .success-snackbar {
-    background-color: #4caf50 !important;
-    color: white !important;
-  }
+.success-snackbar {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
 
-  .error-snackbar {
-    background-color: #f44336 !important;
-    color: white !important;
-  }
+.error-snackbar {
+  background-color: #f44336 !important;
+  color: white !important;
+}
 
-  .warning-snackbar {
-    background-color: #ff9800 !important;
-    color: white !important;
-  }
+.warning-snackbar {
+  background-color: #ff9800 !important;
+  color: white !important;
 } 

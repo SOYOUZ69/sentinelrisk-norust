@@ -29,6 +29,7 @@ import { ConfigFormComponent } from './components/config-form/config-form.compon
 import { ManualScanComponent } from './components/manual-scan/manual-scan.component';
 import { ScanHistoryComponent } from './components/scan-history/scan-history.component';
 import { ScanDetailComponent } from './components/scan-detail/scan-detail.component';
+import { AssetFormDialogComponent } from '../../components/snmp/assets/asset-form-dialog.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { ScanDetailComponent } from './components/scan-detail/scan-detail.compon
     ConfigFormComponent,
     ManualScanComponent,
     ScanHistoryComponent,
-    ScanDetailComponent
+    ScanDetailComponent,
+    AssetFormDialogComponent
   ],
   imports: [
     CommonModule,

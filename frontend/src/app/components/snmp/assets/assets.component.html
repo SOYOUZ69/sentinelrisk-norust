@@ -2,8 +2,9 @@
   <div class="header">
     <h2>Assets SNMP</h2>
     <div class="header-actions">
-      <button mat-raised-button color="primary" (click)="toggleDemoMode()">
-        {{ snmpService.isDemoMode ? 'Mode Réel' : 'Mode Démo' }}
+      <button mat-raised-button color="primary" (click)="createAsset()">
+        <mat-icon>add</mat-icon>
+        Nouvel Asset
       </button>
       <button mat-raised-button color="accent" (click)="syncAllAssets()" 
               [disabled]="assets.filter(a => !a.synchronizedWithZabbix).length === 0">
@@ -18,20 +19,35 @@
   <table mat-table [dataSource]="assets" class="mat-elevation-z8">
     <!-- Host Column -->
     <ng-container matColumnDef="host">
-      <th mat-header-cell *matHeaderCellDef>Host</th>
-      <td mat-cell *matCellDef="let asset">{{asset.host}}</td>
+      <th mat-header-cell *matHeaderCellDef>Nom/Host</th>
+      <td mat-cell *matCellDef="let asset">
+        <div class="asset-name">
+          <strong>{{asset.name || asset.hostName}}</strong>
+          <small *ngIf="asset.description" class="asset-description">{{asset.description}}</small>
+        </div>
+      </td>
     </ng-container>
 
     <!-- IP Column -->
     <ng-container matColumnDef="ip">
       <th mat-header-cell *matHeaderCellDef>IP</th>
-      <td mat-cell *matCellDef="let asset">{{asset.ip}}</td>
+      <td mat-cell *matCellDef="let asset">
+        <div class="ip-info">
+          {{asset.ipAddress}}
+          <small *ngIf="asset.snmpPort && asset.snmpPort !== 161" class="port-info">:{{asset.snmpPort}}</small>
+        </div>
+      </td>
     </ng-container>
 
     <!-- Version Column -->
     <ng-container matColumnDef="version">
-      <th mat-header-cell *matHeaderCellDef>Version</th>
-      <td mat-cell *matCellDef="let asset">{{asset.version}}</td>
+      <th mat-header-cell *matHeaderCellDef>SNMP</th>
+      <td mat-cell *matCellDef="let asset">
+        <div class="snmp-info">
+          <span class="version">v{{asset.snmpVersion || '2c'}}</span>
+          <small *ngIf="asset.snmpCommunity" class="community">{{asset.snmpCommunity}}</small>
+        </div>
+      </td>
     </ng-container>
 
     <!-- Status Column -->
@@ -39,8 +55,8 @@
       <th mat-header-cell *matHeaderCellDef>Statut</th>
       <td mat-cell *matCellDef="let asset">
         <mat-chip-list>
-          <mat-chip [color]="asset.status === 'active' ? 'primary' : 'warn'" selected>
-            {{asset.status}}
+          <mat-chip [color]="getStatusColor(asset.status)" selected>
+            {{getStatusLabel(asset.status)}}
           </mat-chip>
         </mat-chip-list>
       </td>
@@ -76,11 +92,8 @@
           <mat-icon>sync</mat-icon>
         </button>
         
-        <!-- Actions existantes -->
-        <button mat-icon-button color="primary" (click)="pauseAsset(asset)" matTooltip="Pause">
-          <mat-icon>pause</mat-icon>
-        </button>
-        <button mat-icon-button color="accent" (click)="editAsset(asset)" matTooltip="Éditer">
+        <!-- Actions CRUD -->
+        <button mat-icon-button color="primary" (click)="editAsset(asset)" matTooltip="Modifier">
           <mat-icon>edit</mat-icon>
         </button>
         <button mat-icon-button color="warn" (click)="deleteAsset(asset)" matTooltip="Supprimer">
@@ -94,6 +107,12 @@
   </table>
 
   <div *ngIf="!loading && assets.length === 0" class="no-data">
-    <p>Aucun asset SNMP trouvé</p>
+    <mat-icon>device_hub</mat-icon>
+    <h3>Aucun asset SNMP trouvé</h3>
+    <p>Commencez par créer votre premier asset SNMP</p>
+    <button mat-raised-button color="primary" (click)="createAsset()">
+      <mat-icon>add</mat-icon>
+      Créer un Asset
+    </button>
   </div>
 </div> 

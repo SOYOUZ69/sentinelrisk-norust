@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { SnmpService } from '../../../../services/snmp.service';
 import { SnmpAsset } from '../../../../models/snmp.model';
+import { AssetFormDialogComponent } from '../../../../components/snmp/assets/asset-form-dialog.component';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -19,6 +21,7 @@ export class AssetListComponent implements OnInit {
   constructor(
     private router: Router,
     private snackBar: MatSnackBar,
+    private dialog: MatDialog,
     private snmpService: SnmpService
   ) {}
 
@@ -73,6 +76,66 @@ export class AssetListComponent implements OnInit {
         console.error('Erreur lors de la vérification des statuts de synchronisation:', error);
       }
     });
+  }
+
+  // Créer un nouvel asset avec dialogue
+  createAsset(): void {
+    const dialogRef = this.dialog.open(AssetFormDialogComponent, {
+      width: '600px',
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadAssets(); // Recharger la liste
+      }
+    });
+  }
+
+  // Modifier un asset existant avec dialogue
+  editAsset(asset: SnmpAsset): void {
+    const dialogRef = this.dialog.open(AssetFormDialogComponent, {
+      width: '600px',
+      data: { asset }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadAssets(); // Recharger la liste
+      }
+    });
+  }
+
+  // Supprimer un asset
+  deleteAsset(asset: SnmpAsset): void {
+    if (!asset.id) {
+      return;
+    }
+
+    const confirmed = confirm(`Êtes-vous sûr de vouloir supprimer l'asset "${asset.name || asset.hostName}" ?`);
+    
+    if (confirmed) {
+      this.snmpService.deleteAsset(asset.id).subscribe({
+        next: () => {
+          this.snackBar.open(`Asset "${asset.name || asset.hostName}" supprimé avec succès`, 'Fermer', {
+            duration: 3000,
+            panelClass: ['success-snackbar']
+          });
+          this.loadAssets(); // Recharger la liste
+        },
+        error: (error) => {
+          console.error('Erreur lors de la suppression:', error);
+          let message = 'Erreur lors de la suppression';
+          if (error.status === 404) {
+            message = 'Asset non trouvé';
+          }
+          this.snackBar.open(message, 'Fermer', {
+            duration: 3000,
+            panelClass: ['error-snackbar']
+          });
+        }
+      });
+    }
   }
 
   syncAsset(asset: SnmpAsset): void {
@@ -191,12 +254,23 @@ export class AssetListComponent implements OnInit {
     }
   }
 
-  createAsset(): void {
-    this.router.navigate(['/snmp/assets/new']);
+  // Méthodes helper pour l'affichage
+  getStatusColor(status: string): string {
+    switch (status) {
+      case 'active': return 'primary';
+      case 'inactive': return 'warn';
+      case 'maintenance': return 'accent';
+      default: return 'basic';
+    }
   }
 
-  editAsset(asset: SnmpAsset): void {
-    this.router.navigate(['/snmp/assets/edit', asset.id]);
+  getStatusLabel(status: string): string {
+    switch (status) {
+      case 'active': return 'Actif';
+      case 'inactive': return 'Inactif';
+      case 'maintenance': return 'Maintenance';
+      default: return status || 'Inconnu';
+    }
   }
 
   pauseAsset(asset: SnmpAsset): void {
@@ -205,15 +279,7 @@ export class AssetListComponent implements OnInit {
     });
   }
 
-  deleteAsset(asset: SnmpAsset): void {
-    if (confirm(`Êtes-vous sûr de vouloir supprimer l'asset ${asset.hostName || asset.name} ?`)) {
-      this.snackBar.open(`Suppression de l'asset ${asset.hostName || asset.name}`, 'Fermer', {
-        duration: 2000
-      });
-    }
-  }
-
   allAssetsAreSynchronized(): boolean {
-    return this.assets.filter(a => !a.synchronizedWithZabbix).length === 0;
+    return this.assets.every(asset => asset.synchronizedWithZabbix);
   }
 }

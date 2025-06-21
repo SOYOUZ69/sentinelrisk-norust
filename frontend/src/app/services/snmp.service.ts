@@ -17,6 +17,31 @@ export class SnmpService {
     return this.http.get<SnmpAsset[]>(`${this.apiUrl}/snmp/local/assets`);
   }
 
+  // Récupérer un asset par ID
+  getAssetById(id: number): Observable<SnmpAsset> {
+    return this.http.get<SnmpAsset>(`${this.apiUrl}/snmp/local/assets/${id}`);
+  }
+
+  // Créer un nouvel asset
+  createAsset(asset: SnmpAssetRequest): Observable<SnmpAsset> {
+    return this.http.post<SnmpAsset>(`${this.apiUrl}/snmp/local/assets`, asset);
+  }
+
+  // Modifier un asset existant
+  updateAsset(id: number, asset: SnmpAssetRequest): Observable<SnmpAsset> {
+    return this.http.put<SnmpAsset>(`${this.apiUrl}/snmp/local/assets/${id}`, asset);
+  }
+
+  // Supprimer un asset
+  deleteAsset(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/snmp/local/assets/${id}`);
+  }
+
+  // Récupérer les assets par statut
+  getAssetsByStatus(status: string): Observable<SnmpAsset[]> {
+    return this.http.get<SnmpAsset[]>(`${this.apiUrl}/snmp/local/assets/status/${status}`);
+  }
+
   // Méthodes pour les configurations de scan
   getConfigs(): Observable<SnmpScanConfig[]> {
     return this.http.get<SnmpScanConfig[]>(`${this.apiUrl}/snmp/configs`);
@@ -60,4 +85,18 @@ export class SnmpService {
   syncAllAssets(): Observable<any> {
     return this.http.post(`${this.apiUrl}/snmp/zabbix/sync-all`, {});
   }
+}
+
+// Interface pour les requêtes de création/modification d'assets
+export interface SnmpAssetRequest {
+  name: string;
+  ipAddress: string;
+  snmpPort: number;
+  snmpCommunity: string;
+  snmpVersion?: string;
+  description?: string;
+  location?: string;
+  deviceType?: string;
+  status?: string;
+  snmpProperties?: { [key: string]: string };
 } 
