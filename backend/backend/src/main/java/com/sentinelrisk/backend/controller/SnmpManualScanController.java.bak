@@ -1,0 +1,111 @@
+package com.sentinelrisk.backend.controller;
+
+import com.sentinelrisk.backend.dto.SnmpManualScanRequest;
+import com.sentinelrisk.backend.dto.SnmpManualScanResponse;
+import com.sentinelrisk.backend.service.SnmpManualScanService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/snmp/manual")
+@Tag(name = "SNMP Manual Scan", description = "API pour effectuer des scans SNMP manuels")
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:3000"})
+public class SnmpManualScanController {
+
+    private static final Logger logger = LoggerFactory.getLogger(SnmpManualScanController.class);
+
+    @Autowired
+    private SnmpManualScanService snmpManualScanService;
+
+    @Operation(
+        summary = "Effectuer un scan SNMP manuel",
+        description = "Lance un scan SNMP direct sur un équipement avec les OIDs spécifiés"
+    )
+    @PostMapping("/scan")
+    public ResponseEntity<SnmpManualScanResponse> performManualScan(
+            @Valid @RequestBody SnmpManualScanRequest request) {
+        
+        logger.info("🔍 Requête de scan SNMP manuel reçue pour {}:{}", request.getIp(), request.getPort());
+
+        try {
+            if (request.getOids() == null || request.getOids().isEmpty()) {
+                logger.warn("⚠️ Liste d'OIDs vide dans la requête");
+                SnmpManualScanResponse errorResponse = new SnmpManualScanResponse(false, request.getIp(), request.getPort());
+                errorResponse.setError("La liste des OIDs ne peut pas être vide");
+                return ResponseEntity.badRequest().body(errorResponse);
+            }
+
+            SnmpManualScanResponse response = snmpManualScanService.performManualScan(request);
+            
+            if (response.isSuccess()) {
+                logger.info("✅ Scan SNMP manuel réussi pour {}:{}", request.getIp(), request.getPort());
+                return ResponseEntity.ok(response);
+            } else {
+                logger.warn("⚠️ Scan SNMP manuel échoué pour {}:{}: {}", 
+                           request.getIp(), request.getPort(), response.getError());
+                return ResponseEntity.ok(response);
+            }
+
+        } catch (Exception e) {
+            logger.error("❌ Erreur lors du scan SNMP manuel pour {}:{}: {}", 
+                        request.getIp(), request.getPort(), e.getMessage(), e);
+            
+            SnmpManualScanResponse errorResponse = new SnmpManualScanResponse(false, request.getIp(), request.getPort());
+            errorResponse.setError("Erreur interne: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    @Operation(
+        summary = "Tester la connectivité SNMP",
+        description = "Teste rapidement la connectivité SNMP avec un équipement"
+    )
+    @GetMapping("/test-connectivity")
+    public ResponseEntity<SnmpManualScanResponse> testConnectivity(
+            @RequestParam String ip,
+            @RequestParam(defaultValue = "161") Integer port,
+            @RequestParam(defaultValue = "public") String community,
+            @RequestParam(defaultValue = "2c") String version) {
+        
+        logger.info("🔍 Test de connectivité SNMP pour {}:{}", ip, port);
+
+        try {
+            SnmpManualScanRequest testRequest = new SnmpManualScanRequest();
+            testRequest.setIp(ip);
+            testRequest.setPort(port);
+            testRequest.setCommunity(community);
+            testRequest.setVersion(version);
+            testRequest.setOids(java.util.Arrays.asList("1.3.6.1.2.1.1.1.0"));
+            testRequest.setTimeout(3000);
+            testRequest.setRetries(1);
+
+            SnmpManualScanResponse response = snmpManualScanService.performManualScan(testRequest);
+            
+            logger.info("Test de connectivité SNMP pour {}:{} - Succès: {}", 
+                       ip, port, response.isSuccess());
+            
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            logger.error("❌ Erreur lors du test de connectivité SNMP pour {}:{}: {}", 
+                        ip, port, e.getMessage(), e);
+            
+            SnmpManualScanResponse errorResponse = new SnmpManualScanResponse(false, ip, port);
+            errorResponse.setError("Erreur de test: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+}
+
+    @GetMapping("/hello")
+    public ResponseEntity<String> hello() {
+        return ResponseEntity.ok("Hello from SNMP Manual Scan Controller!");
+    }
+}

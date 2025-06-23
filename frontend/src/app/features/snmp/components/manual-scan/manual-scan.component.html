@@ -6,37 +6,182 @@
         Scan Manuel SNMP
       </mat-card-title>
       <div class="header-actions">
-        <mat-chip color="accent" selected>
-          <mat-icon>info</mat-icon>
-          MODE DÉMO
+        <mat-chip color="primary" selected>
+          <mat-icon>network_check</mat-icon>
+          MODE PRODUCTION
         </mat-chip>
       </div>
     </mat-card-header>
 
     <mat-card-content>
-      <!-- Formulaire de scan -->
+      <!-- Formulaire de configuration SNMP -->
       <form [formGroup]="scanForm" (ngSubmit)="onSubmit()" class="scan-form">
+        
+        <!-- Section Connexion -->
         <div class="form-section">
-          <h3>Sélection de l'asset</h3>
+          <h3><mat-icon>router</mat-icon> Configuration de connexion</h3>
           
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Choisir un asset</mat-label>
-            <mat-select formControlName="assetId" [disabled]="isScanning">
-              <mat-option *ngFor="let asset of assets" [value]="asset.id">
-                <div class="asset-option">
-                  <span class="asset-name">{{ getAssetDisplayName(asset) }}</span>
-                  <mat-chip size="small" [color]="'primary'" selected>
-                    {{ getAssetTypeLabel(asset.type) }}
-                  </mat-chip>
-                </div>
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="scanForm.get('assetId')?.hasError('required')">
-              Veuillez sélectionner un asset
-            </mat-error>
-          </mat-form-field>
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="ip-field">
+              <mat-label>Adresse IP</mat-label>
+              <input matInput formControlName="ip" placeholder="192.168.1.10" [disabled]="isScanning">
+              <mat-icon matSuffix>language</mat-icon>
+              <mat-error *ngIf="scanForm.get('ip')?.hasError('required')">
+                L'adresse IP est obligatoire
+              </mat-error>
+              <mat-error *ngIf="scanForm.get('ip')?.hasError('pattern')">
+                Format d'adresse IP invalide
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="port-field">
+              <mat-label>Port SNMP</mat-label>
+              <input matInput type="number" formControlName="port" [disabled]="isScanning">
+              <mat-error *ngIf="scanForm.get('port')?.hasError('required')">
+                Le port est obligatoire
+              </mat-error>
+              <mat-error *ngIf="scanForm.get('port')?.hasError('min') || scanForm.get('port')?.hasError('max')">
+                Port invalide (1-65535)
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="community-field">
+              <mat-label>Communauté SNMP</mat-label>
+              <input matInput formControlName="community" [disabled]="isScanning">
+              <mat-icon matSuffix>vpn_key</mat-icon>
+              <mat-error *ngIf="scanForm.get('community')?.hasError('required')">
+                La communauté est obligatoire
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="version-field">
+              <mat-label>Version SNMP</mat-label>
+              <mat-select formControlName="version" [disabled]="isScanning">
+                <mat-option *ngFor="let version of snmpVersions" [value]="version">
+                  {{ getSnmpVersionLabel(version) }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <!-- Bouton de test de connectivité -->
+          <div class="connectivity-test">
+            <button mat-raised-button 
+                    color="accent" 
+                    type="button"
+                    (click)="testConnectivity()"
+                    [disabled]="isTesting || isScanning || !scanForm.get('ip')?.valid || !scanForm.get('port')?.valid">
+              <mat-icon>{{ isTesting ? 'hourglass_empty' : 'network_check' }}</mat-icon>
+              {{ isTesting ? 'Test en cours...' : 'Tester la connectivité' }}
+            </button>
+            
+            <!-- Résultat du test de connectivité -->
+            <div *ngIf="connectivityResult" class="connectivity-result">
+              <mat-chip [color]="connectivityResult.success ? 'primary' : 'warn'" selected>
+                <mat-icon>{{ connectivityResult.success ? 'check_circle' : 'error' }}</mat-icon>
+                {{ connectivityResult.success ? 'Connectivité OK' : 'Échec de connectivité' }}
+                <span class="duration">({{ formatDuration(connectivityResult.duration) }})</span>
+              </mat-chip>
+            </div>
+          </div>
         </div>
 
+        <!-- Section Paramètres avancés -->
+        <div class="form-section">
+          <h3><mat-icon>tune</mat-icon> Paramètres avancés</h3>
+          
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="timeout-field">
+              <mat-label>Timeout (ms)</mat-label>
+              <input matInput type="number" formControlName="timeout" [disabled]="isScanning">
+              <mat-error *ngIf="scanForm.get('timeout')?.hasError('required')">
+                Le timeout est obligatoire
+              </mat-error>
+              <mat-error *ngIf="scanForm.get('timeout')?.hasError('min') || scanForm.get('timeout')?.hasError('max')">
+                Timeout invalide (1000-30000ms)
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="retries-field">
+              <mat-label>Tentatives</mat-label>
+              <input matInput type="number" formControlName="retries" [disabled]="isScanning">
+              <mat-error *ngIf="scanForm.get('retries')?.hasError('required')">
+                Le nombre de tentatives est obligatoire
+              </mat-error>
+              <mat-error *ngIf="scanForm.get('retries')?.hasError('min') || scanForm.get('retries')?.hasError('max')">
+                Nombre de tentatives invalide (1-10)
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Section OIDs -->
+        <div class="form-section">
+          <h3><mat-icon>list</mat-icon> OIDs à scanner</h3>
+          
+          <!-- Liste des OIDs -->
+          <div class="oids-list" formArrayName="oids">
+            <div *ngFor="let oidControl of oidsArray.controls; let i = index" class="oid-item">
+              <mat-form-field appearance="outline" class="oid-field">
+                <mat-label>OID {{ i + 1 }}</mat-label>
+                <input matInput [formControlName]="i" placeholder="1.3.6.1.2.1.1.1.0" [disabled]="isScanning">
+                <mat-error *ngIf="oidControl.hasError('required')">
+                  OID obligatoire
+                </mat-error>
+                <mat-error *ngIf="oidControl.hasError('pattern')">
+                  Format OID invalide (ex: 1.3.6.1.2.1.1.1.0)
+                </mat-error>
+              </mat-form-field>
+              
+              <div class="oid-actions">
+                <button mat-icon-button 
+                        type="button"
+                        color="warn"
+                        (click)="removeOid(i)"
+                        [disabled]="isScanning || oidsArray.length <= 1"
+                        matTooltip="Supprimer cet OID">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+              
+              <div class="oid-info" *ngIf="oidControl.value">
+                <small>{{ getOidLabel(oidControl.value) }}</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bouton d'ajout d'OID -->
+          <div class="oid-controls">
+            <button mat-button 
+                    type="button"
+                    (click)="addOid()"
+                    [disabled]="isScanning">
+              <mat-icon>add</mat-icon>
+              Ajouter un OID
+            </button>
+          </div>
+
+          <!-- OIDs communs -->
+          <div class="common-oids">
+            <h4>OIDs communs</h4>
+            <div class="oid-chips">
+              <mat-chip-listbox>
+                <mat-chip-option *ngFor="let oidInfo of commonOids" 
+                                (click)="addCommonOid(oidInfo.oid)"
+                                [disabled]="isScanning">
+                  <mat-icon>{{ oidInfo.category === 'System' ? 'computer' : 
+                                 oidInfo.category === 'Interface' ? 'settings_ethernet' : 'storage' }}</mat-icon>
+                  {{ oidInfo.label }}
+                  <small>({{ oidInfo.oid }})</small>
+                </mat-chip-option>
+              </mat-chip-listbox>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions du formulaire -->
         <div class="form-actions">
           <button mat-raised-button 
                   color="primary" 
@@ -64,8 +209,8 @@
             <div class="progress-content">
               <mat-spinner diameter="40"></mat-spinner>
               <div class="progress-text">
-                <h4>Scan en cours...</h4>
-                <p>Analyse de l'asset sélectionné</p>
+                <h4>Scan SNMP en cours...</h4>
+                <p>Interrogation des OIDs sur {{ scanForm.get('ip')?.value }}:{{ scanForm.get('port')?.value }}</p>
               </div>
             </div>
             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -78,72 +223,103 @@
         <mat-card class="result-card">
           <mat-card-header>
             <mat-card-title>
-              <mat-icon>assessment</mat-icon>
-              Résultat de scan
+              <mat-icon [class.success]="scanResult.success" [class.error]="!scanResult.success">
+                {{ scanResult.success ? 'check_circle' : 'error' }}
+              </mat-icon>
+              Résultats du scan SNMP
             </mat-card-title>
+            <div class="result-summary">
+              <mat-chip [color]="scanResult.success ? 'primary' : 'warn'" selected>
+                {{ scanResult.success ? 'Succès' : 'Échec' }}
+              </mat-chip>
+              <span class="duration">{{ formatDuration(scanResult.duration) }}</span>
+            </div>
           </mat-card-header>
           
           <mat-card-content>
-            <div class="result-grid">
-              <div class="result-item">
-                <mat-icon class="result-icon">schedule</mat-icon>
-                <div class="result-details">
-                  <span class="result-label">Date</span>
-                  <span class="result-value">{{ scanResult.date }}</span>
-                </div>
+            <!-- Informations générales -->
+            <div class="scan-info">
+              <div class="info-item">
+                <mat-icon>language</mat-icon>
+                <span>{{ scanResult.ip }}:{{ scanResult.port }}</span>
               </div>
+              <div class="info-item">
+                <mat-icon>schedule</mat-icon>
+                <span>{{ scanResult.timestamp | date:'dd/MM/yyyy HH:mm:ss' }}</span>
+              </div>
+              <div class="info-item" *ngIf="scanResult.results">
+                <mat-icon>list</mat-icon>
+                <span>{{ scanResult.results.length }} OID(s) interrogé(s)</span>
+              </div>
+            </div>
 
-              <div class="result-item">
-                <mat-icon class="result-icon" 
-                         [class.success]="scanResult.statut === 'Terminé'"
-                         [class.warning]="scanResult.statut === 'En cours'"
-                         [class.error]="scanResult.statut === 'Échec'">
-                  {{ scanResult.statut === 'Terminé' ? 'check_circle' : 
-                     scanResult.statut === 'En cours' ? 'hourglass_empty' : 'error' }}
-                </mat-icon>
-                <div class="result-details">
-                  <span class="result-label">Statut</span>
-                  <mat-chip [color]="scanResult.statut === 'Terminé' ? 'primary' : 
-                                   scanResult.statut === 'En cours' ? 'accent' : 'warn'" 
-                           selected>
-                    {{ scanResult.statut }}
-                  </mat-chip>
-                </div>
-              </div>
+            <!-- Message d'erreur global -->
+            <div *ngIf="!scanResult.success && scanResult.error" class="error-message">
+              <mat-icon>error</mat-icon>
+              <span>{{ scanResult.error }}</span>
+            </div>
 
-              <div class="result-item">
-                <mat-icon class="result-icon score-icon"
-                         [class.high-score]="scanResult.scoreGlobal >= 80"
-                         [class.medium-score]="scanResult.scoreGlobal >= 60 && scanResult.scoreGlobal < 80"
-                         [class.low-score]="scanResult.scoreGlobal < 60">
-                  trending_up
-                </mat-icon>
-                <div class="result-details">
-                  <span class="result-label">Score global</span>
-                  <div class="score-display">
-                    <span class="score-value" 
-                          [class.high-score]="scanResult.scoreGlobal >= 80"
-                          [class.medium-score]="scanResult.scoreGlobal >= 60 && scanResult.scoreGlobal < 80"
-                          [class.low-score]="scanResult.scoreGlobal < 60">
-                      {{ scanResult.scoreGlobal }}
-                    </span>
-                    <span class="score-max">/100</span>
-                  </div>
-                </div>
-              </div>
+            <!-- Tableau des résultats -->
+            <div *ngIf="scanResult.success && scanResult.results && scanResult.results.length > 0" class="results-table">
+              <h4>Détail des résultats</h4>
+              <table mat-table [dataSource]="scanResult.results" class="oid-results-table">
+                
+                <!-- Colonne OID -->
+                <ng-container matColumnDef="oid">
+                  <th mat-header-cell *matHeaderCellDef>OID</th>
+                  <td mat-cell *matCellDef="let result">
+                    <div class="oid-cell">
+                      <code>{{ result.oid }}</code>
+                      <small>{{ getOidLabel(result.oid) }}</small>
+                    </div>
+                  </td>
+                </ng-container>
 
-              <div class="result-item">
-                <mat-icon class="result-icon warning-icon"
-                         [class.has-anomalies]="scanResult.anomalies > 0">
-                  {{ scanResult.anomalies > 0 ? 'warning' : 'check' }}
-                </mat-icon>
-                <div class="result-details">
-                  <span class="result-label">Anomalies détectées</span>
-                  <mat-chip [color]="scanResult.anomalies > 0 ? 'warn' : 'primary'" selected>
-                    {{ scanResult.anomalies }}
-                  </mat-chip>
-                </div>
-              </div>
+                <!-- Colonne Valeur -->
+                <ng-container matColumnDef="value">
+                  <th mat-header-cell *matHeaderCellDef>Valeur</th>
+                  <td mat-cell *matCellDef="let result">
+                    <div class="value-cell" *ngIf="result.success">
+                      <span class="value">{{ result.value }}</span>
+                    </div>
+                    <div class="error-cell" *ngIf="!result.success">
+                      <mat-icon color="warn">error</mat-icon>
+                      <span>{{ result.error || 'Erreur inconnue' }}</span>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <!-- Colonne Type -->
+                <ng-container matColumnDef="type">
+                  <th mat-header-cell *matHeaderCellDef>Type</th>
+                  <td mat-cell *matCellDef="let result">
+                    <mat-chip *ngIf="result.success" size="small" selected>
+                      <mat-icon>{{ getResultTypeIcon(result.type) }}</mat-icon>
+                      {{ result.type }}
+                    </mat-chip>
+                    <span *ngIf="!result.success" class="no-type">-</span>
+                  </td>
+                </ng-container>
+
+                <!-- Colonne Statut -->
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>Statut</th>
+                  <td mat-cell *matCellDef="let result">
+                    <mat-icon [class.success]="result.success" [class.error]="!result.success">
+                      {{ result.success ? 'check_circle' : 'error' }}
+                    </mat-icon>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="['oid', 'value', 'type', 'status']"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['oid', 'value', 'type', 'status']"></tr>
+              </table>
+            </div>
+
+            <!-- Message si aucun résultat -->
+            <div *ngIf="scanResult.success && (!scanResult.results || scanResult.results.length === 0)" class="no-results">
+              <mat-icon>info</mat-icon>
+              <span>Aucun résultat retourné par l'équipement</span>
             </div>
           </mat-card-content>
         </mat-card>
