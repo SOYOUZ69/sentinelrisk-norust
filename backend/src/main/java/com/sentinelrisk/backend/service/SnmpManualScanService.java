@@ -9,6 +9,7 @@ import org.snmp4j.event.ResponseEvent;
 import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.smi.*;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -22,6 +23,9 @@ import java.util.List;
 public class SnmpManualScanService {
 
     private static final Logger logger = LoggerFactory.getLogger(SnmpManualScanService.class);
+
+    @Autowired
+    private SnmpScanHistoryService historyService;
 
     /**
      * Effectue un scan SNMP manuel sur les OIDs spécifiés
@@ -102,6 +106,14 @@ public class SnmpManualScanService {
         
         logger.info("🏁 Fin du scan SNMP pour {}:{} - Durée: {}ms - Succès: {}", 
                    request.getIp(), request.getPort(), duration, response.isSuccess());
+
+        // Enregistrer le scan dans l'historique
+        try {
+            historyService.saveScanInHistory(request, response);
+        } catch (Exception e) {
+            logger.warn("⚠️ Impossible d'enregistrer le scan dans l'historique: {}", e.getMessage());
+            // Ne pas faire échouer le scan pour un problème d'historique
+        }
 
         return response;
     }

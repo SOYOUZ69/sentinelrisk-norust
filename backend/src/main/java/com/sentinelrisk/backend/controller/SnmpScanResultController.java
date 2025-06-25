@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 @Tag(name = "SNMP", description = "API de supervision SNMP via Zabbix")
 @RestController
-@RequestMapping("/api/snmp/history")
+@RequestMapping("/api/snmp/zabbix-history")
 public class SnmpScanResultController {
     private static final Logger logger = LoggerFactory.getLogger(SnmpScanResultController.class);
 

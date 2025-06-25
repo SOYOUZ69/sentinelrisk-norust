@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,6 +22,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { SnmpRoutingModule } from './snmp-routing.module';
 import { AssetListComponent } from './components/asset-list/asset-list.component';
@@ -47,6 +48,7 @@ import { AssetFormDialogComponent } from '../../components/snmp/assets/asset-for
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     SnmpRoutingModule,
     // Angular Material modules
     MatTableModule,
@@ -69,7 +71,8 @@ import { AssetFormDialogComponent } from '../../components/snmp/assets/asset-for
     MatDatepickerModule,
     MatNativeDateModule,
     MatTabsModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatSlideToggleModule
   ]
 })
 export class SnmpModule { }

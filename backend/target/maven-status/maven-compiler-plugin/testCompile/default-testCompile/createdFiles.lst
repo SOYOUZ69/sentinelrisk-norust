@@ -1,0 +1,6 @@
+com/sentinelrisk/model/SnmpEntitiesTest.class
+com/sentinelrisk/backend/controller/DashboardControllerTest.class
+com/sentinelrisk/client/ZabbixClientTest.class
+com/sentinelrisk/backend/controller/RiskControllerTest.class
+com/sentinelrisk/controller/UserControllerIntegrationTest.class
+com/sentinelrisk/controller/SnmpAssetControllerTest.class

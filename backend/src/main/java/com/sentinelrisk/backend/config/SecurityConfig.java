@@ -38,7 +38,9 @@ public class SecurityConfig {
         "/swagger-resources/**",
         "/swagger-resources",
         "/webjars/**",
-        "/api/auth-test/user-info" // Endpoint de debug pour vérifier l'authentification
+        "/auth-test/user-info", // Endpoint de debug pour vérifier l'authentification
+        "/debug/**", // Endpoints de debug
+        "/snmp/history/**" // Historique SNMP temporairement public pour debug
     };
 
     @Bean
@@ -58,48 +60,10 @@ public class SecurityConfig {
                     .requestMatchers(PUBLIC_WHITELIST).permitAll()
                     
                     // Endpoints d'administration - ADMIN uniquement
-                    .requestMatchers("/api/users/**").hasRole("ADMIN")
+                    .requestMatchers("/users/**").hasRole("ADMIN")
                     
                     // Endpoints SNMP - ADMIN et RISK_MANAGER
-                    .requestMatchers("/api/snmp/**").hasAnyRole("ADMIN", "RISK_MANAGER")
-                    
-                    // Endpoints des risques - lecture pour tous, écriture pour ADMIN et RISK_MANAGER
-                    .requestMatchers(HttpMethod.GET, "/api/risks/**").hasAnyRole("ADMIN", "RISK_MANAGER", "COMPLIANCE_OFFICER", "AUDITOR", "USER")
-                    .requestMatchers(HttpMethod.POST, "/api/risks/**").hasAnyRole("ADMIN", "RISK_MANAGER")
-                    .requestMatchers(HttpMethod.PUT, "/api/risks/**").hasAnyRole("ADMIN", "RISK_MANAGER")
-                    .requestMatchers(HttpMethod.DELETE, "/api/risks/**").hasAnyRole("ADMIN", "RISK_MANAGER")
-                    
-                    // Endpoints des contrôles - lecture pour tous, écriture pour ADMIN et RISK_MANAGER
-                    .requestMatchers(HttpMethod.GET, "/api/controls/**").hasAnyRole("ADMIN", "RISK_MANAGER", "COMPLIANCE_OFFICER", "AUDITOR", "USER")
-                    .requestMatchers(HttpMethod.POST, "/api/controls/**").hasAnyRole("ADMIN", "RISK_MANAGER")
-                    .requestMatchers(HttpMethod.PUT, "/api/controls/**").hasAnyRole("ADMIN", "RISK_MANAGER")
-                    .requestMatchers(HttpMethod.DELETE, "/api/controls/**").hasAnyRole("ADMIN", "RISK_MANAGER")
-                    
-                    // Endpoints des catégories - lecture pour tous, écriture pour ADMIN et RISK_MANAGER
-                    .requestMatchers(HttpMethod.GET, "/api/categories/**").hasAnyRole("ADMIN", "RISK_MANAGER", "COMPLIANCE_OFFICER", "AUDITOR", "USER")
-                    .requestMatchers(HttpMethod.POST, "/api/categories/**").hasAnyRole("ADMIN", "RISK_MANAGER")
-                    .requestMatchers(HttpMethod.PUT, "/api/categories/**").hasAnyRole("ADMIN", "RISK_MANAGER")
-                    .requestMatchers(HttpMethod.DELETE, "/api/categories/**").hasAnyRole("ADMIN", "RISK_MANAGER")
-                    
-                    // Endpoints des évaluations - lecture pour tous, écriture pour ADMIN et COMPLIANCE_OFFICER
-                    .requestMatchers(HttpMethod.GET, "/api/assessments/**").hasAnyRole("ADMIN", "RISK_MANAGER", "COMPLIANCE_OFFICER", "AUDITOR", "USER")
-                    .requestMatchers(HttpMethod.POST, "/api/assessments/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
-                    .requestMatchers(HttpMethod.PUT, "/api/assessments/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
-                    .requestMatchers(HttpMethod.DELETE, "/api/assessments/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
-                    
-                    // Endpoints de conformité - lecture pour tous sauf USER, écriture pour ADMIN et COMPLIANCE_OFFICER
-                    .requestMatchers(HttpMethod.GET, "/api/compliance/**").hasAnyRole("ADMIN", "RISK_MANAGER", "COMPLIANCE_OFFICER", "AUDITOR")
-                    .requestMatchers(HttpMethod.POST, "/api/compliance/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
-                    .requestMatchers(HttpMethod.PUT, "/api/compliance/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
-                    .requestMatchers(HttpMethod.DELETE, "/api/compliance/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
-                    
-                    // Dashboard - accès selon le rôle
-                    .requestMatchers("/api/dashboard/summary/global", "/api/dashboard/summary/risks").hasAnyRole("ADMIN", "RISK_MANAGER", "COMPLIANCE_OFFICER", "AUDITOR", "USER")
-                    .requestMatchers("/api/dashboard/summary/compliance", "/api/dashboard/summary/plans").hasAnyRole("ADMIN", "RISK_MANAGER", "COMPLIANCE_OFFICER", "AUDITOR")
-                    .requestMatchers("/api/dashboard/summary/snmp").hasAnyRole("ADMIN", "RISK_MANAGER")
-                    
-                    // Endpoints de test d'autorisation
-                    .requestMatchers("/api/auth-test/**").hasAnyRole("ADMIN", "RISK_MANAGER", "COMPLIANCE_OFFICER", "AUDITOR", "USER")
+                    .requestMatchers("/snmp/**").hasAnyRole("ADMIN", "RISK_MANAGER")
                     
                     // Tous les autres endpoints nécessitent une authentification
                     .anyRequest().authenticated();

@@ -1,131 +1,270 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-// Interface pour l'historique de scan statique
-interface StaticScanHistory {
-  id: number;
-  actif: string;
-  date: string;
-  statut: 'Succès' | 'Echec';
-  score: number;
-}
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { ScanHistoryService } from '../../services/scan-history.service';
+import { 
+  SnmpScanHistoryDto, 
+  ScanStatistics, 
+  SNMP_VERSION_LABELS 
+} from '../../models/scan-history.model';
 
 @Component({
   selector: 'app-scan-history',
   templateUrl: './scan-history.component.html',
   styleUrls: ['./scan-history.component.css']
 })
-export class ScanHistoryComponent implements OnInit {
-  // Mock-data des derniers scans comme demandé par l'utilisateur
-  scanHistory: StaticScanHistory[] = [
-    { 
-      id: 101, 
-      actif: 'Serveur de base', 
-      date: '2025-06-10 09:12', 
-      statut: 'Succès', 
-      score: 85 
-    },
-    { 
-      id: 102, 
-      actif: 'Switch Core', 
-      date: '2025-06-09 11:45', 
-      statut: 'Succès', 
-      score: 92 
-    },
-    { 
-      id: 103, 
-      actif: 'Routeur Bureautique', 
-      date: '2025-06-08 16:30', 
-      statut: 'Echec', 
-      score: 0 
-    },
-    { 
-      id: 104, 
-      actif: 'Poste Utilisateur', 
-      date: '2025-06-07 08:00', 
-      statut: 'Succès', 
-      score: 74 
-    }
-  ];
-
+export class ScanHistoryComponent implements OnInit, AfterViewInit {
+  // Données réelles de l'historique
+  dataSource = new MatTableDataSource<SnmpScanHistoryDto>([]);
+  statistics: ScanStatistics | null = null;
+  
+  // Configuration de l'interface
   loading = false;
-  displayedColumns: string[] = ['id', 'actif', 'date', 'statut', 'score', 'actions'];
+  displayedColumns: string[] = ['id', 'target', 'createdAt', 'success', 'successRate', 'duration', 'actions'];
+  
+  // Pagination et filtres
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  currentPage = 0;
+  pageSize = 20;
+  totalElements = 0;
+  
+  // Filtres
+  searchTerm = '';
+  showSuccessOnly = false;
+  showRecentOnly = false;
 
-  constructor(private snackBar: MatSnackBar) {}
+  constructor(
+    private scanHistoryService: ScanHistoryService,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
-    // Pas de chargement d'API, les données sont déjà présentes
-    this.showStaticModeNotification();
+    this.loadScanHistory();
+    this.loadStatistics();
   }
 
-  showStaticModeNotification(): void {
-    this.snackBar.open('Mode statique : Historique de démonstration', 'Fermer', {
-      duration: 4000,
-      panelClass: ['demo-mode-snackbar']
-    });
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
   }
 
-  voirDetails(scan: StaticScanHistory): void {
-    this.snackBar.open('Fonctionnalité désactivée en mode statique', 'Fermer', {
-      duration: 3000
-    });
-  }
+  /**
+   * Charge l'historique des scans
+   */
+  loadScanHistory(): void {
+    this.loading = true;
+    console.log('📋 Chargement de l\'historique des scans...');
 
-  relancerScan(scan: StaticScanHistory): void {
-    this.snackBar.open(`Relance du scan sur ${scan.actif} (mode statique)`, 'Fermer', {
-      duration: 3000
-    });
-  }
-
-  supprimerScan(scan: StaticScanHistory): void {
-    if (confirm(`Êtes-vous sûr de vouloir supprimer le scan #${scan.id} ?`)) {
-      // Simulation de suppression en mode statique
-      const index = this.scanHistory.findIndex(s => s.id === scan.id);
-      if (index !== -1) {
-        this.scanHistory.splice(index, 1);
+    this.scanHistoryService.getAllScans(this.currentPage, this.pageSize).subscribe({
+      next: (response) => {
+        console.log('✅ Historique chargé:', response);
+        this.dataSource.data = response.content;
+        this.totalElements = response.totalElements;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('❌ Erreur lors du chargement de l\'historique:', error);
+        this.loading = false;
+        this.snackBar.open('Erreur lors du chargement de l\'historique', 'Fermer', {
+          duration: 5000,
+          panelClass: ['error-snackbar']
+        });
       }
-      
-      this.snackBar.open('Scan supprimé (mode statique)', 'Fermer', {
-        duration: 3000
+    });
+  }
+
+  /**
+   * Charge les statistiques globales
+   */
+  loadStatistics(): void {
+    this.scanHistoryService.getStatistics().subscribe({
+      next: (stats) => {
+        console.log('📊 Statistiques chargées:', stats);
+        this.statistics = stats;
+      },
+      error: (error) => {
+        console.error('❌ Erreur lors du chargement des statistiques:', error);
+      }
+    });
+  }
+
+  /**
+   * Affiche les détails d'un scan
+   */
+  voirDetails(scan: SnmpScanHistoryDto): void {
+    console.log('🔍 Affichage des détails du scan:', scan.id);
+    
+    this.scanHistoryService.getScanDetails(scan.id).subscribe({
+      next: (detailedScan) => {
+        console.log('✅ Détails du scan récupérés:', detailedScan);
+        // TODO: Ouvrir une dialog avec les détails
+        this.openScanDetailsDialog(detailedScan);
+      },
+      error: (error) => {
+        console.error('❌ Erreur lors de la récupération des détails:', error);
+        this.snackBar.open('Erreur lors de la récupération des détails', 'Fermer', {
+          duration: 3000
+        });
+      }
+    });
+  }
+
+  /**
+   * Relance un scan avec les mêmes paramètres
+   */
+  relancerScan(scan: SnmpScanHistoryDto): void {
+    this.snackBar.open(`Relance du scan sur ${scan.target}`, 'Fermer', {
+      duration: 3000
+    });
+    // TODO: Implémenter la relance avec les mêmes paramètres
+  }
+
+  /**
+   * Supprime un scan de l'historique
+   */
+  supprimerScan(scan: SnmpScanHistoryDto): void {
+    if (confirm(`Êtes-vous sûr de vouloir supprimer le scan #${scan.id} sur ${scan.target} ?`)) {
+      this.scanHistoryService.deleteScan(scan.id).subscribe({
+        next: () => {
+          console.log('✅ Scan supprimé:', scan.id);
+          this.snackBar.open('Scan supprimé avec succès', 'Fermer', {
+            duration: 3000
+          });
+          this.loadScanHistory(); // Recharger la liste
+          this.loadStatistics(); // Recharger les stats
+        },
+        error: (error) => {
+          console.error('❌ Erreur lors de la suppression:', error);
+          this.snackBar.open('Erreur lors de la suppression', 'Fermer', {
+            duration: 3000
+          });
+        }
       });
     }
   }
 
-  getStatutColor(statut: string): string {
-    return statut === 'Succès' ? 'primary' : 'warn';
+  /**
+   * Recherche dans l'historique
+   */
+  onSearch(): void {
+    if (this.searchTerm.trim()) {
+      this.loading = true;
+      this.scanHistoryService.searchScans(this.searchTerm).subscribe({
+        next: (scans) => {
+          this.dataSource.data = scans;
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('❌ Erreur lors de la recherche:', error);
+          this.loading = false;
+        }
+      });
+    } else {
+      this.loadScanHistory();
+    }
   }
 
-  getScoreColor(score: number): string {
-    if (score >= 80) return 'primary';
-    if (score >= 60) return 'accent';
-    if (score > 0) return 'warn';
-    return 'warn'; // Pour les scores à 0 (échecs)
+  /**
+   * Filtre les scans récents
+   */
+  onFilterRecent(): void {
+    if (this.showRecentOnly) {
+      this.loading = true;
+      this.scanHistoryService.getRecentScans(24).subscribe({
+        next: (scans) => {
+          this.dataSource.data = scans;
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('❌ Erreur lors du filtrage:', error);
+          this.loading = false;
+        }
+      });
+    } else {
+      this.loadScanHistory();
+    }
   }
 
-  getScoreClass(score: number): string {
-    if (score >= 80) return 'high-score';
-    if (score >= 60) return 'medium-score';
-    return 'low-score';
+  /**
+   * Change de page
+   */
+  onPageChange(event: any): void {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadScanHistory();
   }
 
-  getTotalScans(): number {
-    return this.scanHistory.length;
+  /**
+   * Ouvre la dialog des détails
+   */
+  private openScanDetailsDialog(scan: SnmpScanHistoryDto): void {
+    // TODO: Créer et ouvrir une dialog spécialisée
+    console.log('Dialog des détails à implémenter:', scan);
   }
 
-  getSuccessfulScans(): number {
-    return this.scanHistory.filter(s => s.statut === 'Succès').length;
+  // === MÉTHODES UTILITAIRES ===
+
+  /**
+   * Formate la durée du scan
+   */
+  formatDuration(durationMs: number): string {
+    return this.scanHistoryService.formatDuration(durationMs);
   }
 
-  getSuccessRate(): number {
-    const total = this.getTotalScans();
-    if (total === 0) return 0;
-    return Math.round((this.getSuccessfulScans() / total) * 100);
+  /**
+   * Formate la date de création
+   */
+  formatCreatedAt(createdAt: string): string {
+    return this.scanHistoryService.formatCreatedAt(createdAt);
   }
 
-  getAverageScore(): number {
-    const successfulScans = this.scanHistory.filter(s => s.statut === 'Succès');
-    if (successfulScans.length === 0) return 0;
-    const totalScore = successfulScans.reduce((sum, scan) => sum + scan.score, 0);
-    return Math.round(totalScore / successfulScans.length);
+  /**
+   * Obtient la couleur de statut
+   */
+  getStatusColor(scan: SnmpScanHistoryDto): string {
+    return this.scanHistoryService.getScanStatusColor(scan);
+  }
+
+  /**
+   * Obtient l'icône de statut
+   */
+  getStatusIcon(scan: SnmpScanHistoryDto): string {
+    return this.scanHistoryService.getScanStatusIcon(scan);
+  }
+
+  /**
+   * Obtient le texte de statut
+   */
+  getStatusText(scan: SnmpScanHistoryDto): string {
+    return this.scanHistoryService.getScanStatusText(scan);
+  }
+
+  /**
+   * Formate la version SNMP
+   */
+  formatSnmpVersion(version: string): string {
+    return SNMP_VERSION_LABELS[version as keyof typeof SNMP_VERSION_LABELS] || version;
+  }
+
+  /**
+   * Obtient les statistiques affichables
+   */
+  get totalScans(): number {
+    return this.statistics?.totalScans || 0;
+  }
+
+  get successfulScans(): number {
+    return this.statistics?.successfulScans || 0;
+  }
+
+  get successRate(): number {
+    return this.statistics?.successRate || 0;
+  }
+
+  get averageDuration(): string {
+    if (!this.statistics) return '0ms';
+    return this.formatDuration(this.statistics.averageDurationMs);
   }
 }

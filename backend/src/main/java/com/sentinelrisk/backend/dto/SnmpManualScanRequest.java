@@ -47,6 +47,9 @@ public class SnmpManualScanRequest {
     @Schema(description = "Nombre de tentatives", example = "3")
     private Integer retries = 3;
 
+    @Schema(description = "Nom d'utilisateur qui effectue le scan", example = "admin")
+    private String username;
+
     // Constructeurs
     public SnmpManualScanRequest() {}
 
@@ -115,6 +118,14 @@ public class SnmpManualScanRequest {
         this.retries = retries;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     @Override
     public String toString() {
         return "SnmpManualScanRequest{" +
@@ -125,6 +136,7 @@ public class SnmpManualScanRequest {
                 ", oids=" + oids +
                 ", timeout=" + timeout +
                 ", retries=" + retries +
+                ", username='" + username + '\'' +
                 '}';
     }
 } 

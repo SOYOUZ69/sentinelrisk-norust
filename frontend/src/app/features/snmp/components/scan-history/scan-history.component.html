@@ -1,12 +1,12 @@
 <div class="scan-history-container">
   <!-- Métriques de synthèse -->
-  <div class="summary-cards">
+  <div class="summary-cards" *ngIf="statistics">
     <mat-card class="summary-card">
       <mat-card-content>
         <div class="summary-content">
           <mat-icon class="summary-icon">assessment</mat-icon>
           <div class="summary-details">
-            <span class="summary-value">{{ getTotalScans() }}</span>
+            <span class="summary-value">{{ statistics.totalScans }}</span>
             <span class="summary-label">Total des scans</span>
           </div>
         </div>
@@ -18,7 +18,7 @@
         <div class="summary-content">
           <mat-icon class="summary-icon">check_circle</mat-icon>
           <div class="summary-details">
-            <span class="summary-value">{{ getSuccessfulScans() }}</span>
+            <span class="summary-value">{{ statistics.successfulScans }}</span>
             <span class="summary-label">Scans réussis</span>
           </div>
         </div>
@@ -30,7 +30,7 @@
         <div class="summary-content">
           <mat-icon class="summary-icon">trending_up</mat-icon>
           <div class="summary-details">
-            <span class="summary-value">{{ getSuccessRate() }}%</span>
+            <span class="summary-value">{{ statistics.successRate.toFixed(1) }}%</span>
             <span class="summary-label">Taux de succès</span>
           </div>
         </div>
@@ -40,15 +40,56 @@
     <mat-card class="summary-card average">
       <mat-card-content>
         <div class="summary-content">
-          <mat-icon class="summary-icon">star</mat-icon>
+          <mat-icon class="summary-icon">speed</mat-icon>
           <div class="summary-details">
-            <span class="summary-value">{{ getAverageScore() }}</span>
-            <span class="summary-label">Score moyen</span>
+            <span class="summary-value">{{ formatDuration(statistics.averageDurationMs) }}</span>
+            <span class="summary-label">Durée moyenne</span>
           </div>
         </div>
       </mat-card-content>
     </mat-card>
   </div>
+
+  <!-- Filtres et actions -->
+  <mat-card class="filters-card">
+    <mat-card-content>
+      <div class="filters-container">
+        <!-- Barre de recherche -->
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Rechercher par IP ou port</mat-label>
+          <input matInput 
+                 [(ngModel)]="searchTerm" 
+                 (keyup.enter)="onSearch()"
+                 placeholder="Ex: 192.168.1.10">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <!-- Boutons de filtre -->
+        <div class="filter-buttons">
+          <button mat-raised-button 
+                  color="primary" 
+                  (click)="onSearch()"
+                  [disabled]="!searchTerm.trim()">
+            <mat-icon>search</mat-icon>
+            Rechercher
+          </button>
+
+          <mat-slide-toggle 
+            [(ngModel)]="showRecentOnly"
+            (change)="onFilterRecent()"
+            color="accent">
+            Dernières 24h seulement
+          </mat-slide-toggle>
+
+          <button mat-button 
+                  (click)="searchTerm = ''; showRecentOnly = false; loadScanHistory()">
+            <mat-icon>clear</mat-icon>
+            Effacer filtres
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
 
   <!-- Table principale -->
   <mat-card class="history-table-card">
@@ -58,28 +99,36 @@
         Historique des Scans SNMP
       </mat-card-title>
       <div class="header-actions">
-        <mat-chip color="accent" selected>
-          <mat-icon>info</mat-icon>
-          MODE DÉMO
+        <mat-chip *ngIf="statistics && statistics.scansLast24h > 0" color="accent" selected>
+          <mat-icon>schedule</mat-icon>
+          {{ statistics.scansLast24h }} scan(s) aujourd'hui
         </mat-chip>
       </div>
     </mat-card-header>
 
     <mat-card-content>
+      <!-- Indicateur de chargement -->
       <div *ngIf="loading" class="loading-container">
         <mat-spinner></mat-spinner>
         <p>Chargement de l'historique...</p>
       </div>
 
-      <div *ngIf="!loading && scanHistory.length === 0" class="empty-state">
-        <mat-icon>history_off</mat-icon>
+      <!-- État vide -->
+      <div *ngIf="!loading && dataSource.data.length === 0" class="empty-state">
+        <mat-icon>history_toggle_off</mat-icon>
         <h3>Aucun scan dans l'historique</h3>
-        <p>L'historique des scans s'affichera ici une fois que vous aurez lancé des scans</p>
+        <p>L'historique des scans s'affichera ici une fois que vous aurez lancé des scans SNMP manuels</p>
+        <button mat-raised-button color="primary" routerLink="/snmp/run">
+          <mat-icon>play_arrow</mat-icon>
+          Lancer un scan SNMP
+        </button>
       </div>
 
-      <div *ngIf="!loading && scanHistory.length > 0" class="table-container">
-        <table mat-table [dataSource]="scanHistory" class="history-table">
-          <!-- ID Column -->
+      <!-- Table des résultats -->
+      <div *ngIf="!loading && dataSource.data.length > 0" class="table-container">
+        <table mat-table [dataSource]="dataSource" class="history-table">
+          
+          <!-- Colonne ID -->
           <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef>ID</th>
             <td mat-cell *matCellDef="let scan">
@@ -87,85 +136,117 @@
             </td>
           </ng-container>
 
-          <!-- Actif Column -->
-          <ng-container matColumnDef="actif">
-            <th mat-header-cell *matHeaderCellDef>Actif</th>
+          <!-- Colonne Cible -->
+          <ng-container matColumnDef="target">
+            <th mat-header-cell *matHeaderCellDef>Cible</th>
             <td mat-cell *matCellDef="let scan">
-              <div class="asset-info">
-                <mat-icon class="asset-icon">devices</mat-icon>
-                <span>{{ scan.actif }}</span>
+              <div class="target-info">
+                <mat-icon class="target-icon">router</mat-icon>
+                <div class="target-details">
+                  <span class="target-ip">{{ scan.targetIp }}</span>
+                  <span class="target-port">:{{ scan.targetPort }}</span>
+                  <div class="target-version">{{ formatSnmpVersion(scan.snmpVersion) }}</div>
+                </div>
               </div>
             </td>
           </ng-container>
 
-          <!-- Date Column -->
-          <ng-container matColumnDef="date">
+          <!-- Colonne Date -->
+          <ng-container matColumnDef="createdAt">
             <th mat-header-cell *matHeaderCellDef>Date</th>
             <td mat-cell *matCellDef="let scan">
               <div class="date-info">
                 <mat-icon class="date-icon">schedule</mat-icon>
-                <span>{{ scan.date }}</span>
+                <span>{{ formatCreatedAt(scan.createdAt) }}</span>
               </div>
             </td>
           </ng-container>
 
-          <!-- Statut Column -->
-          <ng-container matColumnDef="statut">
+          <!-- Colonne Statut -->
+          <ng-container matColumnDef="success">
             <th mat-header-cell *matHeaderCellDef>Statut</th>
             <td mat-cell *matCellDef="let scan">
-              <mat-chip [color]="getStatutColor(scan.statut)" selected>
-                <mat-icon>{{ scan.statut === 'Succès' ? 'check_circle' : 'error' }}</mat-icon>
-                {{ scan.statut }}
+              <mat-chip [style.backgroundColor]="getStatusColor(scan)" 
+                        [style.color]="'white'" 
+                        selected>
+                <mat-icon>{{ getStatusIcon(scan) }}</mat-icon>
+                {{ getStatusText(scan) }}
               </mat-chip>
             </td>
           </ng-container>
 
-          <!-- Score Column -->
-          <ng-container matColumnDef="score">
-            <th mat-header-cell *matHeaderCellDef>Score global</th>
+          <!-- Colonne Taux de Succès -->
+          <ng-container matColumnDef="successRate">
+            <th mat-header-cell *matHeaderCellDef>OIDs</th>
             <td mat-cell *matCellDef="let scan">
-              <div class="score-display">
-                <span class="score-value" [class]="getScoreClass(scan.score)">
-                  {{ scan.score }}
-                </span>
-                <span class="score-max" *ngIf="scan.score > 0">/100</span>
-                <span class="score-na" *ngIf="scan.score === 0">N/A</span>
+              <div class="oids-info">
+                <div class="oids-count">
+                  {{ scan.successfulOidsCount }}/{{ scan.oidsCount }}
+                </div>
+                <div class="success-rate" 
+                     [style.color]="scan.successRate >= 80 ? '#4CAF50' : scan.successRate >= 50 ? '#FF9800' : '#F44336'">
+                  {{ scan.successRate.toFixed(1) }}%
+                </div>
               </div>
             </td>
           </ng-container>
 
-          <!-- Actions Column -->
+          <!-- Colonne Durée -->
+          <ng-container matColumnDef="duration">
+            <th mat-header-cell *matHeaderCellDef>Durée</th>
+            <td mat-cell *matCellDef="let scan">
+              <div class="duration-info">
+                <mat-icon class="duration-icon">timer</mat-icon>
+                <span>{{ formatDuration(scan.durationMs) }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Colonne Actions -->
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef>Actions</th>
             <td mat-cell *matCellDef="let scan">
-              <button mat-icon-button 
-                      color="primary"
-                      (click)="voirDetails(scan)"
-                      matTooltip="Voir les détails">
-                <mat-icon>visibility</mat-icon>
-              </button>
-              
-              <button mat-icon-button 
-                      color="accent"
-                      (click)="relancerScan(scan)"
-                      matTooltip="Relancer le scan">
-                <mat-icon>refresh</mat-icon>
-              </button>
-              
-              <button mat-icon-button 
-                      color="warn"
-                      (click)="supprimerScan(scan)"
-                      matTooltip="Supprimer">
-                <mat-icon>delete</mat-icon>
-              </button>
+              <div class="actions-container">
+                <button mat-icon-button 
+                        color="primary"
+                        (click)="voirDetails(scan)"
+                        matTooltip="Voir les détails des OIDs">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                
+                <button mat-icon-button 
+                        color="accent"
+                        (click)="relancerScan(scan)"
+                        matTooltip="Relancer ce scan">
+                  <mat-icon>refresh</mat-icon>
+                </button>
+                
+                <button mat-icon-button 
+                        color="warn"
+                        (click)="supprimerScan(scan)"
+                        matTooltip="Supprimer de l'historique">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
             </td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
-              [class.success-row]="row.statut === 'Succès'"
-              [class.error-row]="row.statut === 'Echec'"></tr>
+              class="data-row"
+              [class.success-row]="row.success"
+              [class.error-row]="!row.success"></tr>
         </table>
+
+        <!-- Pagination -->
+        <mat-paginator #paginator
+                       [length]="totalElements"
+                       [pageIndex]="currentPage"
+                       [pageSize]="pageSize"
+                       [pageSizeOptions]="[10, 20, 50, 100]"
+                       (page)="onPageChange($event)"
+                       showFirstLastButtons>
+        </mat-paginator>
       </div>
     </mat-card-content>
   </mat-card>
