@@ -20,6 +20,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { SnmpRoutingModule } from './snmp-routing.module';
 import { AssetListComponent } from './components/asset-list/asset-list.component';
@@ -65,7 +67,9 @@ import { AssetFormDialogComponent } from '../../components/snmp/assets/asset-for
     MatSnackBarModule,
     MatTooltipModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatTabsModule,
+    MatExpansionModule
   ]
 })
 export class SnmpModule { }
