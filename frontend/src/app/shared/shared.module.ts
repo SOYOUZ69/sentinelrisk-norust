@@ -4,11 +4,13 @@ import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { HasRoleDirective } from './directives/has-role.directive';
+import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 
 @NgModule({
   declarations: [
     PageNotFoundComponent,
-    HasRoleDirective
+    HasRoleDirective,
+    UnauthorizedComponent
   ],
   imports: [
     CommonModule,
@@ -17,7 +19,8 @@ import { HasRoleDirective } from './directives/has-role.directive';
   ],
   exports: [
     PageNotFoundComponent,
-    HasRoleDirective
+    HasRoleDirective,
+    UnauthorizedComponent
   ]
 })
 export class SharedModule { } 

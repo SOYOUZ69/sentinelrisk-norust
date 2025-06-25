@@ -22,7 +22,7 @@ public class DashboardController {
      * Récupère le résumé des risques
      */
     @GetMapping("/risks")
-    @PreAuthorize("hasAnyRole('admin', 'risk_manager', 'compliance_officer', 'auditor', 'user')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'RISK_MANAGER', 'COMPLIANCE_OFFICER', 'AUDITOR', 'USER')")
     public ResponseEntity<DashboardSummaryDto.RiskSummary> getRiskSummary(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
@@ -36,7 +36,7 @@ public class DashboardController {
      * Récupère le résumé de la conformité
      */
     @GetMapping("/compliance")
-    @PreAuthorize("hasAnyRole('admin', 'compliance_officer', 'risk_manager', 'auditor')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COMPLIANCE_OFFICER', 'RISK_MANAGER', 'AUDITOR')")
     public ResponseEntity<DashboardSummaryDto.ComplianceSummary> getComplianceSummary(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
@@ -50,7 +50,7 @@ public class DashboardController {
      * Récupère le résumé SNMP
      */
     @GetMapping("/snmp")
-    @PreAuthorize("hasAnyRole('admin', 'risk_manager')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'RISK_MANAGER')")
     public ResponseEntity<DashboardSummaryDto.SnmpSummary> getSnmpSummary(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
@@ -64,7 +64,7 @@ public class DashboardController {
      * Récupère le résumé des plans d'action
      */
     @GetMapping("/plans")
-    @PreAuthorize("hasAnyRole('admin', 'compliance_officer', 'risk_manager', 'auditor')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COMPLIANCE_OFFICER', 'RISK_MANAGER', 'AUDITOR')")
     public ResponseEntity<DashboardSummaryDto.ActionPlansSummary> getActionPlansSummary(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
@@ -78,7 +78,7 @@ public class DashboardController {
      * Récupère un résumé global du dashboard
      */
     @GetMapping("/global")
-    @PreAuthorize("hasAnyRole('admin', 'risk_manager', 'compliance_officer', 'auditor', 'user')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'RISK_MANAGER', 'COMPLIANCE_OFFICER', 'AUDITOR', 'USER')")
     public ResponseEntity<Object> getGlobalSummary(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,

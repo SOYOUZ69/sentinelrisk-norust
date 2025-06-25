@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private static final String[] SWAGGER_WHITELIST = {
+    private static final String[] PUBLIC_WHITELIST = {
         "/v3/api-docs",
         "/v3/api-docs/**",
         "/v3/api-docs/swagger-config",
@@ -37,26 +37,14 @@ public class SecurityConfig {
         "/swagger-ui/**",
         "/swagger-resources/**",
         "/swagger-resources",
-        "/webjars/**"
-    };
-
-    private static final String[] DEBUG_WHITELIST = {
-        "/debug/**",
-        "/api/debug/**",
-        "/api/debug/jwt/**",
-        "/api/debug/ping",
-        "/api/debug/risks/**",
-        "/api/test/**"
-    };
-
-    private static final String[] SNMP_WHITELIST = {
-        "/api/snmp/**",
-        "/api/snmp/zabbix/**",
-        "/api/snmp/local/**"
+        "/webjars/**",
+        "/api/auth-test/user-info" // Endpoint de debug pour vérifier l'authentification
     };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        System.out.println("🔒 Configuration de la sécurité Spring - MODE SÉCURISÉ ACTIVÉ");
+        
         http
             .cors().configurationSource(corsConfigurationSource())
             .and()
@@ -65,35 +53,73 @@ public class SecurityConfig {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeHttpRequests(authorize -> {
-                System.out.println("🔒 Configuration des autorisations HTTP - MODE PERMISSIF TEMPORAIRE");
-                System.out.println("   - SNMP Whitelist: " + java.util.Arrays.toString(SNMP_WHITELIST));
-                System.out.println("   - DEBUG Whitelist: " + java.util.Arrays.toString(DEBUG_WHITELIST));
-                System.out.println("   - SWAGGER Whitelist: " + java.util.Arrays.toString(SWAGGER_WHITELIST));
-                
                 authorize
-                    .anyRequest().permitAll(); // TEMPORAIRE: Permettre toutes les requêtes pour déboguer
-            });
-            // .oauth2ResourceServer()
-            // .jwt()
-            // .jwtAuthenticationConverter(jwtAuthenticationConverter());
+                    // Endpoints publics (documentation, debug)
+                    .requestMatchers(PUBLIC_WHITELIST).permitAll()
+                    
+                    // Endpoints d'administration - ADMIN uniquement
+                    .requestMatchers("/api/users/**").hasRole("ADMIN")
+                    
+                    // Endpoints SNMP - ADMIN et RISK_MANAGER
+                    .requestMatchers("/api/snmp/**").hasAnyRole("ADMIN", "RISK_MANAGER")
+                    
+                    // Endpoints des risques - lecture pour tous, écriture pour ADMIN et RISK_MANAGER
+                    .requestMatchers(HttpMethod.GET, "/api/risks/**").hasAnyRole("ADMIN", "RISK_MANAGER", "COMPLIANCE_OFFICER", "AUDITOR", "USER")
+                    .requestMatchers(HttpMethod.POST, "/api/risks/**").hasAnyRole("ADMIN", "RISK_MANAGER")
+                    .requestMatchers(HttpMethod.PUT, "/api/risks/**").hasAnyRole("ADMIN", "RISK_MANAGER")
+                    .requestMatchers(HttpMethod.DELETE, "/api/risks/**").hasAnyRole("ADMIN", "RISK_MANAGER")
+                    
+                    // Endpoints des contrôles - lecture pour tous, écriture pour ADMIN et RISK_MANAGER
+                    .requestMatchers(HttpMethod.GET, "/api/controls/**").hasAnyRole("ADMIN", "RISK_MANAGER", "COMPLIANCE_OFFICER", "AUDITOR", "USER")
+                    .requestMatchers(HttpMethod.POST, "/api/controls/**").hasAnyRole("ADMIN", "RISK_MANAGER")
+                    .requestMatchers(HttpMethod.PUT, "/api/controls/**").hasAnyRole("ADMIN", "RISK_MANAGER")
+                    .requestMatchers(HttpMethod.DELETE, "/api/controls/**").hasAnyRole("ADMIN", "RISK_MANAGER")
+                    
+                    // Endpoints des catégories - lecture pour tous, écriture pour ADMIN et RISK_MANAGER
+                    .requestMatchers(HttpMethod.GET, "/api/categories/**").hasAnyRole("ADMIN", "RISK_MANAGER", "COMPLIANCE_OFFICER", "AUDITOR", "USER")
+                    .requestMatchers(HttpMethod.POST, "/api/categories/**").hasAnyRole("ADMIN", "RISK_MANAGER")
+                    .requestMatchers(HttpMethod.PUT, "/api/categories/**").hasAnyRole("ADMIN", "RISK_MANAGER")
+                    .requestMatchers(HttpMethod.DELETE, "/api/categories/**").hasAnyRole("ADMIN", "RISK_MANAGER")
+                    
+                    // Endpoints des évaluations - lecture pour tous, écriture pour ADMIN et COMPLIANCE_OFFICER
+                    .requestMatchers(HttpMethod.GET, "/api/assessments/**").hasAnyRole("ADMIN", "RISK_MANAGER", "COMPLIANCE_OFFICER", "AUDITOR", "USER")
+                    .requestMatchers(HttpMethod.POST, "/api/assessments/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
+                    .requestMatchers(HttpMethod.PUT, "/api/assessments/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
+                    .requestMatchers(HttpMethod.DELETE, "/api/assessments/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
+                    
+                    // Endpoints de conformité - lecture pour tous sauf USER, écriture pour ADMIN et COMPLIANCE_OFFICER
+                    .requestMatchers(HttpMethod.GET, "/api/compliance/**").hasAnyRole("ADMIN", "RISK_MANAGER", "COMPLIANCE_OFFICER", "AUDITOR")
+                    .requestMatchers(HttpMethod.POST, "/api/compliance/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
+                    .requestMatchers(HttpMethod.PUT, "/api/compliance/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
+                    .requestMatchers(HttpMethod.DELETE, "/api/compliance/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
+                    
+                    // Dashboard - accès selon le rôle
+                    .requestMatchers("/api/dashboard/summary/global", "/api/dashboard/summary/risks").hasAnyRole("ADMIN", "RISK_MANAGER", "COMPLIANCE_OFFICER", "AUDITOR", "USER")
+                    .requestMatchers("/api/dashboard/summary/compliance", "/api/dashboard/summary/plans").hasAnyRole("ADMIN", "RISK_MANAGER", "COMPLIANCE_OFFICER", "AUDITOR")
+                    .requestMatchers("/api/dashboard/summary/snmp").hasAnyRole("ADMIN", "RISK_MANAGER")
+                    
+                    // Endpoints de test d'autorisation
+                    .requestMatchers("/api/auth-test/**").hasAnyRole("ADMIN", "RISK_MANAGER", "COMPLIANCE_OFFICER", "AUDITOR", "USER")
+                    
+                    // Tous les autres endpoints nécessitent une authentification
+                    .anyRequest().authenticated();
+            })
+            .oauth2ResourceServer(oauth2 -> oauth2
+                .jwt(jwt -> jwt
+                    .jwtAuthenticationConverter(jwtAuthenticationConverter())
+                )
+            );
 
+        System.out.println("✅ Configuration de la sécurité terminée");
         return http.build();
     }
 
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
-        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        
-        // Le claim "roles" est généralement imbriqué dans "realm_access" dans les jetons Keycloak
-        grantedAuthoritiesConverter.setAuthoritiesClaimName("realm_access.roles");
-        grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
             // Log pour débogage
             System.out.println("====== DÉBOGAGE JWT ======");
-            System.out.println("JWT Headers: " + jwt.getHeaders());
-            System.out.println("JWT Claims: " + jwt.getClaims());
             System.out.println("JWT Subject: " + jwt.getSubject());
             
             // Récupérer les rôles depuis le claim 'realm_access'
@@ -102,7 +128,7 @@ public class SecurityConfig {
                 @SuppressWarnings("unchecked")
                 List<String> roles = (List<String>) realmAccess.get("roles");
                 
-                System.out.println("Roles trouvés dans realm_access: " + roles);
+                System.out.println("Rôles trouvés dans realm_access: " + roles);
                 
                 Collection<GrantedAuthority> authorities = roles.stream()
                     .map(role -> {
@@ -130,7 +156,7 @@ public class SecurityConfig {
                         @SuppressWarnings("unchecked")
                         List<String> roles = (List<String>) clientAccess.get("roles");
                         
-                        System.out.println("Roles trouvés dans resource_access.sentinelrisk-frontend: " + roles);
+                        System.out.println("Rôles trouvés dans resource_access.sentinelrisk-frontend: " + roles);
                         
                         Collection<GrantedAuthority> authorities = roles.stream()
                             .map(role -> {
@@ -150,7 +176,7 @@ public class SecurityConfig {
                 System.out.println("Erreur lors de l'extraction des rôles resource_access: " + e.getMessage());
             }
             
-            System.out.println("Aucun rôle trouvé dans le token JWT!");
+            System.out.println("⚠️ Aucun rôle trouvé dans le token JWT!");
             // Retourner une liste vide si aucun rôle n'est trouvé
             return Collections.emptyList();
         });
