@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-@ComponentScan(basePackages = {"com.sentinelrisk.backend", "com.sentinelrisk.client"})
+@ComponentScan(basePackages = {"com.sentinelrisk.backend", "com.sentinelrisk.client", "com.sentinelrisk.dto"})
 public class SentinelRiskApplication {
 
     public static void main(String[] args) {

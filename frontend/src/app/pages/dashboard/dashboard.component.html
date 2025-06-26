@@ -4,8 +4,8 @@
     <h1 class="dashboard-title">
       <mat-icon class="title-icon">dashboard</mat-icon>
       Tableau de Bord
-      <!-- Indicateur mode démo -->
-      <mat-chip class="demo-chip" color="accent">MODE DÉMO</mat-chip>
+      <!-- Indicateur données réelles -->
+      <mat-chip class="demo-chip" color="primary">DONNÉES RÉELLES</mat-chip>
     </h1>
     
     <!-- Refresh Button -->
@@ -14,8 +14,8 @@
       color="primary" 
       class="refresh-btn"
       [disabled]="isLoading"
-      (click)="onRefresh()"
-      matTooltip="Actualiser les données (mode démo)">
+      (click)="refreshData()"
+      matTooltip="Actualiser les données">
       <mat-icon>refresh</mat-icon>
     </button>
   </div>
@@ -25,7 +25,7 @@
     <mat-card-header>
       <mat-card-title>
         <mat-icon>filter_list</mat-icon>
-        Filtres (Mode démo - non fonctionnels)
+        Filtres
       </mat-card-title>
     </mat-card-header>
     
@@ -34,21 +34,21 @@
         <div class="filter-row">
           <mat-form-field appearance="outline" class="filter-field">
             <mat-label>Date de début</mat-label>
-            <input matInput [matDatepicker]="startPicker" formControlName="startDate" [disabled]="true">
+            <input matInput [matDatepicker]="startPicker" formControlName="startDate">
             <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
             <mat-datepicker #startPicker></mat-datepicker>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="filter-field">
             <mat-label>Date de fin</mat-label>
-            <input matInput [matDatepicker]="endPicker" formControlName="endDate" [disabled]="true">
+            <input matInput [matDatepicker]="endPicker" formControlName="endDate">
             <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
             <mat-datepicker #endPicker></mat-datepicker>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="filter-field">
             <mat-label>Référentiel de conformité</mat-label>
-            <mat-select formControlName="framework" [disabled]="true">
+            <mat-select formControlName="framework">
               <mat-option *ngFor="let option of frameworkOptions" [value]="option.value">
                 {{option.label}}
               </mat-option>
@@ -57,7 +57,7 @@
 
           <mat-form-field appearance="outline" class="filter-field">
             <mat-label>Rôle utilisateur</mat-label>
-            <mat-select formControlName="role" [disabled]="true">
+            <mat-select formControlName="role">
               <mat-option *ngFor="let option of roleOptions" [value]="option.value">
                 {{option.label}}
               </mat-option>
@@ -68,9 +68,9 @@
             mat-raised-button 
             color="warn" 
             type="button" 
-            (click)="onResetFilters()"
+            (click)="resetFilters()"
             class="reset-btn"
-            [disabled]="true">
+            [disabled]="isLoading">
             <mat-icon>clear</mat-icon>
             Réinitialiser
           </button>
@@ -79,19 +79,19 @@
     </mat-card-content>
   </mat-card>
 
-  <!-- Loading Spinner - Masqué en mode statique -->
+  <!-- Loading Spinner -->
   <div *ngIf="isLoading" class="loading-container">
     <mat-spinner diameter="60"></mat-spinner>
     <p class="loading-text">Chargement des données...</p>
   </div>
 
-  <!-- Error Message - Masqué en mode statique -->
+  <!-- Error Message -->
   <mat-card *ngIf="error && !isLoading" class="error-card">
     <mat-card-content>
       <div class="error-content">
         <mat-icon color="warn">error</mat-icon>
         <span>{{error}}</span>
-        <button mat-button color="primary" (click)="onRefresh()">
+        <button mat-button color="primary" (click)="refreshData()">
           <mat-icon>refresh</mat-icon>
           Réessayer
         </button>
@@ -99,8 +99,8 @@
     </mat-card-content>
   </mat-card>
 
-  <!-- Dashboard Content - Toujours affiché en mode statique -->
-  <div class="dashboard-content">
+  <!-- Dashboard Content -->
+  <div class="dashboard-content" *ngIf="!isLoading && !error">
     
     <!-- Risks Section -->
     <div class="dashboard-section">

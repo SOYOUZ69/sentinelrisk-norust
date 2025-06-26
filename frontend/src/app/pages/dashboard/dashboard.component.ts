@@ -40,75 +40,46 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   // Form pour les filtres
   filterForm!: FormGroup;
   
-  // Données du dashboard - DONNÉES STATIQUES TEMPORAIRES
+  // Données du dashboard - INITIALISÉES À VIDE
   riskSummary: RiskSummary = {
-    totalRisks: 36,
-    risksByLevel: {
-      'FAIBLE': 10,
-      'MOYEN': 15,
-      'ÉLEVÉ': 8,
-      'CRITIQUE': 3
-    },
-    risksByCategory: {
-      'OPÉRATIONNEL': 18,
-      'FINANCIER': 12,
-      'TECHNIQUE': 6
-    },
-    openRisks: 30,
-    closedRisks: 6
+    totalRisks: 0,
+    risksByLevel: {},
+    risksByCategory: {},
+    openRisks: 0,
+    closedRisks: 0
   };
 
   complianceSummary: ComplianceSummary = {
-    totalControls: 60,
-    compliantControls: 40,
-    nonCompliantControls: 15,
-    complianceRate: 66.7,
-    controlsByFramework: {
-      'ISO 27001': 25,
-      'NIST': 20,
-      'SOC 2': 15
-    },
-    controlsByStatus: {
-      'CONFORME': 40,
-      'NON CONFORME': 15,
-      'EN COURS': 5
-    }
+    totalControls: 0,
+    compliantControls: 0,
+    nonCompliantControls: 0,
+    complianceRate: 0,
+    controlsByFramework: {},
+    controlsByStatus: {}
   };
 
   snmpSummary: SnmpSummary = {
-    totalAssets: 55,
-    activeAssets: 45,
-    inactiveAssets: 10,
-    assetsByType: {
-      'SERVEUR': 20,
-      'COMMUTATEUR': 15,
-      'ROUTEUR': 8,
-      'IMPRIMANTE': 12
-    },
-    assetsByStatus: {
-      'ACTIF': 45,
-      'INACTIF': 10
-    },
-    recentScans: 25,
-    failedScans: 3,
-    successRate: 88.0
+    totalAssets: 0,
+    activeAssets: 0,
+    inactiveAssets: 0,
+    assetsByType: {},
+    assetsByStatus: {},
+    recentScans: 0,
+    failedScans: 0,
+    successRate: 0
   };
 
   actionPlansSummary: ActionPlansSummary = {
-    totalPlans: 23,
-    activePlans: 8,
-    completedPlans: 12,
-    overduePlans: 3,
-    plansByStatus: {
-      'ACTIF': 8,
-      'TERMINÉ': 12,
-      'EN RETARD': 3
-    },
-    completionRate: 52.2
+    totalPlans: 0,
+    activePlans: 0,
+    completedPlans: 0,
+    overduePlans: 0,
+    plansByStatus: {},
+    completionRate: 0
   };
   
-  // État du chargement - désactivé en mode statique
-  isLoading = false;
+  // État du chargement - ACTIVÉ pour charger les vraies données
+  isLoading = true;
   error: string | null = null;
   
   // Données formatées pour les graphiques
@@ -171,78 +142,147 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.setupFormSubscription();
-    // Charger les données statiques au lieu des appels HTTP
-    this.loadStaticDashboardData();
+    // Charger les données initiales
+    this.loadDashboardData();
+    
+    // Écouter les changements de filtres
+    this.filterForm.valueChanges.pipe(
+      takeUntil(this.destroy$),
+      debounceTime(500),
+      distinctUntilChanged()
+    ).subscribe(() => {
+      this.loadDashboardData();
+    });
   }
 
   ngAfterViewInit(): void {
-    // Calculer les dimensions des graphiques après que la vue soit initialisée
-    setTimeout(() => {
-      const hasChanged = this.calculateChartDimensions();
-      this.setupResizeObserver();
-      
-      // Ne déclencher la détection que si nécessaire
-      if (hasChanged) {
-        this.cdr.markForCheck();
-      }
-    }, 100);
+    this.setupResizeObserver();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
     
-    // Nettoyer le ResizeObserver
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
     }
-    
-    // Nettoyer le cache des dimensions
-    this.lastDimensions.clear();
-    this.isResizing = false;
   }
 
+  /**
+   * Charge toutes les données du dashboard depuis les APIs
+   */
+  loadDashboardData(): void {
+    this.isLoading = true;
+    this.error = null;
+    this.cdr.markForCheck();
+
+    const filter = this.buildFilterFromForm();
+    
+    this.dashboardService.getGlobalSummary(filter).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (data) => {
+        this.riskSummary = data.risks;
+        this.complianceSummary = data.compliance;
+        this.snmpSummary = data.snmp;
+        this.actionPlansSummary = data.plans;
+        
+        this.updateChartData();
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      },
+      error: (error) => {
+        console.error('Erreur lors du chargement du dashboard:', error);
+        this.error = 'Erreur lors du chargement des données du dashboard';
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  /**
+   * Rafraîchit manuellement les données
+   */
+  refreshData(): void {
+    this.loadDashboardData();
+  }
+
+  /**
+   * Réinitialise les filtres
+   */
+  resetFilters(): void {
+    this.filterForm.reset();
+    this.loadDashboardData();
+  }
+
+  /**
+   * Construit le filtre à partir du formulaire
+   */
+  private buildFilterFromForm(): DashboardFilter {
+    const formValue = this.filterForm.value;
+    return {
+      startDate: formValue.startDate,
+      endDate: formValue.endDate,
+      framework: formValue.framework,
+      role: formValue.role,
+      assetId: formValue.assetId
+    };
+  }
+
+  /**
+   * Initialise le formulaire de filtres
+   */
   private initializeForm(): void {
     this.filterForm = this.fb.group({
       startDate: [null],
       endDate: [null],
       framework: [''],
-      role: ['']
+      role: [''],
+      assetId: ['']
     });
   }
 
-  private setupFormSubscription(): void {
-    // Désactiver temporairement la réactivité des filtres en mode statique
-    // this.filterForm.valueChanges
-    //   .pipe(
-    //     takeUntil(this.destroy$),
-    //     debounceTime(500),
-    //     distinctUntilChanged()
-    //   )
-    //   .subscribe(() => {
-    //     this.loadDashboardData();
-    //   });
-  }
-
-  // NOUVELLE MÉTHODE : Chargement des données statiques
-  private loadStaticDashboardData(): void {
-    this.isLoading = false;
-    this.error = null;
-    
-    // Les données sont déjà définies dans les propriétés de classe
-    // Il suffit de mettre à jour les graphiques
-    this.updateChartData();
-    
-    console.log('Dashboard en mode statique - données chargées');
-  }
-
-  // NOUVELLE MÉTHODE : Calcul des dimensions des graphiques avec vérification des changements
-  private calculateChartDimensions(): boolean {
-    if (this.isResizing) {
-      return false; // Éviter les cycles infinis
+  /**
+   * Configure l'observer de redimensionnement pour les graphiques
+   */
+  private setupResizeObserver(): void {
+    if (!window.ResizeObserver) {
+      console.warn('ResizeObserver non supporté, les graphiques ne se redimensionneront pas automatiquement');
+      return;
     }
 
+    this.resizeObserver = new ResizeObserver(entries => {
+      if (this.isResizing) return;
+      
+      this.isResizing = true;
+      setTimeout(() => {
+        this.updateChartDimensions();
+        this.isResizing = false;
+      }, 100);
+    });
+
+    // Observer tous les containers de graphiques
+    const containers = [
+      this.riskLevelChartContainer,
+      this.riskCategoryChartContainer,
+      this.complianceStatusChartContainer,
+      this.complianceFrameworkChartContainer,
+      this.snmpTypeChartContainer,
+      this.snmpStatusChartContainer,
+      this.planStatusChartContainer
+    ];
+
+    containers.forEach(container => {
+      if (container?.nativeElement) {
+        this.resizeObserver?.observe(container.nativeElement);
+      }
+    });
+  }
+
+  /**
+   * Met à jour les dimensions des graphiques
+   */
+  private updateChartDimensions(): void {
     const containers = [
       { ref: this.riskLevelChartContainer, view: 'riskLevelChartView' },
       { ref: this.riskCategoryChartContainer, view: 'riskCategoryChartView' },
@@ -253,128 +293,26 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
       { ref: this.planStatusChartContainer, view: 'planStatusChartView' }
     ];
 
-    let hasChanged = false;
-
-    containers.forEach(container => {
-      if (container.ref?.nativeElement) {
-        const rect = container.ref.nativeElement.getBoundingClientRect();
-        const width = Math.max(rect.width - 40, 300); // Minimum 300px, avec padding
-        const height = Math.max(rect.height - 40, 250); // Minimum 250px, avec padding
+    containers.forEach(({ ref, view }) => {
+      if (ref?.nativeElement) {
+        const rect = ref.nativeElement.getBoundingClientRect();
+        const width = Math.max(300, rect.width - 32); // 32px pour le padding
+        const height = Math.max(250, rect.height - 64); // 64px pour le titre et padding
         
-        const newDimensions: [number, number] = [width, height];
-        const lastDimensions = this.lastDimensions.get(container.view);
-        
-        // Vérifier si les dimensions ont réellement changé (avec une tolérance de 5px)
-        if (!lastDimensions || 
-            Math.abs(lastDimensions[0] - width) > 5 || 
-            Math.abs(lastDimensions[1] - height) > 5) {
-          
-          (this as any)[container.view] = newDimensions;
-          this.lastDimensions.set(container.view, newDimensions);
-          hasChanged = true;
-          
-          console.log(`Dimensions mises à jour pour ${container.view}:`, newDimensions);
+        const currentDimensions = this.lastDimensions.get(view);
+        if (!currentDimensions || currentDimensions[0] !== width || currentDimensions[1] !== height) {
+          this.lastDimensions.set(view, [width, height]);
+          (this as any)[view] = [width, height];
         }
       }
     });
 
-    if (hasChanged) {
-      console.log('Dimensions des graphiques calculées et mises à jour');
-    }
-
-    return hasChanged;
+    this.cdr.markForCheck();
   }
 
-  // NOUVELLE MÉTHODE : Configuration du ResizeObserver avec protection contre les cycles infinis
-  private setupResizeObserver(): void {
-    if (typeof ResizeObserver !== 'undefined') {
-      let resizeTimeout: any;
-      
-      this.resizeObserver = new ResizeObserver((entries) => {
-        // Éviter les cycles infinis
-        if (this.isResizing) {
-          return;
-        }
-
-        // Throttling pour éviter les re-calculs excessifs
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-          this.isResizing = true;
-          
-          try {
-            const hasChanged = this.calculateChartDimensions();
-            
-            // Ne déclencher la détection de changements que si les dimensions ont vraiment changé
-            if (hasChanged) {
-              this.cdr.markForCheck(); // Utiliser markForCheck au lieu de detectChanges
-            }
-          } finally {
-            // Réactiver l'observation après un délai
-            setTimeout(() => {
-              this.isResizing = false;
-            }, 100);
-          }
-        }, 300);
-      });
-
-      // Observer tous les containers de graphiques
-      const containers = [
-        this.riskLevelChartContainer,
-        this.riskCategoryChartContainer,
-        this.complianceStatusChartContainer,
-        this.complianceFrameworkChartContainer,
-        this.snmpTypeChartContainer,
-        this.snmpStatusChartContainer,
-        this.planStatusChartContainer
-      ];
-
-      containers.forEach(container => {
-        if (container?.nativeElement) {
-          this.resizeObserver!.observe(container.nativeElement);
-        }
-      });
-      
-      console.log('ResizeObserver configuré pour', containers.length, 'containers');
-    }
-  }
-
-  // ANCIENNE MÉTHODE : Commentée pour le mode statique
-  private loadDashboardData(): void {
-    // MODE STATIQUE : Cette méthode est temporairement désactivée
-    console.log('Mode statique activé - pas d\'appel HTTP');
-    return;
-    
-    /* APPELS HTTP COMMENTÉS TEMPORAIREMENT
-    this.isLoading = true;
-    this.error = null;
-    
-    const filter: DashboardFilter = this.filterForm.value;
-    
-    forkJoin({
-      risks: this.dashboardService.getRiskSummary(filter),
-      compliance: this.dashboardService.getComplianceSummary(filter),
-      snmp: this.dashboardService.getSnmpSummary(filter),
-      plans: this.dashboardService.getActionPlansSummary(filter)
-    })
-    .pipe(takeUntil(this.destroy$))
-    .subscribe({
-      next: (data) => {
-        this.riskSummary = data.risks;
-        this.complianceSummary = data.compliance;
-        this.snmpSummary = data.snmp;
-        this.actionPlansSummary = data.plans;
-        this.updateChartData();
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Erreur lors du chargement des données du dashboard:', error);
-        this.error = 'Erreur lors du chargement des données. Veuillez réessayer.';
-        this.isLoading = false;
-      }
-    });
-    */
-  }
-
+  /**
+   * Met à jour les données des graphiques
+   */
   private updateChartData(): void {
     if (this.riskSummary) {
       this.riskLevelChart = this.objectToChartData(this.riskSummary.risksByLevel);
@@ -399,20 +337,11 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.cdr.markForCheck();
   }
 
+  /**
+   * Convertit un objet en données de graphique
+   */
   private objectToChartData(obj: { [key: string]: number }): ChartData[] {
     return Object.entries(obj).map(([name, value]) => ({ name, value }));
-  }
-
-  onRefresh(): void {
-    // En mode statique, simuler un rafraîchissement
-    console.log('Rafraîchissement en mode statique');
-    this.loadStaticDashboardData();
-  }
-
-  onResetFilters(): void {
-    this.filterForm.reset();
-    // En mode statique, pas de rechargement des données
-    console.log('Filtres réinitialisés (mode statique)');
   }
 
   // Méthodes pour les événements des graphiques

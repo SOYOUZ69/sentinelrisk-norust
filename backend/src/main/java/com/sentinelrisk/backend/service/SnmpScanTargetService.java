@@ -147,21 +147,55 @@ public class SnmpScanTargetService {
 
     /**
      * Met à jour le statut d'activation d'un asset
+     * Si l'asset n'existe pas encore, il est automatiquement configuré
      */
     @Transactional
     public boolean updateTargetStatus(String zabbixHostId, boolean enabled) {
         log.debug("🔄 Mise à jour du statut de l'asset {} - activé: {}", zabbixHostId, enabled);
         
-        int updated = scanTargetRepository.updateEnabledStatus(zabbixHostId, enabled);
-        boolean success = updated > 0;
+        // Vérifier si l'asset existe déjà
+        Optional<SnmpScanTarget> existingTarget = scanTargetRepository.findByZabbixHostId(zabbixHostId);
         
-        if (success) {
-            log.info("✅ Statut de l'asset {} mis à jour", zabbixHostId);
+        if (existingTarget.isPresent()) {
+            // Asset existe - mise à jour du statut
+            int updated = scanTargetRepository.updateEnabledStatus(zabbixHostId, enabled);
+            boolean success = updated > 0;
+            
+            if (success) {
+                log.info("✅ Statut de l'asset {} mis à jour", zabbixHostId);
+            } else {
+                log.warn("⚠️ Asset {} non trouvé pour mise à jour du statut", zabbixHostId);
+            }
+            
+            return success;
         } else {
-            log.warn("⚠️ Asset {} non trouvé pour mise à jour du statut", zabbixHostId);
+            // Asset n'existe pas - le configurer automatiquement
+            log.info("🆕 Asset {} non trouvé, configuration automatique avec statut: {}", zabbixHostId, enabled);
+            
+            try {
+                // Récupérer les informations depuis Zabbix
+                JsonNode hostInfo = getHostInfoFromZabbix(zabbixHostId);
+                if (hostInfo == null) {
+                    log.error("❌ Asset {} non trouvé dans Zabbix", zabbixHostId);
+                    return false;
+                }
+                
+                // Créer et configurer l'asset
+                SnmpScanTarget newTarget = createNewTarget(hostInfo);
+                newTarget.setEnabled(enabled);
+                newTarget.setConfiguredBy("auto-config");
+                newTarget.setDescription("Asset configuré automatiquement lors de la mise à jour du statut");
+                
+                SnmpScanTarget saved = scanTargetRepository.save(newTarget);
+                log.info("✅ Asset {} configuré automatiquement avec statut: {}", zabbixHostId, enabled);
+                
+                return true;
+                
+            } catch (Exception e) {
+                log.error("❌ Erreur lors de la configuration automatique de l'asset {}", zabbixHostId, e);
+                return false;
+            }
         }
-        
-        return success;
     }
 
     /**
@@ -230,9 +264,10 @@ public class SnmpScanTargetService {
         
         if (!stats.isEmpty()) {
             Object[] row = stats.get(0);
-            result.put("total", ((Number) row[0]).longValue());
-            result.put("enabled", ((Number) row[1]).longValue());
-            result.put("disabled", ((Number) row[2]).longValue());
+            // Gestion sécurisée des valeurs nulles
+            result.put("total", row[0] != null ? ((Number) row[0]).longValue() : 0L);
+            result.put("enabled", row[1] != null ? ((Number) row[1]).longValue() : 0L);
+            result.put("disabled", row[2] != null ? ((Number) row[2]).longValue() : 0L);
         } else {
             result.put("total", 0L);
             result.put("enabled", 0L);

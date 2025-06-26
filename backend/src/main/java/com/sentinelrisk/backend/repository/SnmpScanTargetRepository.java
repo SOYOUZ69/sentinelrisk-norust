@@ -2,6 +2,7 @@ package com.sentinelrisk.backend.repository;
 
 import com.sentinelrisk.backend.model.SnmpScanTarget;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -61,12 +62,14 @@ public interface SnmpScanTargetRepository extends JpaRepository<SnmpScanTarget, 
     /**
      * Désactive tous les assets
      */
+    @Modifying
     @Query("UPDATE SnmpScanTarget s SET s.enabled = false")
     int disableAllTargets();
 
     /**
      * Active/désactive un asset par son ID Zabbix
      */
+    @Modifying
     @Query("UPDATE SnmpScanTarget s SET s.enabled = :enabled WHERE s.zabbixHostId = :zabbixHostId")
     int updateEnabledStatus(@Param("zabbixHostId") String zabbixHostId, @Param("enabled") Boolean enabled);
 
@@ -78,6 +81,7 @@ public interface SnmpScanTargetRepository extends JpaRepository<SnmpScanTarget, 
     /**
      * Supprime les assets qui ne sont plus dans Zabbix
      */
+    @Modifying
     @Query("DELETE FROM SnmpScanTarget s WHERE s.zabbixHostId NOT IN :zabbixHostIds")
     int deleteTargetsNotInZabbix(@Param("zabbixHostIds") List<String> zabbixHostIds);
 
