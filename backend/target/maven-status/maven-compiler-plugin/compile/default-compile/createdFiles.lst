@@ -11,6 +11,7 @@ com/sentinelrisk/backend/repository/compliance/ComplianceRequirementRepository.c
 com/sentinelrisk/backend/controller/TestController.class
 com/sentinelrisk/backend/controller/ControlController.class
 com/sentinelrisk/util/CreatedResponseUtil.class
+com/sentinelrisk/backend/service/SnmpZabbixAutomationService.class
 com/sentinelrisk/backend/controller/SnmpManualScanController.class
 com/sentinelrisk/backend/repository/UserRepository.class
 com/sentinelrisk/backend/controller/AuthTestController.class
@@ -31,6 +32,7 @@ com/sentinelrisk/backend/service/ControlService.class
 com/sentinelrisk/dto/ZabbixHistoryDto.class
 com/sentinelrisk/dto/AssetCreateRequest.class
 com/sentinelrisk/backend/util/JsonHelper.class
+com/sentinelrisk/backend/dto/SnmpScanTargetDto.class
 com/sentinelrisk/backend/config/OpenApiConfig.class
 com/sentinelrisk/backend/repository/SnmpScanHistoryRepository.class
 com/sentinelrisk/service/RiskService.class
@@ -46,7 +48,9 @@ com/sentinelrisk/backend/domain/compliance/ComplianceRequirement$RequirementType
 com/sentinelrisk/repository/RiskRepository.class
 com/sentinelrisk/backend/controller/SnmpAssetCrudController.class
 com/sentinelrisk/backend/controller/CategoryController.class
+com/sentinelrisk/backend/service/SnmpZabbixScheduler$SchedulerStatus.class
 com/sentinelrisk/backend/controller/UserController.class
+com/sentinelrisk/backend/dto/SnmpScanTargetDto$SnmpScanTargetDtoBuilder.class
 com/sentinelrisk/backend/dto/SnmpManualScanRequest.class
 com/sentinelrisk/backend/domain/compliance/RiskComplianceMapping$ComplianceStatus.class
 com/sentinelrisk/backend/dto/SnmpManualScanResponse$SnmpResult.class
@@ -64,11 +68,11 @@ com/sentinelrisk/backend/domain/compliance/ComplianceRequirement.class
 com/sentinelrisk/dto/ZabbixHostDto.class
 com/sentinelrisk/backend/dto/CategoryResponse.class
 com/sentinelrisk/exception/GlobalExceptionHandler.class
-com/sentinelrisk/backend/controller/SnmpScanConfigController.class
 com/sentinelrisk/service/ComplianceControlService.class
 com/sentinelrisk/backend/dto/RiskResponse.class
 com/sentinelrisk/backend/config/RestClientConfig.class
 com/sentinelrisk/backend/service/DashboardService.class
+com/sentinelrisk/backend/model/SnmpScanTarget$SnmpScanTargetBuilder.class
 com/sentinelrisk/backend/domain/compliance/RemediationPlan$Status.class
 com/sentinelrisk/dto/DashboardSummaryDto$ComplianceSummary.class
 com/sentinelrisk/backend/repository/CategoryRepository.class
@@ -87,11 +91,14 @@ com/sentinelrisk/backend/service/compliance/ComplianceRequirementService.class
 com/sentinelrisk/backend/service/compliance/ComplianceFrameworkService.class
 com/sentinelrisk/backend/model/Assessment.class
 com/sentinelrisk/backend/mapper/CategoryMapper.class
+com/sentinelrisk/backend/service/SnmpZabbixScheduler.class
 com/sentinelrisk/backend/dto/ImportResult.class
 com/sentinelrisk/backend/controller/SnmpZabbixSyncController.class
+com/sentinelrisk/backend/controller/SnmpAutomationConfigController.class
 com/sentinelrisk/repository/IncidentRepository.class
 com/sentinelrisk/backend/web/rest/compliance/ComplianceFrameworkResource.class
 com/sentinelrisk/backend/config/JacksonConfig.class
+com/sentinelrisk/backend/repository/SnmpScanTargetRepository.class
 com/sentinelrisk/controller/ZabbixController.class
 com/sentinelrisk/backend/dto/BulkRiskRequest.class
 com/sentinelrisk/backend/service/mapper/ComplianceMapper.class
@@ -137,6 +144,7 @@ com/sentinelrisk/backend/service/OidInterpretationService.class
 com/sentinelrisk/service/SnmpScanResultService.class
 com/sentinelrisk/dto/ConfigCreateRequest$SeverityThresholdDto.class
 com/sentinelrisk/backend/model/SnmpScanResult.class
+com/sentinelrisk/backend/service/SnmpScanTargetService.class
 com/sentinelrisk/backend/service/dto/compliance/RiskComplianceMappingDTO.class
 com/sentinelrisk/backend/web/rest/compliance/RiskComplianceMappingResource.class
 com/sentinelrisk/backend/domain/compliance/RiskComplianceMapping.class
@@ -145,9 +153,11 @@ com/sentinelrisk/dto/RiskDTO.class
 com/sentinelrisk/dto/DashboardSummaryDto.class
 com/sentinelrisk/backend/controller/DebugController.class
 com/sentinelrisk/service/KeycloakUserService.class
+com/sentinelrisk/backend/model/SnmpScanTarget.class
 com/sentinelrisk/backend/controller/DashboardController.class
 com/sentinelrisk/controller/SnmpConfigController.class
 com/sentinelrisk/controller/SnmpAssetController.class
+com/sentinelrisk/backend/controller/SnmpZabbixAutomationController.class
 com/sentinelrisk/backend/service/mapper/RemediationPlanMapper.class
 com/sentinelrisk/backend/dto/ImportError.class
 com/sentinelrisk/dto/DashboardSummaryDto$RiskSummary.class

@@ -89,6 +89,14 @@ import { KeycloakService } from '../../core/auth/keycloak.service';
             <mat-icon matListItemIcon>history</mat-icon>
             <span matListItemTitle>Historique</span>
           </a>
+          <a mat-list-item routerLink="/snmp/automation" routerLinkActive="active">
+            <mat-icon matListItemIcon>smart_toy</mat-icon>
+            <span matListItemTitle>Automatisation</span>
+          </a>
+          <a mat-list-item routerLink="/snmp/automation/config" routerLinkActive="active">
+            <mat-icon matListItemIcon>tune</mat-icon>
+            <span matListItemTitle>Configuration automatique</span>
+          </a>
         </mat-nav-list>
       </mat-expansion-panel>
     </mat-nav-list>

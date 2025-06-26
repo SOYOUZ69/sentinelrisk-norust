@@ -23,6 +23,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
 
 import { SnmpRoutingModule } from './snmp-routing.module';
 import { AssetListComponent } from './components/asset-list/asset-list.component';
@@ -33,6 +35,8 @@ import { ManualScanComponent } from './components/manual-scan/manual-scan.compon
 import { ScanHistoryComponent } from './components/scan-history/scan-history.component';
 import { ScanDetailComponent } from './components/scan-detail/scan-detail.component';
 import { ScanDetailDialogComponent } from './components/scan-detail-dialog/scan-detail-dialog.component';
+import { AutomationDashboardComponent } from './components/automation-dashboard/automation-dashboard.component';
+import { AutomationConfigComponent } from './components/automation-config/automation-config.component';
 import { AssetFormDialogComponent } from '../../components/snmp/assets/asset-form-dialog.component';
 
 @NgModule({
@@ -45,6 +49,8 @@ import { AssetFormDialogComponent } from '../../components/snmp/assets/asset-for
     ScanHistoryComponent,
     ScanDetailComponent,
     ScanDetailDialogComponent,
+    AutomationDashboardComponent,
+    AutomationConfigComponent,
     AssetFormDialogComponent
   ],
   imports: [
@@ -74,7 +80,9 @@ import { AssetFormDialogComponent } from '../../components/snmp/assets/asset-for
     MatNativeDateModule,
     MatTabsModule,
     MatExpansionModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatMenuModule,
+    MatDividerModule
   ]
 })
 export class SnmpModule { }

@@ -7,6 +7,8 @@ import { ConfigFormComponent } from './components/config-form/config-form.compon
 import { ManualScanComponent } from './components/manual-scan/manual-scan.component';
 import { ScanHistoryComponent } from './components/scan-history/scan-history.component';
 import { ScanDetailComponent } from './components/scan-detail/scan-detail.component';
+import { AutomationDashboardComponent } from './components/automation-dashboard/automation-dashboard.component';
+import { AutomationConfigComponent } from './components/automation-config/automation-config.component';
 
 const routes: Routes = [
   // Route par défaut : liste des assets (/snmp/assets)
@@ -27,7 +29,13 @@ const routes: Routes = [
   
   // 4. ScanHistoryComponent (/snmp/results)
   { path: 'results', component: ScanHistoryComponent },
-  { path: 'results/:id', component: ScanDetailComponent }
+  { path: 'results/:id', component: ScanDetailComponent },
+  
+  // 5. AutomationDashboardComponent (/snmp/automation)
+  { path: 'automation', component: AutomationDashboardComponent },
+  
+  // 6. AutomationConfigComponent (/snmp/automation/config)
+  { path: 'automation/config', component: AutomationConfigComponent }
 ];
 
 @NgModule({

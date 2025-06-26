@@ -62,6 +62,9 @@ public class SnmpScanHistory {
     @Column(name = "username", length = 255)
     private String username;
 
+    @Column(name = "notes", columnDefinition = "TEXT")
+    private String notes;
+
     @OneToMany(mappedBy = "scanHistory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SnmpScanHistoryResult> results = new ArrayList<>();
 
@@ -204,6 +207,14 @@ public class SnmpScanHistory {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public List<SnmpScanHistoryResult> getResults() {

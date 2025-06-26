@@ -1,12 +1,6 @@
 <div class="risks-container">
   <!-- Test de directive structurelle -->
-  <div style="background-color: lightgreen; padding: 10px; margin-bottom: 15px;" *ngIf="true">
-    <p>Test de directive ngIf (devrait être visible)</p>
-    <button mat-raised-button color="primary">Bouton toujours visible</button>
-    <button mat-raised-button color="accent" *ngIf="keycloakService.hasRole('admin') || keycloakService.hasRole('ADMIN')">
-      Bouton visible si admin (via ngIf direct)
-    </button>
-  </div>
+  
 
   <!-- Débogage des rôles (temporaire) -->
   <div class="debug-box" *ngIf="showDebug">

@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["angular:styles/component:css;e8c5923abef4c6e1c388107b1aa7a95345e58221f781d141abb8ec7d4630fce3;/Users/omar/Desktop/pfe2025/sentinelrisk-norust/frontend/src/app/layout/layout.component.ts"],
-  "sourcesContent": ["\n    .sidenav-container {\n      height: 100vh;\n    }\n    .sidenav {\n      width: 250px;\n    }\n    .content {\n      padding: 20px;\n      height: calc(100vh - 64px);\n      overflow: auto;\n    }\n  "],
-  "mappings": ";AACI,CAAC;AACC,UAAQ;AACV;AACA,CAAC;AACC,SAAO;AACT;AACA,CAAC;AACC,WAAS;AACT,UAAQ,KAAK,MAAM,EAAE;AACrB,YAAU;AACZ;",
-  "names": []
-}

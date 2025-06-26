@@ -1,0 +1,521 @@
+.automation-config-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  // Header section
+  .config-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    .header-content {
+      flex: 1;
+      min-width: 300px;
+
+      .page-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0 0 8px 0;
+        font-size: 28px;
+        font-weight: 500;
+        color: #333;
+
+        mat-icon {
+          font-size: 32px;
+          width: 32px;
+          height: 32px;
+          color: #1976d2;
+        }
+      }
+
+      .page-description {
+        margin: 0;
+        color: #666;
+        font-size: 16px;
+        line-height: 1.5;
+      }
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+
+      button {
+        min-width: 120px;
+
+        mat-icon {
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+
+  // Statistics section
+  .statistics-section {
+    margin-bottom: 32px;
+
+    .stats-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+
+      .stat-card {
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        mat-card-content {
+          display: flex;
+          align-items: center;
+          padding: 20px !important;
+
+          .stat-icon {
+            margin-right: 16px;
+            padding: 12px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            mat-icon {
+              font-size: 28px;
+              width: 28px;
+              height: 28px;
+            }
+          }
+
+          .stat-info {
+            flex: 1;
+
+            .stat-value {
+              font-size: 32px;
+              font-weight: 600;
+              line-height: 1;
+              margin-bottom: 4px;
+            }
+
+            .stat-label {
+              font-size: 14px;
+              color: #666;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+            }
+          }
+        }
+
+        &.total {
+          .stat-icon {
+            background-color: #e3f2fd;
+            mat-icon { color: #1976d2; }
+          }
+          .stat-value { color: #1976d2; }
+        }
+
+        &.enabled {
+          .stat-icon {
+            background-color: #e8f5e8;
+            mat-icon { color: #4caf50; }
+          }
+          .stat-value { color: #4caf50; }
+        }
+
+        &.disabled {
+          .stat-icon {
+            background-color: #ffebee;
+            mat-icon { color: #f44336; }
+          }
+          .stat-value { color: #f44336; }
+        }
+      }
+    }
+  }
+
+  // Filters section
+  .filters-section {
+    margin-bottom: 24px;
+
+    .filters-card {
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+      .filters-row {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        flex-wrap: wrap;
+
+        .search-field {
+          flex: 1;
+          min-width: 250px;
+        }
+
+        mat-form-field {
+          min-width: 150px;
+        }
+
+        button {
+          height: 56px;
+          margin-top: 8px;
+        }
+      }
+    }
+  }
+
+  // Batch actions section
+  .batch-actions {
+    margin-bottom: 24px;
+
+    .batch-card {
+      background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+      border-radius: 12px;
+      border-left: 4px solid #1976d2;
+
+      mat-card-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 24px !important;
+        flex-wrap: wrap;
+        gap: 16px;
+
+        .batch-info {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          font-weight: 500;
+          color: #333;
+
+          mat-icon {
+            color: #1976d2;
+          }
+        }
+
+        .batch-buttons {
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+      }
+    }
+  }
+
+  // Targets section
+  .targets-section {
+    .targets-card {
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+
+      .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 20px;
+        color: #666;
+
+        mat-spinner {
+          margin-bottom: 20px;
+        }
+
+        p {
+          margin: 0;
+          font-size: 16px;
+        }
+      }
+
+      .targets-table {
+        .targets-mat-table {
+          width: 100%;
+          background: white;
+
+          .sortable-header {
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s ease;
+
+            &:hover {
+              background-color: #f5f5f5;
+            }
+
+            mat-icon {
+              margin-left: 8px;
+              font-size: 18px;
+              width: 18px;
+              height: 18px;
+            }
+          }
+
+          .mat-mdc-header-cell {
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #e0e0e0;
+            padding: 16px 12px;
+          }
+
+          .mat-mdc-cell {
+            padding: 16px 12px;
+            border-bottom: 1px solid #f0f0f0;
+          }
+
+          .mat-mdc-row {
+            transition: background-color 0.2s ease;
+
+            &:hover {
+              background-color: #f8f9fa;
+            }
+
+            &.selected-row {
+              background-color: #e3f2fd;
+            }
+          }
+
+          // Colonnes spécifiques
+          .target-name {
+            .primary-name {
+              font-weight: 500;
+              color: #333;
+              margin-bottom: 2px;
+            }
+
+            .secondary-name {
+              font-size: 12px;
+              color: #666;
+            }
+          }
+
+          .ip-address {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #333;
+          }
+
+          .port-info {
+            font-size: 12px;
+            color: #666;
+            margin-left: 4px;
+          }
+
+          .description-text {
+            font-size: 14px;
+            color: #666;
+            max-width: 200px;
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          mat-slide-toggle {
+            margin: 0;
+          }
+
+          mat-chip {
+            font-size: 12px;
+            font-weight: 500;
+            min-height: 24px;
+          }
+
+          mat-checkbox {
+            margin: 0;
+          }
+        }
+
+        .no-results {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 60px 20px;
+          text-align: center;
+          color: #666;
+
+          mat-icon {
+            font-size: 64px;
+            width: 64px;
+            height: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+          }
+
+          h3 {
+            margin: 0 0 8px 0;
+            font-size: 24px;
+            font-weight: 500;
+          }
+
+          p {
+            margin: 0 0 24px 0;
+            font-size: 16px;
+            line-height: 1.5;
+          }
+        }
+      }
+
+      .pagination-container {
+        border-top: 1px solid #e0e0e0;
+        padding: 16px;
+        background-color: #fafafa;
+
+        mat-paginator {
+          background: transparent;
+        }
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .automation-config-container {
+    padding: 16px;
+
+    .config-header {
+      flex-direction: column;
+      align-items: stretch;
+
+      .header-actions {
+        justify-content: stretch;
+
+        button {
+          flex: 1;
+          min-width: auto;
+        }
+      }
+    }
+
+    .statistics-section .stats-cards {
+      grid-template-columns: 1fr;
+    }
+
+    .filters-section .filters-card .filters-row {
+      flex-direction: column;
+      align-items: stretch;
+
+      mat-form-field,
+      .search-field {
+        width: 100%;
+        min-width: auto;
+      }
+    }
+
+    .batch-actions .batch-card mat-card-content {
+      flex-direction: column;
+      align-items: stretch;
+
+      .batch-buttons {
+        justify-content: stretch;
+
+        button {
+          flex: 1;
+        }
+      }
+    }
+
+    .targets-section .targets-card .targets-table .targets-mat-table {
+      .mat-mdc-header-cell,
+      .mat-mdc-cell {
+        padding: 8px 6px;
+        font-size: 12px;
+      }
+
+      .description-text {
+        max-width: 120px;
+      }
+    }
+  }
+}
+
+// Dark theme support
+@media (prefers-color-scheme: dark) {
+  .automation-config-container {
+    .config-header .header-content {
+      .page-title {
+        color: #ffffff;
+      }
+
+      .page-description {
+        color: #cccccc;
+      }
+    }
+
+    .statistics-section .stats-cards .stat-card {
+      background-color: #424242;
+      color: #ffffff;
+
+      .stat-info .stat-label {
+        color: #cccccc;
+      }
+    }
+
+    .targets-section .targets-card .targets-table {
+      .targets-mat-table {
+        background: #424242;
+        color: #ffffff;
+
+        .mat-mdc-header-cell {
+          color: #ffffff;
+          border-bottom-color: #666666;
+        }
+
+        .mat-mdc-cell {
+          border-bottom-color: #555555;
+        }
+
+        .mat-mdc-row:hover {
+          background-color: #555555;
+        }
+
+        .target-name .primary-name {
+          color: #ffffff;
+        }
+
+        .ip-address {
+          color: #ffffff;
+        }
+      }
+
+      .no-results {
+        color: #cccccc;
+      }
+    }
+  }
+}
+
+// Animation pour les transitions
+.automation-config-container {
+  * {
+    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+  }
+}
+
+// Amélioration de l'accessibilité
+.automation-config-container {
+  .sortable-header:focus {
+    outline: 2px solid #1976d2;
+    outline-offset: 2px;
+  }
+
+  button:focus {
+    outline: 2px solid #1976d2;
+    outline-offset: 2px;
+  }
+
+  mat-checkbox:focus,
+  mat-slide-toggle:focus {
+    outline: 2px solid #1976d2;
+    outline-offset: 2px;
+  }
+} 

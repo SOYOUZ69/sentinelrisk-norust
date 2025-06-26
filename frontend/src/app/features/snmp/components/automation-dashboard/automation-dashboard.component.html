@@ -1,0 +1,280 @@
+<div class="automation-dashboard">
+  <!-- En-tête avec titre et actions -->
+  <div class="dashboard-header">
+    <div class="title-section">
+      <h2 class="dashboard-title">
+        <mat-icon>schedule</mat-icon>
+        Automatisation SNMP via Zabbix
+      </h2>
+      <p class="dashboard-subtitle">
+        Synchronisation automatique des scans SNMP depuis Zabbix vers SentinelRisk
+      </p>
+    </div>
+
+    <div class="action-buttons">
+      <!-- Bouton de rafraîchissement automatique -->
+      <button mat-icon-button 
+              [color]="autoRefreshEnabled ? 'primary' : 'basic'"
+              (click)="toggleAutoRefresh()"
+              matTooltip="Activer/désactiver le rafraîchissement automatique">
+        <mat-icon>{{ autoRefreshEnabled ? 'autorenew' : 'sync_disabled' }}</mat-icon>
+      </button>
+
+      <!-- Bouton de rafraîchissement manuel -->
+      <button mat-icon-button 
+              color="primary"
+              [disabled]="isLoading"
+              (click)="refreshData()"
+              matTooltip="Rafraîchir les données">
+        <mat-icon [class.spinning]="isLoading">refresh</mat-icon>
+      </button>
+
+      <!-- Bouton de test de connectivité -->
+      <button mat-icon-button 
+              color="accent"
+              [disabled]="isTestingConnectivity"
+              (click)="testZabbixConnectivity()"
+              matTooltip="Tester la connectivité Zabbix">
+        <mat-icon [class.spinning]="isTestingConnectivity">cloud_sync</mat-icon>
+      </button>
+
+      <!-- Bouton de synchronisation manuelle -->
+      <button mat-raised-button 
+              color="primary"
+              [disabled]="isSyncing || isLoading"
+              (click)="triggerManualSync()"
+              class="sync-button">
+        <mat-icon [class.spinning]="isSyncing">sync</mat-icon>
+        {{ isSyncing ? 'Synchronisation...' : 'Synchroniser' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Indicateur de chargement global -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <p class="loading-text">Chargement des données d'automatisation...</p>
+  </div>
+
+  <!-- Contenu principal -->
+  <div *ngIf="!isLoading" class="dashboard-content">
+    
+    <!-- Cartes de statut -->
+    <div class="status-cards">
+      
+      <!-- Statut du Scheduler -->
+      <mat-card class="status-card scheduler-status">
+        <mat-card-header>
+          <mat-icon mat-card-avatar 
+                    [style.color]="getSchedulerStatusColor()">
+            {{ getSchedulerStatusIcon() }}
+          </mat-icon>
+          <mat-card-title>Scheduler</mat-card-title>
+          <mat-card-subtitle>Automatisation</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="status-value">
+            {{ schedulerStatus?.status || 'Inconnu' }}
+          </div>
+          <div class="status-details">
+            <div class="detail-item">
+              <mat-icon class="detail-icon">access_time</mat-icon>
+              <span>Dernière vérification: {{ formatDate(schedulerStatus?.lastCheck) }}</span>
+            </div>
+            <div class="detail-item">
+              <mat-icon class="detail-icon">settings</mat-icon>
+              <span>{{ schedulerStatus?.enabled ? 'Activé' : 'Désactivé' }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Connectivité Zabbix -->
+      <mat-card class="status-card zabbix-connectivity">
+        <mat-card-header>
+          <mat-icon mat-card-avatar 
+                    [style.color]="getZabbixConnectivityColor()">
+            {{ getZabbixConnectivityIcon() }}
+          </mat-icon>
+          <mat-card-title>Zabbix</mat-card-title>
+          <mat-card-subtitle>Connectivité</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="status-value">
+            {{ statistics?.zabbixConnected ? 'Connecté' : 'Déconnecté' }}
+          </div>
+          <div class="status-details" *ngIf="lastConnectivityTest">
+            <div class="detail-item">
+              <mat-icon class="detail-icon">timer</mat-icon>
+              <span>Temps de réponse: {{ lastConnectivityTest.responseTimeMs }}ms</span>
+            </div>
+            <div class="detail-item">
+              <mat-icon class="detail-icon">schedule</mat-icon>
+              <span>{{ formatDate(lastConnectivityTest.timestamp.toString()) }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Fraîcheur des données -->
+      <mat-card class="status-card data-freshness">
+        <mat-card-header>
+          <mat-icon mat-card-avatar 
+                    [style.color]="isDataRecent() ? '#4caf50' : '#ff9800'">
+            {{ isDataRecent() ? 'update' : 'schedule' }}
+          </mat-icon>
+          <mat-card-title>Données</mat-card-title>
+          <mat-card-subtitle>Fraîcheur</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="status-value">
+            {{ isDataRecent() ? 'Récentes' : 'Anciennes' }}
+          </div>
+          <div class="status-details">
+            <div class="detail-item">
+              <mat-icon class="detail-icon">autorenew</mat-icon>
+              <span>Auto-refresh: {{ autoRefreshEnabled ? 'ON' : 'OFF' }}</span>
+            </div>
+            <div class="detail-item">
+              <mat-icon class="detail-icon">timer</mat-icon>
+              <span>Intervalle: {{ autoRefreshInterval / 1000 }}s</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+
+    <!-- Statistiques détaillées -->
+    <div class="statistics-section">
+      <mat-card class="statistics-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar color="primary">bar_chart</mat-icon>
+          <mat-card-title>Statistiques des Scans Automatiques</mat-card-title>
+          <mat-card-subtitle>Vue d'ensemble de l'activité Zabbix</mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div class="stats-grid">
+            
+            <!-- Total des scans automatiques -->
+            <div class="stat-item">
+              <div class="stat-icon">
+                <mat-icon>assessment</mat-icon>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value">{{ formatNumber(statistics?.totalAutomaticScans) }}</div>
+                <div class="stat-label">Scans automatiques totaux</div>
+              </div>
+            </div>
+
+            <!-- Scans des dernières 24h -->
+            <div class="stat-item">
+              <div class="stat-icon">
+                <mat-icon>today</mat-icon>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value">{{ formatNumber(statistics?.automaticScansLast24h) }}</div>
+                <div class="stat-label">Dernières 24h</div>
+              </div>
+            </div>
+
+            <!-- Taux de succès -->
+            <div class="stat-item">
+              <div class="stat-icon">
+                <mat-icon>trending_up</mat-icon>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value" 
+                     [class]="getSuccessRateBadgeClass()">
+                  {{ formatPercentage(statistics?.automaticSuccessRate) }}
+                </div>
+                <div class="stat-label">Taux de succès</div>
+              </div>
+            </div>
+
+            <!-- Statut du scheduler -->
+            <div class="stat-item">
+              <div class="stat-icon">
+                <mat-icon>schedule</mat-icon>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value" 
+                     [style.color]="getSchedulerStatusColor()">
+                  {{ statistics?.schedulerStatus || 'Inconnu' }}
+                </div>
+                <div class="stat-label">État du planificateur</div>
+              </div>
+            </div>
+
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Informations système -->
+    <div class="system-info-section">
+      <mat-card class="system-info-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar color="accent">info</mat-icon>
+          <mat-card-title>Informations Système</mat-card-title>
+          <mat-card-subtitle>Configuration et état de l'automatisation</mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div class="info-grid">
+            
+            <div class="info-item">
+              <mat-icon class="info-icon">schedule</mat-icon>
+              <div class="info-content">
+                <div class="info-label">Synchronisation automatique</div>
+                <div class="info-value">Toutes les 5 minutes</div>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <mat-icon class="info-icon">storage</mat-icon>
+              <div class="info-content">
+                <div class="info-label">Source des données</div>
+                <div class="info-value">Zabbix Server</div>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <mat-icon class="info-icon">integration_instructions</mat-icon>
+              <div class="info-content">
+                <div class="info-label">Format de stockage</div>
+                <div class="info-value">SnmpScanHistory unifié</div>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <mat-icon class="info-icon">person</mat-icon>
+              <div class="info-content">
+                <div class="info-label">Utilisateur automatique</div>
+                <div class="info-value">zabbix-automation</div>
+              </div>
+            </div>
+
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+  </div>
+
+  <!-- Message d'erreur général -->
+  <div *ngIf="statistics?.error" class="error-section">
+    <mat-card class="error-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar color="warn">error</mat-icon>
+        <mat-card-title>Erreur</mat-card-title>
+        <mat-card-subtitle>Problème détecté</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="error-message">{{ statistics?.error }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div> 

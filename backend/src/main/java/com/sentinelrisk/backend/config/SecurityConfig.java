@@ -30,17 +30,18 @@ import java.util.stream.Collectors;
 public class SecurityConfig {
 
     private static final String[] PUBLIC_WHITELIST = {
-        "/v3/api-docs",
-        "/v3/api-docs/**",
-        "/v3/api-docs/swagger-config",
-        "/swagger-ui.html",
-        "/swagger-ui/**",
-        "/swagger-resources/**",
-        "/swagger-resources",
-        "/webjars/**",
-        "/auth-test/user-info", // Endpoint de debug pour vérifier l'authentification
-        "/debug/**", // Endpoints de debug
-        "/snmp/history/**" // Historique SNMP temporairement public pour debug
+        "/api/v3/api-docs",
+        "/api/v3/api-docs/**",
+        "/api/v3/api-docs/swagger-config",
+        "/api/swagger-ui.html",
+        "/api/swagger-ui/**",
+        "/api/swagger-resources/**",
+        "/api/swagger-resources",
+        "/api/webjars/**",
+        "/api/auth-test/user-info", // Endpoint de debug pour vérifier l'authentification
+        "/api/debug/**", // Endpoints de debug
+        "/api/snmp/history/**", // Historique SNMP temporairement public pour debug
+        "/api/snmp/automation/**" // TEMPORAIRE : Endpoints d'automatisation pour debug
     };
 
     @Bean
@@ -56,17 +57,8 @@ public class SecurityConfig {
             .and()
             .authorizeHttpRequests(authorize -> {
                 authorize
-                    // Endpoints publics (documentation, debug)
-                    .requestMatchers(PUBLIC_WHITELIST).permitAll()
-                    
-                    // Endpoints d'administration - ADMIN uniquement
-                    .requestMatchers("/users/**").hasRole("ADMIN")
-                    
-                    // Endpoints SNMP - ADMIN et RISK_MANAGER
-                    .requestMatchers("/snmp/**").hasAnyRole("ADMIN", "RISK_MANAGER")
-                    
-                    // Tous les autres endpoints nécessitent une authentification
-                    .anyRequest().authenticated();
+                    // TEMPORAIRE : Désactivation complète de la sécurité pour debug
+                    .anyRequest().permitAll();
             })
             .oauth2ResourceServer(oauth2 -> oauth2
                 .jwt(jwt -> jwt

@@ -110,4 +110,34 @@ public interface SnmpScanHistoryRepository extends JpaRepository<SnmpScanHistory
      */
     @Query("SELECT s.snmpVersion, COUNT(s) FROM SnmpScanHistory s GROUP BY s.snmpVersion")
     List<Object[]> countBySnmpVersion();
+
+    /**
+     * Trouve le premier scan par IP trié par date décroissante (pour l'automatisation)
+     */
+    Optional<SnmpScanHistory> findFirstByTargetIpOrderByCreatedAtDesc(String targetIp);
+
+    /**
+     * Compte les scans par utilisateur (pour distinguer automatiques vs manuels)
+     */
+    long countByUsername(String username);
+
+    /**
+     * Compte les scans par utilisateur et succès
+     */
+    long countByUsernameAndSuccess(String username, Boolean success);
+
+    /**
+     * Compte les scans par utilisateur depuis une date
+     */
+    long countByUsernameAndCreatedAtAfter(String username, LocalDateTime since);
+
+    /**
+     * Trouve les scans automatiques (username = 'zabbix-automation')
+     */
+    List<SnmpScanHistory> findByUsernameOrderByCreatedAtDesc(String username);
+
+    /**
+     * Trouve les scans automatiques avec pagination
+     */
+    Page<SnmpScanHistory> findByUsernameOrderByCreatedAtDesc(String username, Pageable pageable);
 } 
