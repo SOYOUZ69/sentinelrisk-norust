@@ -284,17 +284,41 @@ public class SnmpScanHistoryService {
      * Crée un résultat d'historique avec interprétation complète
      */
     private SnmpScanHistoryResult createHistoryResultWithInterpretation(SnmpManualScanResponse.SnmpResult result, List<String> allOids) {
+        // S'assurer que snmpType n'est jamais null - valeur par défaut si nécessaire
+        String snmpType = result.getType();
+        if (snmpType == null || snmpType.trim().isEmpty()) {
+            if (result.isSuccess()) {
+                snmpType = "unknown"; // Scan réussi mais type indéterminé
+            } else {
+                snmpType = "unavailable"; // Échec du scan, type non disponible
+            }
+            logger.debug("⚠️ Type SNMP null pour OID {}, utilisation de la valeur par défaut: {}", 
+                       result.getOid(), snmpType);
+        }
+
+        // Vérifier que l'OID n'est pas null/vide
+        String oid = result.getOid();
+        if (oid == null || oid.trim().isEmpty()) {
+            logger.warn("⚠️ OID null ou vide détecté - assignation d'une valeur par défaut");
+            oid = "unknown.oid";
+        }
+
         // Utiliser les informations du résultat pour créer l'entrée historique
         SnmpScanHistoryResult historyResult = new SnmpScanHistoryResult(
-            result.getOid(),
-            result.getValue(),
-            result.getType(),
+            oid,
+            result.getValue(), // peut être null, c'est acceptable
+            snmpType,
             result.isSuccess()
         );
 
         if (!result.isSuccess() && result.getError() != null) {
             historyResult.setErrorMessage(result.getError());
         }
+
+        // Log de débogage pour diagnostiquer les problèmes d'insertion
+        logger.debug("🔍 Création résultat historique: OID={}, Type={}, Succès={}, Valeur={}", 
+                    oid, snmpType, result.isSuccess(), 
+                    result.getValue() != null ? result.getValue().substring(0, Math.min(50, result.getValue().length())) + "..." : "null");
 
         // Utiliser le service d'interprétation pour enrichir les données
         try {
@@ -311,27 +335,51 @@ public class SnmpScanHistoryService {
             historyResult.setFormattedValue(interpretation.getFormattedValue());
             historyResult.setInterpretation(interpretation.getInterpretation());
             
-            // Définir le statut
-            if ("CRITICAL".equals(interpretation.getStatus())) {
+            // Définir le statut avec gestion améliorée
+            String interpretationStatus = interpretation.getStatus();
+            if ("CRITICAL".equals(interpretationStatus)) {
                 historyResult.setStatus(SnmpScanHistoryResult.SnmpResultStatus.CRITICAL);
-            } else if ("WARNING".equals(interpretation.getStatus())) {
+            } else if ("WARNING".equals(interpretationStatus)) {
                 historyResult.setStatus(SnmpScanHistoryResult.SnmpResultStatus.WARNING);
-            } else if ("ERROR".equals(interpretation.getStatus())) {
+            } else if ("ERROR".equals(interpretationStatus)) {
                 historyResult.setStatus(SnmpScanHistoryResult.SnmpResultStatus.ERROR);
+            } else if ("INFORMATION".equals(interpretationStatus)) {
+                historyResult.setStatus(SnmpScanHistoryResult.SnmpResultStatus.INFORMATION);
+            } else if ("UNAVAILABLE".equals(interpretationStatus)) {
+                historyResult.setStatus(SnmpScanHistoryResult.SnmpResultStatus.UNAVAILABLE);
             } else {
                 historyResult.setStatus(SnmpScanHistoryResult.SnmpResultStatus.NORMAL);
             }
             
         } catch (Exception e) {
-            logger.warn("Erreur lors de l'interprétation de l'OID {}: {}", result.getOid(), e.getMessage());
+            logger.warn("Erreur lors de l'interprétation de l'OID {}: {}", oid, e.getMessage());
             
-            // Valeurs par défaut en cas d'erreur
-            historyResult.setOidName("OID " + result.getOid());
-            historyResult.setOidDescription("Valeur SNMP pour l'OID " + result.getOid());
+            // Valeurs par défaut en cas d'erreur d'interprétation
+            historyResult.setOidName("OID " + oid);
+            historyResult.setOidDescription("Valeur SNMP pour l'OID " + oid);
             historyResult.setOidCategory("general");
-            historyResult.setFormattedValue(result.getValue());
-            historyResult.setInterpretation(result.getType() + " value");
-            historyResult.setStatus(SnmpScanHistoryResult.SnmpResultStatus.NORMAL);
+            
+            // Gestion intelligente selon la disponibilité de la valeur
+            if (result.getValue() == null || result.getValue().trim().isEmpty()) {
+                historyResult.setFormattedValue("N/A");
+                historyResult.setInterpretation("Aucune valeur reçue – instance inexistante ou réponse SNMP absente");
+                historyResult.setStatus(SnmpScanHistoryResult.SnmpResultStatus.UNAVAILABLE);
+            } else {
+                // Afficher la valeur brute telle que reçue
+                historyResult.setFormattedValue(result.getValue());
+                historyResult.setInterpretation("Valeur SNMP pour l'OID " + oid + " : " + result.getValue());
+                historyResult.setStatus(SnmpScanHistoryResult.SnmpResultStatus.NORMAL);
+            }
+        }
+
+        // Validation finale avant retour - s'assurer qu'aucun champ requis n'est null
+        if (historyResult.getSnmpType() == null) {
+            logger.error("🚨 ERREUR CRITIQUE: snmpType est encore null après traitement pour OID {}", oid);
+            historyResult.setSnmpType("error");
+        }
+        if (historyResult.getOid() == null) {
+            logger.error("🚨 ERREUR CRITIQUE: OID est null après traitement");
+            historyResult.setOid("error.oid");
         }
         
         return historyResult;

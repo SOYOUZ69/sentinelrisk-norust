@@ -33,7 +33,7 @@ export interface SnmpScanHistoryResultDto {
   oidCategory?: string;
   formattedValue?: string;
   interpretation?: string;
-  status: 'NORMAL' | 'WARNING' | 'CRITICAL' | 'ERROR';
+  status: 'NORMAL' | 'WARNING' | 'CRITICAL' | 'ERROR' | 'INFORMATION' | 'UNAVAILABLE';
 }
 
 export interface ScanStatistics {

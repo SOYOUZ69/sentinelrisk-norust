@@ -59,26 +59,28 @@ public class SnmpScanHistoryResult {
     public SnmpScanHistoryResult() {}
 
     public SnmpScanHistoryResult(String oid, String value, String snmpType, Boolean success) {
-        this.oid = oid;
-        this.value = value;
-        this.snmpType = snmpType;
-        this.success = success;
-        this.status = success ? SnmpResultStatus.NORMAL : SnmpResultStatus.ERROR;
+        // Validation et valeurs par défaut pour éviter les contraintes NOT NULL
+        this.oid = (oid != null && !oid.trim().isEmpty()) ? oid : "unknown.oid";
+        this.value = value; // peut être null, c'est acceptable
+        this.snmpType = (snmpType != null && !snmpType.trim().isEmpty()) ? snmpType : "unknown";
+        this.success = success != null ? success : false;
+        this.status = (success != null && success) ? SnmpResultStatus.NORMAL : SnmpResultStatus.ERROR;
     }
 
     public SnmpScanHistoryResult(String oid, String value, String snmpType, Boolean success, 
                                 String oidName, String oidDescription, String oidCategory,
                                 String formattedValue, String interpretation, SnmpResultStatus status) {
-        this.oid = oid;
-        this.value = value;
-        this.snmpType = snmpType;
-        this.success = success;
+        // Validation et valeurs par défaut pour éviter les contraintes NOT NULL
+        this.oid = (oid != null && !oid.trim().isEmpty()) ? oid : "unknown.oid";
+        this.value = value; // peut être null, c'est acceptable
+        this.snmpType = (snmpType != null && !snmpType.trim().isEmpty()) ? snmpType : "unknown";
+        this.success = success != null ? success : false;
         this.oidName = oidName;
         this.oidDescription = oidDescription;
         this.oidCategory = oidCategory;
         this.formattedValue = formattedValue;
         this.interpretation = interpretation;
-        this.status = status != null ? status : (success ? SnmpResultStatus.NORMAL : SnmpResultStatus.ERROR);
+        this.status = status != null ? status : ((success != null && success) ? SnmpResultStatus.NORMAL : SnmpResultStatus.ERROR);
     }
 
     // Getters et Setters
@@ -103,7 +105,8 @@ public class SnmpScanHistoryResult {
     }
 
     public void setOid(String oid) {
-        this.oid = oid;
+        // Ne jamais permettre une valeur null pour oid (contrainte NOT NULL en DB)
+        this.oid = (oid != null && !oid.trim().isEmpty()) ? oid : "unknown.oid";
     }
 
     public String getValue() {
@@ -119,7 +122,8 @@ public class SnmpScanHistoryResult {
     }
 
     public void setSnmpType(String snmpType) {
-        this.snmpType = snmpType;
+        // Ne jamais permettre une valeur null pour snmpType (contrainte NOT NULL en DB)
+        this.snmpType = (snmpType != null && !snmpType.trim().isEmpty()) ? snmpType : "unknown";
     }
 
     public Boolean getSuccess() {
@@ -127,7 +131,8 @@ public class SnmpScanHistoryResult {
     }
 
     public void setSuccess(Boolean success) {
-        this.success = success;
+        // Ne jamais permettre une valeur null pour success (contrainte NOT NULL en DB)
+        this.success = success != null ? success : false;
     }
 
     public String getErrorMessage() {
@@ -201,9 +206,11 @@ public class SnmpScanHistoryResult {
      * Enumération pour le statut du résultat SNMP
      */
     public enum SnmpResultStatus {
-        NORMAL,     // Valeur normale
-        WARNING,    // Valeur nécessitant attention
-        CRITICAL,   // Valeur critique
-        ERROR       // Erreur lors de la récupération
+        NORMAL,       // Valeur normale
+        WARNING,      // Valeur nécessitant attention
+        CRITICAL,     // Valeur critique
+        ERROR,        // Erreur lors de la récupération
+        INFORMATION,  // Valeur reçue mais non interprétable
+        UNAVAILABLE   // Aucune valeur reçue (instance inexistante)
     }
 } 

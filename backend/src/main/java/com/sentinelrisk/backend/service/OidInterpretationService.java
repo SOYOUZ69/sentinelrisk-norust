@@ -175,14 +175,29 @@ public class OidInterpretationService {
         String interpretation = "";
         String status = "NORMAL";
 
+        // Vérifier si la valeur est vide ou null
+        if (value == null || value.trim().isEmpty()) {
+            formattedValue = "N/A";
+            interpretation = "Aucune valeur reçue – instance inexistante ou réponse SNMP absente";
+            status = "UNAVAILABLE";
+            return new InterpretationResult(formattedValue, interpretation, status);
+        }
+
         try {
             // Interprétation spécifique selon l'OID
             if (oid.equals("1.3.6.1.2.1.1.3.0")) {
                 // sysUpTime - conversion en format lisible
-                long ticks = Long.parseLong(value);
-                long seconds = ticks / 100;
-                formattedValue = formatUptime(seconds);
-                interpretation = "Système démarré depuis " + formattedValue;
+                if (value.matches("\\d+")) {
+                    long ticks = Long.parseLong(value);
+                    long seconds = ticks / 100;
+                    formattedValue = formatUptime(seconds);
+                    interpretation = "Système démarré depuis " + formattedValue;
+                } else {
+                    // Valeur déjà formatée (ex: "16 days, 7:08:55.72") - conserver la valeur brute
+                    formattedValue = value; // Afficher exactement la valeur reçue
+                    interpretation = "Temps de fonctionnement (valeur formatée) : " + value;
+                    status = "NORMAL"; // Marquer comme normal puisqu'on a une valeur valide
+                }
                 
             } else if (oid.contains("Cpu") || oid.contains("Load")) {
                 // Métriques CPU et charge
@@ -237,6 +252,11 @@ public class OidInterpretationService {
                     long seconds = ticks / 100;
                     formattedValue = formatUptime(seconds);
                     interpretation = "Durée: " + formattedValue;
+                } else {
+                    // Valeur TimeTicks déjà formatée ou non numérique - conserver la valeur brute
+                    formattedValue = value; // Afficher exactement la valeur reçue
+                    interpretation = "Durée (valeur formatée) : " + value;
+                    status = "NORMAL"; // Marquer comme normal puisqu'on a une valeur valide
                 }
                 
             } else if ("IpAddress".equals(snmpType)) {
@@ -264,8 +284,19 @@ public class OidInterpretationService {
 
         } catch (Exception e) {
             logger.warn("Erreur lors de l'interprétation de l'OID {} : {}", oid, e.getMessage());
-            status = "ERROR";
-            interpretation = "Erreur d'interprétation: " + e.getMessage();
+            
+            // Si on a une valeur, l'afficher telle quelle - sinon marquer comme indisponible
+            if (value != null && !value.trim().isEmpty()) {
+                formattedValue = value; // Conserver la valeur brute exactement comme reçue
+                interpretation = oidInfo.getDescription() + " : " + value;
+                status = "NORMAL"; // Valeur reçue et affichable
+            } else {
+                formattedValue = "N/A";
+                interpretation = "Aucune valeur reçue – instance inexistante ou réponse SNMP absente";
+                status = "UNAVAILABLE";
+            }
+            
+            logger.debug("🔍 Valeur pour OID {} : {} (status: {})", oid, value, status);
         }
 
         return new InterpretationResult(formattedValue, interpretation, status);

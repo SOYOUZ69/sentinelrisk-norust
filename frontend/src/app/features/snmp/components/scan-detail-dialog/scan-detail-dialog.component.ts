@@ -29,7 +29,10 @@ export class ScanDetailDialogComponent {
     switch (status) {
       case 'CRITICAL': return '#F44336'; // Rouge
       case 'WARNING': return '#FF9800'; // Orange  
+      case 'ERROR': return '#F44336'; // Rouge pour erreur
       case 'NORMAL': return '#4CAF50'; // Vert
+      case 'INFORMATION': return '#2196F3'; // Bleu pour information
+      case 'UNAVAILABLE': return '#9E9E9E'; // Gris pour indisponible
       default: return '#2196F3'; // Bleu par défaut
     }
   }
@@ -42,7 +45,10 @@ export class ScanDetailDialogComponent {
     switch (status) {
       case 'CRITICAL': return 'error';
       case 'WARNING': return 'warning';
+      case 'ERROR': return 'error';
       case 'NORMAL': return 'check_circle';
+      case 'INFORMATION': return 'info';
+      case 'UNAVAILABLE': return 'help_outline';
       default: return 'info';
     }
   }

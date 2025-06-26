@@ -1,5 +1,6 @@
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/test/java/com/sentinelrisk/model/SnmpEntitiesTest.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/test/java/com/sentinelrisk/controller/UserControllerIntegrationTest.java
+/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/test/java/com/sentinelrisk/backend/service/OidInterpretationServiceTest.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/test/java/com/sentinelrisk/client/ZabbixClientTest.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/test/java/com/sentinelrisk/backend/controller/DashboardControllerTest.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/test/java/com/sentinelrisk/backend/controller/RiskControllerTest.java
