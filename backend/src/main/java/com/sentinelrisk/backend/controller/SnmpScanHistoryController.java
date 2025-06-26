@@ -101,7 +101,7 @@ public class SnmpScanHistoryController {
         description = "Récupère tous les scans effectués sur une adresse IP spécifique"
     )
     @GetMapping("/by-ip/{ip}")
-    @PreAuthorize("hasRole('admin') or hasRole('risk_manager')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('RISK_MANAGER')")
     public ResponseEntity<List<SnmpScanHistoryDto>> getScansByIp(
             @Parameter(description = "Adresse IP cible") 
             @PathVariable String ip) {
@@ -124,7 +124,7 @@ public class SnmpScanHistoryController {
         description = "Recherche dans l'historique des scans par IP ou port"
     )
     @GetMapping("/search")
-    @PreAuthorize("hasRole('admin') or hasRole('risk_manager')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('RISK_MANAGER')")
     public ResponseEntity<List<SnmpScanHistoryDto>> searchScans(
             @Parameter(description = "Terme de recherche") 
             @RequestParam String q) {
@@ -218,7 +218,7 @@ public class SnmpScanHistoryController {
         @ApiResponse(responseCode = "500", description = "Erreur serveur")
     })
     @DeleteMapping("/{scanId}")
-    @PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteScan(
             @Parameter(description = "Identifiant du scan à supprimer") 
             @PathVariable Long scanId) {
@@ -247,7 +247,7 @@ public class SnmpScanHistoryController {
         description = "Supprime les scans plus anciens que le nombre de jours spécifié"
     )
     @PostMapping("/cleanup")
-    @PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> cleanupOldScans(
             @Parameter(description = "Nombre de jours à conserver") 
             @RequestParam(defaultValue = "30") int daysToKeep) {
@@ -274,4 +274,6 @@ public class SnmpScanHistoryController {
         logger.info("🧪 Test d'accès libre au contrôleur SNMP History");
         return ResponseEntity.ok("✅ Contrôleur SnmpScanHistoryController fonctionne !");
     }
+
+
 } 

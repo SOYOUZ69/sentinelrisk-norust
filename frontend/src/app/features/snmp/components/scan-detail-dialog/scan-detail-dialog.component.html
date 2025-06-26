@@ -1,0 +1,206 @@
+<div class="scan-detail-dialog">
+  <!-- Header de la dialog -->
+  <div class="dialog-header">
+    <h2 mat-dialog-title>
+      <mat-icon class="title-icon">info</mat-icon>
+      Détails du Scan SNMP #{{ scan.id }}
+    </h2>
+    <button mat-icon-button 
+            mat-dialog-close 
+            class="close-button"
+            matTooltip="Fermer">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Contenu principal -->
+  <mat-dialog-content class="dialog-content">
+    
+    <!-- Informations générales du scan -->
+    <mat-card class="info-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>settings</mat-icon>
+          Informations du Scan
+        </mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="info-grid">
+          <!-- Ligne 1: Cible et Date -->
+          <div class="info-row">
+            <div class="info-item">
+              <mat-icon class="info-icon">router</mat-icon>
+              <div class="info-details">
+                <span class="info-label">Cible</span>
+                <span class="info-value">{{ scan.targetIp }}:{{ scan.targetPort }}</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <mat-icon class="info-icon">schedule</mat-icon>
+              <div class="info-details">
+                <span class="info-label">Date du scan</span>
+                <span class="info-value">{{ formatDate(scan.createdAt) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ligne 2: Version SNMP et Communauté -->
+          <div class="info-row">
+            <div class="info-item">
+              <mat-icon class="info-icon">info</mat-icon>
+              <div class="info-details">
+                <span class="info-label">Version SNMP</span>
+                <span class="info-value">{{ scan.snmpVersion }}</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <mat-icon class="info-icon">key</mat-icon>
+              <div class="info-details">
+                <span class="info-label">Communauté</span>
+                <span class="info-value">{{ scan.community }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ligne 3: Statut et Durée -->
+          <div class="info-row">
+            <div class="info-item">
+              <mat-icon class="info-icon" 
+                        [style.color]="scan.success ? '#4CAF50' : '#F44336'">
+                {{ scan.success ? 'check_circle' : 'error' }}
+              </mat-icon>
+              <div class="info-details">
+                <span class="info-label">Statut général</span>
+                <span class="info-value" 
+                      [style.color]="scan.success ? '#4CAF50' : '#F44336'">
+                  {{ scan.success ? 'Succès' : 'Échec' }}
+                  <span *ngIf="scan.errorMessage" class="error-msg">- {{ scan.errorMessage }}</span>
+                </span>
+              </div>
+            </div>
+            <div class="info-item">
+              <mat-icon class="info-icon">timer</mat-icon>
+              <div class="info-details">
+                <span class="info-label">Durée d'exécution</span>
+                <span class="info-value">{{ formatDuration(scan.durationMs) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ligne 4: Résumé OIDs -->
+          <div class="info-row">
+            <div class="info-item full-width">
+              <mat-icon class="info-icon">assessment</mat-icon>
+              <div class="info-details">
+                <span class="info-label">Résultats OIDs</span>
+                <span class="info-value">
+                  <strong>{{ scan.successfulOidsCount }}/{{ scan.oidsCount }}</strong> OIDs récupérés 
+                  <span class="success-rate" 
+                        [style.color]="scan.successRate >= 80 ? '#4CAF50' : scan.successRate >= 50 ? '#FF9800' : '#F44336'">
+                    ({{ scan.successRate.toFixed(1) }}%)
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Détails des résultats OIDs -->
+    <mat-card class="results-card" *ngIf="scan.results && scan.results.length > 0">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>list</mat-icon>
+          Résultats détaillés ({{ scan.results.length }} OIDs)
+        </mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="results-container">
+          <div class="result-item" 
+               *ngFor="let result of scan.results; trackBy: trackByOid"
+               [class.success]="result.success"
+               [class.error]="!result.success">
+            
+            <!-- Header du résultat -->
+            <div class="result-header">
+              <div class="result-status">
+                <mat-icon [style.color]="getResultStatusColor(result.success, result.status)">
+                  {{ getResultStatusIcon(result.success, result.status) }}
+                </mat-icon>
+                <span class="status-text" 
+                      [style.color]="getResultStatusColor(result.success, result.status)">
+                  {{ result.status || (result.success ? 'SUCCÈS' : 'ÉCHEC') }}
+                </span>
+              </div>
+              
+              <div class="result-oid">
+                <strong>{{ result.oidName || result.oid }}</strong>
+                <span class="oid-code" *ngIf="result.oidName">{{ result.oid }}</span>
+              </div>
+            </div>
+
+            <!-- Description de l'OID -->
+            <div class="result-description" *ngIf="result.oidDescription">
+              <mat-icon class="desc-icon">help</mat-icon>
+              <span>{{ result.oidDescription }}</span>
+            </div>
+
+            <!-- Valeur récupérée -->
+            <div class="result-value" *ngIf="result.success && result.value">
+              <div class="value-section">
+                <span class="value-label">Valeur brute:</span>
+                <code class="raw-value">{{ result.value }}</code>
+              </div>
+              
+              <div class="value-section" *ngIf="result.formattedValue && result.formattedValue !== result.value">
+                <span class="value-label">Valeur formatée:</span>
+                <span class="formatted-value">{{ result.formattedValue }}</span>
+              </div>
+              
+              <div class="value-section" *ngIf="result.interpretation">
+                <span class="value-label">Interprétation:</span>
+                <span class="interpretation">{{ result.interpretation }}</span>
+              </div>
+
+              <div class="metadata">
+                <mat-chip class="type-chip" *ngIf="result.snmpType">{{ result.snmpType }}</mat-chip>
+                <mat-chip class="category-chip" *ngIf="result.oidCategory">{{ result.oidCategory }}</mat-chip>
+              </div>
+            </div>
+
+            <!-- Message d'erreur -->
+            <div class="result-error" *ngIf="!result.success && result.errorMessage">
+              <mat-icon class="error-icon">error</mat-icon>
+              <span class="error-message">{{ result.errorMessage }}</span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Cas où aucun résultat -->
+    <mat-card class="no-results-card" *ngIf="!scan.results || scan.results.length === 0">
+      <mat-card-content>
+        <div class="no-results">
+          <mat-icon class="no-results-icon">info</mat-icon>
+          <h3>Aucun résultat détaillé</h3>
+          <p>Les détails des OIDs ne sont pas disponibles pour ce scan.</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </mat-dialog-content>
+
+  <!-- Actions de la dialog -->
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-raised-button 
+            color="primary"
+            mat-dialog-close>
+      <mat-icon>close</mat-icon>
+      Fermer
+    </button>
+  </mat-dialog-actions>
+</div> 

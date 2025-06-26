@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["angular:styles/component:css;560b98b9f2242f14bd6b3ce3af766361f3a8525add677ab0add6eafb1727aa2b;/Users/omar/Desktop/pfe2025/sentinelrisk-norust/frontend/src/app/layout/sidebar/sidebar.component.ts"],
+  "sourcesContent": ["\n    mat-nav-list {\n      padding-top: 0;\n    }\n    .active {\n      background-color: rgba(0, 0, 0, 0.04);\n    }\n    mat-icon {\n      margin-right: 8px;\n    }\n    .sidebar-menu-title {\n      display: flex;\n      align-items: center;\n      height: 48px;\n    }\n    .sidebar-menu-title mat-icon {\n      margin-right: 8px;\n    }\n    .sub-menu {\n      padding-left: 8px;\n    }\n    mat-expansion-panel {\n      box-shadow: none !important;\n      background: transparent;\n    }\n    ::ng-deep .mat-expansion-panel-body {\n      padding: 0 !important;\n    }\n  "],
+  "mappings": ";AACI;AACE,eAAa;AACf;AACA,CAAC;AACC,oBAAkB,KAAK,CAAC,EAAE,CAAC,EAAE,CAAC,EAAE;AAClC;AACA;AACE,gBAAc;AAChB;AACA,CAAC;AACC,WAAS;AACT,eAAa;AACb,UAAQ;AACV;AACA,CALC,mBAKmB;AAClB,gBAAc;AAChB;AACA,CAAC;AACC,gBAAc;AAChB;AACA;AACE,cAAY;AACZ,cAAY;AACd;AACA,UAAU,CAAC;AACT,WAAS;AACX;",
+  "names": []
+}

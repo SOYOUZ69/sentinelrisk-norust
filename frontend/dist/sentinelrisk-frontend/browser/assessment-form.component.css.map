@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/features/assessments/components/assessment-form/assessment-form.component.css"],
+  "sourcesContent": [".container {\n  padding: 20px;\n}\n\n.header-section {\n  margin-bottom: 20px;\n}\n\nmat-card {\n  margin-bottom: 20px;\n  position: relative;\n}\n\n.loading-overlay {\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background: rgba(255, 255, 255, 0.7);\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  z-index: 10;\n}\n\n.row {\n  display: flex;\n  flex-wrap: wrap;\n  margin: 0 -10px;\n  margin-bottom: 10px;\n}\n\n.col {\n  flex: 1;\n  padding: 0 10px;\n  min-width: 200px;\n}\n\n.full-width {\n  width: 100%;\n}\n\n.button-row {\n  display: flex;\n  justify-content: flex-end;\n  margin-top: 20px;\n  gap: 10px;\n}\n\n@media (max-width: 768px) {\n  .row {\n    flex-direction: column;\n  }\n  \n  .col {\n    margin-bottom: 10px;\n  }\n}\n"],
+  "mappings": ";AAAA,CAAC;AACC,WAAS;AACX;AAEA,CAAC;AACC,iBAAe;AACjB;AAEA;AACE,iBAAe;AACf,YAAU;AACZ;AAEA,CAAC;AACC,YAAU;AACV,OAAK;AACL,QAAM;AACN,SAAO;AACP,UAAQ;AACR,cAAY,KAAK,GAAG,EAAE,GAAG,EAAE,GAAG,EAAE;AAChC,WAAS;AACT,mBAAiB;AACjB,eAAa;AACb,WAAS;AACX;AAEA,CAAC;AACC,WAAS;AACT,aAAW;AACX,UAAQ,EAAE;AACV,iBAAe;AACjB;AAEA,CAAC;AACC,QAAM;AACN,WAAS,EAAE;AACX,aAAW;AACb;AAEA,CAAC;AACC,SAAO;AACT;AAEA,CAAC;AACC,WAAS;AACT,mBAAiB;AACjB,cAAY;AACZ,OAAK;AACP;AAEA,OAAO,CAAC,SAAS,EAAE;AACjB,GAzBD;AA0BG,oBAAgB;AAClB;AAEA,GAtBD;AAuBG,mBAAe;AACjB;AACF;",
+  "names": []
+}

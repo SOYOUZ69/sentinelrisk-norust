@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["angular:styles/component:css;f1399edda766cdc20fdbda9d0b7996018e91415365d3f34ead562f5784cdcfa4;/Users/omar/Desktop/pfe2025/sentinelrisk-norust/frontend/src/app/features/auth/login/login.component.ts"],
+  "sourcesContent": ["\n    .login-container {\n      display: flex;\n      justify-content: center;\n      align-items: center;\n      height: 100vh;\n    }\n    mat-card {\n      width: 400px;\n      text-align: center;\n    }\n    button {\n      margin-top: 20px;\n    }\n  "],
+  "mappings": ";AACI,CAAC;AACC,WAAS;AACT,mBAAiB;AACjB,eAAa;AACb,UAAQ;AACV;AACA;AACE,SAAO;AACP,cAAY;AACd;AACA;AACE,cAAY;AACd;",
+  "names": []
+}

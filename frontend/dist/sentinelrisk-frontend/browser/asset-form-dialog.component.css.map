@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["angular:styles/component:css;714bdd4c8b93cd280bedc1ea02ed885cee4333bdb534ef1867d9210944d81e8b;/Users/omar/Desktop/pfe2025/sentinelrisk-norust/frontend/src/app/components/snmp/assets/asset-form-dialog.component.ts"],
+  "sourcesContent": ["\n    .dialog-content {\n      width: 500px;\n      max-height: 70vh;\n      overflow-y: auto;\n    }\n    \n    .form-row {\n      display: flex;\n      gap: 16px;\n      margin-bottom: 16px;\n    }\n    \n    .full-width {\n      width: 100%;\n    }\n    \n    .half-width {\n      width: calc(50% - 8px);\n    }\n    \n    mat-form-field {\n      margin-bottom: 8px;\n    }\n    \n    .mat-mdc-dialog-actions {\n      padding: 16px 24px;\n    }\n  "],
+  "mappings": ";AACI,CAAC;AACC,SAAO;AACP,cAAY;AACZ,cAAY;AACd;AAEA,CAAC;AACC,WAAS;AACT,OAAK;AACL,iBAAe;AACjB;AAEA,CAAC;AACC,SAAO;AACT;AAEA,CAAC;AACC,SAAO,KAAK,IAAI,EAAE;AACpB;AAEA;AACE,iBAAe;AACjB;AAEA,CAAC;AACC,WAAS,KAAK;AAChB;",
+  "names": []
+}

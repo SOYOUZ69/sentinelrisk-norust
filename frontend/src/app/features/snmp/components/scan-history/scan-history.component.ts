@@ -9,6 +9,7 @@ import {
   ScanStatistics, 
   SNMP_VERSION_LABELS 
 } from '../../models/scan-history.model';
+import { ScanDetailDialogComponent } from '../scan-detail-dialog/scan-detail-dialog.component';
 
 @Component({
   selector: 'app-scan-history',
@@ -200,8 +201,24 @@ export class ScanHistoryComponent implements OnInit, AfterViewInit {
    * Ouvre la dialog des détails
    */
   private openScanDetailsDialog(scan: SnmpScanHistoryDto): void {
-    // TODO: Créer et ouvrir une dialog spécialisée
-    console.log('Dialog des détails à implémenter:', scan);
+    console.log('🎯 Ouverture de la dialog des détails pour le scan:', scan.id);
+    
+    const dialogRef = this.dialog.open(ScanDetailDialogComponent, {
+      width: '80vw',
+      maxWidth: '900px',
+      height: '80vh',
+      maxHeight: '800px',
+      data: scan,
+      disableClose: false,
+      autoFocus: true,
+      restoreFocus: true
+    });
+
+    // Optionnel : réactions à la fermeture de la dialog
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('🔒 Dialog des détails fermée');
+      // Pas d'action particulière nécessaire
+    });
   }
 
   // === MÉTHODES UTILITAIRES ===

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/features/categories/components/category-detail/category-detail.component.scss"],
+  "sourcesContent": [".container {\n  max-width: 800px;\n  margin: 0 auto;\n  padding: 20px;\n}\n\n.category-card {\n  margin-bottom: 20px;\n}\n\n.detail-section {\n  margin-bottom: 20px;\n  \n  h3 {\n    color: #3f51b5;\n    border-bottom: 1px solid #e0e0e0;\n    padding-bottom: 8px;\n    margin-bottom: 16px;\n  }\n}\n\n.detail-item {\n  display: flex;\n  margin-bottom: 8px;\n  \n  .label {\n    font-weight: 500;\n    width: 150px;\n    color: rgba(0, 0, 0, 0.7);\n  }\n  \n  .value {\n    flex: 1;\n  }\n}\n\nmat-card-actions {\n  display: flex;\n  justify-content: flex-end;\n  padding: 16px;\n}\n\n.loading-spinner {\n  margin: 48px auto;\n  display: block;\n} "],
+  "mappings": ";AAAA,CAAA;AACE,aAAA;AACA,UAAA,EAAA;AACA,WAAA;;AAGF,CAAA;AACE,iBAAA;;AAGF,CAAA;AACE,iBAAA;;AAEA,CAHF,eAGE;AACE,SAAA;AACA,iBAAA,IAAA,MAAA;AACA,kBAAA;AACA,iBAAA;;AAIJ,CAAA;AACE,WAAA;AACA,iBAAA;;AAEA,CAJF,YAIE,CAAA;AACE,eAAA;AACA,SAAA;AACA,SAAA,KAAA,CAAA,EAAA,CAAA,EAAA,CAAA,EAAA;;AAGF,CAVF,YAUE,CAAA;AACE,QAAA;;AAIJ;AACE,WAAA;AACA,mBAAA;AACA,WAAA;;AAGF,CAAA;AACE,UAAA,KAAA;AACA,WAAA;;",
+  "names": []
+}
