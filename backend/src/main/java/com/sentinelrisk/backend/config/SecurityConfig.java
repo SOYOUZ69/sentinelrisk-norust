@@ -39,9 +39,7 @@ public class SecurityConfig {
         "/api/swagger-resources",
         "/api/webjars/**",
         "/api/auth-test/user-info", // Endpoint de debug pour vérifier l'authentification
-        "/api/debug/**", // Endpoints de debug
-        "/api/snmp/history/**", // Historique SNMP temporairement public pour debug
-        "/api/snmp/automation/**" // TEMPORAIRE : Endpoints d'automatisation pour debug
+        "/api/debug/**" // Endpoints de debug
     };
 
     @Bean
@@ -57,8 +55,59 @@ public class SecurityConfig {
             .and()
             .authorizeHttpRequests(authorize -> {
                 authorize
-                    // TEMPORAIRE : Désactivation complète de la sécurité pour debug
-                    .anyRequest().permitAll();
+                    // Endpoints publics (Swagger, debug)
+                    .requestMatchers(PUBLIC_WHITELIST).permitAll()
+                    
+                    // Endpoints d'authentification et debug
+                    .requestMatchers("/api/auth-test/**", "/api/debug/**").permitAll()
+                    
+                    // Dashboard - accessible à tous les utilisateurs connectés
+                    .requestMatchers("/api/dashboard/**").hasAnyRole("ADMIN", "RISK_MANAGER", "COMPLIANCE_OFFICER", "AUDITOR", "USER")
+                    
+                    // Gestion des utilisateurs - ADMIN uniquement
+                    .requestMatchers("/api/users/**").hasRole("ADMIN")
+                    
+                    // Gestion des risques - ADMIN et RISK_MANAGER pour modification, tous pour consultation
+                    .requestMatchers(HttpMethod.GET, "/api/risks/**").hasAnyRole("ADMIN", "RISK_MANAGER", "COMPLIANCE_OFFICER", "AUDITOR", "USER")
+                    .requestMatchers(HttpMethod.POST, "/api/risks/**").hasAnyRole("ADMIN", "RISK_MANAGER")
+                    .requestMatchers(HttpMethod.PUT, "/api/risks/**").hasAnyRole("ADMIN", "RISK_MANAGER")
+                    .requestMatchers(HttpMethod.DELETE, "/api/risks/**").hasAnyRole("ADMIN", "RISK_MANAGER")
+                    
+                    // Gestion des contrôles - ADMIN et RISK_MANAGER pour modification, tous pour consultation
+                    .requestMatchers(HttpMethod.GET, "/api/controls/**").hasAnyRole("ADMIN", "RISK_MANAGER", "COMPLIANCE_OFFICER", "AUDITOR", "USER")
+                    .requestMatchers(HttpMethod.POST, "/api/controls/**").hasAnyRole("ADMIN", "RISK_MANAGER")
+                    .requestMatchers(HttpMethod.PUT, "/api/controls/**").hasAnyRole("ADMIN", "RISK_MANAGER")
+                    .requestMatchers(HttpMethod.DELETE, "/api/controls/**").hasAnyRole("ADMIN", "RISK_MANAGER")
+                    
+                    // Gestion des catégories - ADMIN et RISK_MANAGER pour modification, tous pour consultation
+                    .requestMatchers(HttpMethod.GET, "/api/categories/**").hasAnyRole("ADMIN", "RISK_MANAGER", "COMPLIANCE_OFFICER", "AUDITOR", "USER")
+                    .requestMatchers(HttpMethod.POST, "/api/categories/**").hasAnyRole("ADMIN", "RISK_MANAGER")
+                    .requestMatchers(HttpMethod.PUT, "/api/categories/**").hasAnyRole("ADMIN", "RISK_MANAGER")
+                    .requestMatchers(HttpMethod.DELETE, "/api/categories/**").hasAnyRole("ADMIN", "RISK_MANAGER")
+                    
+                    // Gestion des évaluations - ADMIN et COMPLIANCE_OFFICER pour modification, tous pour consultation
+                    .requestMatchers(HttpMethod.GET, "/api/assessments/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER", "RISK_MANAGER", "AUDITOR", "USER")
+                    .requestMatchers(HttpMethod.POST, "/api/assessments/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
+                    .requestMatchers(HttpMethod.PUT, "/api/assessments/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
+                    .requestMatchers(HttpMethod.DELETE, "/api/assessments/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
+                    
+                    // Gestion de la conformité - ADMIN et COMPLIANCE_OFFICER pour modification, tous pour consultation
+                    .requestMatchers(HttpMethod.GET, "/api/compliance/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER", "RISK_MANAGER", "AUDITOR", "USER")
+                    .requestMatchers(HttpMethod.POST, "/api/compliance/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
+                    .requestMatchers(HttpMethod.PUT, "/api/compliance/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
+                    .requestMatchers(HttpMethod.DELETE, "/api/compliance/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
+                    
+                    // Gestion des plans de remédiation - ADMIN et COMPLIANCE_OFFICER pour modification, tous pour consultation
+                    .requestMatchers(HttpMethod.GET, "/api/remediation-plans/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER", "RISK_MANAGER", "AUDITOR", "USER")
+                    .requestMatchers(HttpMethod.POST, "/api/remediation-plans/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
+                    .requestMatchers(HttpMethod.PUT, "/api/remediation-plans/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
+                    .requestMatchers(HttpMethod.DELETE, "/api/remediation-plans/**").hasAnyRole("ADMIN", "COMPLIANCE_OFFICER")
+                    
+                    // Gestion SNMP - ADMIN et RISK_MANAGER uniquement
+                    .requestMatchers("/api/snmp/**").hasAnyRole("ADMIN", "RISK_MANAGER")
+                    
+                    // Tous les autres endpoints nécessitent une authentification
+                    .anyRequest().authenticated();
             })
             .oauth2ResourceServer(oauth2 -> oauth2
                 .jwt(jwt -> jwt
@@ -66,7 +115,7 @@ public class SecurityConfig {
                 )
             );
 
-        System.out.println("✅ Configuration de la sécurité terminée");
+        System.out.println("✅ Configuration de la sécurité terminée - Restrictions d'accès activées");
         return http.build();
     }
 

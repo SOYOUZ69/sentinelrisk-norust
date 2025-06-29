@@ -9,28 +9,38 @@ import { KeycloakService } from '../../core/auth/keycloak.service';
         <mat-icon matListItemIcon>dashboard</mat-icon>
         <span matListItemTitle>Tableau de bord</span>
       </a>
+      
+      <!-- Section Utilisateurs - ADMIN uniquement -->
       <a mat-list-item routerLink="/users" routerLinkActive="active" *appHasRole="['admin']">
         <mat-icon matListItemIcon>people</mat-icon>
         <span matListItemTitle>Utilisateurs</span>
       </a>
+      
+      <!-- Section Risques - Tous les utilisateurs connectés -->
       <a mat-list-item routerLink="/risks" routerLinkActive="active">
         <mat-icon matListItemIcon>warning</mat-icon>
         <span matListItemTitle>Risques</span>
       </a>
+      
+      <!-- Section Contrôles - Tous les utilisateurs connectés -->
       <a mat-list-item routerLink="/controls" routerLinkActive="active">
         <mat-icon matListItemIcon>security</mat-icon>
         <span matListItemTitle>Contrôles</span>
       </a>
+      
+      <!-- Section Catégories - Tous les utilisateurs connectés -->
       <a mat-list-item routerLink="/categories" routerLinkActive="active">
         <mat-icon matListItemIcon>category</mat-icon>
         <span matListItemTitle>Catégories</span>
       </a>
+      
+      <!-- Section Évaluations - Tous les utilisateurs connectés -->
       <a mat-list-item routerLink="/assessments" routerLinkActive="active">
         <mat-icon matListItemIcon>assessment</mat-icon>
         <span matListItemTitle>Évaluations</span>
       </a>
       
-      <!-- Menu Conformité avec sous-menus -->
+      <!-- Menu Conformité avec sous-menus - Tous les utilisateurs connectés -->
       <mat-expansion-panel class="mat-elevation-z0">
         <mat-expansion-panel-header expandedHeight="48px" collapsedHeight="48px">
           <mat-panel-title class="sidebar-menu-title">
@@ -63,7 +73,7 @@ import { KeycloakService } from '../../core/auth/keycloak.service';
         </mat-nav-list>
       </mat-expansion-panel>
 
-      <!-- Menu SNMP avec sous-menus -->
+      <!-- Menu SNMP avec sous-menus - ADMIN et RISK_MANAGER uniquement -->
       <mat-expansion-panel class="mat-elevation-z0" *appHasRole="['admin', 'risk_manager']">
         <mat-expansion-panel-header expandedHeight="48px" collapsedHeight="48px">
           <mat-panel-title class="sidebar-menu-title">

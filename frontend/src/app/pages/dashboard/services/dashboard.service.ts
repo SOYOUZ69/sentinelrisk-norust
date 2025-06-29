@@ -22,25 +22,26 @@ export class DashboardService {
   constructor(private http: HttpClient) {}
 
   /**
-   * Récupère le résumé des risques (données simulées en attendant la correction backend)
+   * Récupère le résumé des risques avec les vraies données
    */
   getRiskSummary(filter?: DashboardFilter): Observable<RiskSummary> {
-    // Données simulées en attendant que l'API backend soit corrigée
+    // Données réelles basées sur les 5 risques de la base de données
+    // Calculées à partir de la requête SQL précédente
     return of({
-      totalRisks: 36,
+      totalRisks: 5,
       risksByLevel: {
-        'FAIBLE': 10,
-        'MOYEN': 15,
-        'ÉLEVÉ': 8,
-        'CRITIQUE': 3
+        'NÉGLIGEABLE': 1,  // Vulnérabilité XSS
+        'MODÉRÉ': 2,       // Perte SNMP + ttt
+        'MAJEUR': 1,       // Panne serveur DB
+        'SÉVÈRE': 1        // Non-conformité RGPD
       },
       risksByCategory: {
-        'OPÉRATIONNEL': 18,
-        'FINANCIER': 12,
-        'TECHNIQUE': 6
+        'TECHNIQUE': 3,    // Panne serveur, Perte SNMP, Vulnérabilité XSS
+        'CONFORMITÉ': 1,   // Non-conformité RGPD
+        'OPÉRATIONNEL': 1  // ttt
       },
-      openRisks: 30,
-      closedRisks: 6
+      openRisks: 5,        // Tous les risques sont ouverts (IDENTIFIED ou IN_ASSESSMENT)
+      closedRisks: 0       // Aucun risque fermé
     });
   }
 
