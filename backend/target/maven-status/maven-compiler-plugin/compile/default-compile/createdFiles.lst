@@ -11,8 +11,10 @@ com/sentinelrisk/model/Asset$AssetType.class
 com/sentinelrisk/backend/repository/compliance/ComplianceRequirementRepository.class
 com/sentinelrisk/backend/controller/TestController.class
 com/sentinelrisk/backend/controller/ControlController.class
+com/sentinelrisk/backend/model/RiskStatusHistory.class
 com/sentinelrisk/util/CreatedResponseUtil.class
 com/sentinelrisk/backend/service/SnmpZabbixAutomationService.class
+com/sentinelrisk/backend/service/RiskStatusAutomationService.class
 com/sentinelrisk/backend/controller/SnmpManualScanController.class
 com/sentinelrisk/backend/repository/UserRepository.class
 com/sentinelrisk/backend/controller/AuthTestController.class
@@ -27,6 +29,7 @@ com/sentinelrisk/backend/dto/BulkResponse$Error.class
 com/sentinelrisk/backend/service/dto/compliance/RemediationPlanDTO.class
 com/sentinelrisk/backend/service/OidInterpretationService$OidInfo.class
 com/sentinelrisk/service/SnmpScheduler.class
+com/sentinelrisk/backend/service/RiskStatusAutomationService$1.class
 com/sentinelrisk/backend/controller/DashboardController$1.class
 com/sentinelrisk/backend/model/Risk$ImpactLevel.class
 com/sentinelrisk/backend/service/ControlService.class
@@ -49,6 +52,7 @@ com/sentinelrisk/config/KeycloakAdminConfig.class
 com/sentinelrisk/backend/repository/SnmpAssetRepository.class
 com/sentinelrisk/backend/domain/compliance/ComplianceRequirement$RequirementType.class
 com/sentinelrisk/repository/RiskRepository.class
+com/sentinelrisk/backend/repository/RiskStatusHistoryRepository.class
 com/sentinelrisk/backend/controller/SnmpAssetCrudController.class
 com/sentinelrisk/backend/controller/CategoryController.class
 com/sentinelrisk/backend/service/SnmpZabbixScheduler$SchedulerStatus.class
@@ -100,6 +104,7 @@ com/sentinelrisk/backend/dto/ImportResult.class
 com/sentinelrisk/backend/controller/SnmpZabbixSyncController.class
 com/sentinelrisk/backend/controller/SnmpAutomationConfigController.class
 com/sentinelrisk/repository/IncidentRepository.class
+com/sentinelrisk/backend/dto/RiskStatusHistoryResponse.class
 com/sentinelrisk/backend/web/rest/compliance/ComplianceFrameworkResource.class
 com/sentinelrisk/backend/repository/AppSettingsRepository.class
 com/sentinelrisk/backend/config/JacksonConfig.class

@@ -2,10 +2,12 @@ package com.sentinelrisk.backend.service.compliance;
 
 import com.sentinelrisk.backend.domain.compliance.RemediationPlan;
 import com.sentinelrisk.backend.domain.compliance.RiskComplianceMapping;
+import com.sentinelrisk.backend.model.Risk;
 import com.sentinelrisk.backend.model.User;
 import com.sentinelrisk.backend.repository.UserRepository;
 import com.sentinelrisk.backend.repository.compliance.RemediationPlanRepository;
 import com.sentinelrisk.backend.repository.compliance.RiskComplianceMappingRepository;
+import com.sentinelrisk.backend.service.RiskStatusAutomationService;
 import com.sentinelrisk.backend.service.dto.compliance.RemediationPlanDTO;
 import com.sentinelrisk.backend.service.mapper.RemediationPlanMapper;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,6 +32,7 @@ public class RemediationPlanService {
     private final RiskComplianceMappingRepository mappingRepository;
     private final UserRepository userRepository;
     private final RemediationPlanMapper remediationPlanMapper;
+    private final RiskStatusAutomationService riskStatusAutomationService;
 
     /**
      * Crée un nouveau plan de remédiation
@@ -68,6 +71,22 @@ public class RemediationPlanService {
         plan.setStatus(planDTO.getStatus() != null ? planDTO.getStatus() : RemediationPlan.Status.TODO);
         
         RemediationPlan savedPlan = remediationPlanRepository.save(plan);
+        
+        // Automatiser le changement de statut du risque
+        try {
+            Risk risk = mapping.getRisk();
+            if (plan.getStatus() == RemediationPlan.Status.IN_PROGRESS) {
+                riskStatusAutomationService.changeRiskStatus(
+                    risk.getId(), 
+                    Risk.Status.MITIGATED, 
+                    "Plan de remédiation démarré"
+                );
+                log.info("Statut du risque {} automatiquement changé vers MITIGATED suite à la création d'un plan de remédiation", risk.getId());
+            }
+        } catch (Exception e) {
+            log.warn("Erreur lors de l'automatisation du statut du risque: {}", e.getMessage());
+        }
+        
         return remediationPlanMapper.toDto(savedPlan);
     }
 
@@ -85,6 +104,8 @@ public class RemediationPlanService {
         // Vérifier que le plan existe
         RemediationPlan existingPlan = remediationPlanRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Plan de remédiation non trouvé avec ID: " + id));
+        
+        RemediationPlan.Status previousStatus = existingPlan.getStatus();
         
         // Vérifier le mapping si modifié
         if (planDTO.getMappingId() != null && !planDTO.getMappingId().equals(existingPlan.getMapping().getId())) {
@@ -119,6 +140,34 @@ public class RemediationPlanService {
         }
         
         RemediationPlan updatedPlan = remediationPlanRepository.save(existingPlan);
+        
+        // Automatiser le changement de statut du risque
+        try {
+            Risk risk = existingPlan.getMapping().getRisk();
+            
+            if (planDTO.getStatus() == RemediationPlan.Status.DONE && 
+                previousStatus != RemediationPlan.Status.DONE) {
+                // Quand un plan de remédiation est terminé, passer le risque en accepté
+                riskStatusAutomationService.changeRiskStatus(
+                    risk.getId(), 
+                    Risk.Status.ACCEPTED, 
+                    "Plan de remédiation terminé"
+                );
+                log.info("Statut du risque {} automatiquement changé vers ACCEPTED suite à la finalisation du plan de remédiation", risk.getId());
+            } else if (planDTO.getStatus() == RemediationPlan.Status.IN_PROGRESS && 
+                       previousStatus != RemediationPlan.Status.IN_PROGRESS) {
+                // Quand un plan de remédiation commence, passer le risque en atténué
+                riskStatusAutomationService.changeRiskStatus(
+                    risk.getId(), 
+                    Risk.Status.MITIGATED, 
+                    "Plan de remédiation démarré"
+                );
+                log.info("Statut du risque {} automatiquement changé vers MITIGATED suite au démarrage du plan de remédiation", risk.getId());
+            }
+        } catch (Exception e) {
+            log.warn("Erreur lors de l'automatisation du statut du risque: {}", e.getMessage());
+        }
+        
         return remediationPlanMapper.toDto(updatedPlan);
     }
 

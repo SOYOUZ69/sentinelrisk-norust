@@ -2,10 +2,12 @@ package com.sentinelrisk.backend.controller;
 
 import com.sentinelrisk.backend.dto.RiskRequest;
 import com.sentinelrisk.backend.dto.RiskResponse;
+import com.sentinelrisk.backend.dto.RiskStatusHistoryResponse;
 import com.sentinelrisk.backend.model.Risk;
 import com.sentinelrisk.backend.service.RiskService;
 import com.sentinelrisk.backend.service.CategoryService;
 import com.sentinelrisk.backend.service.ExcelService;
+import com.sentinelrisk.backend.service.RiskStatusAutomationService;
 import com.sentinelrisk.backend.dto.ImportResult;
 import com.sentinelrisk.backend.dto.ImportError;
 import com.sentinelrisk.backend.dto.BulkRiskRequest;
@@ -54,6 +56,7 @@ public class RiskController {
     private final CategoryService categoryService;
     private final ExcelService excelService;
     private final UserService userService;
+    private final RiskStatusAutomationService riskStatusAutomationService;
 
     @GetMapping
     @Operation(summary = "Lister tous les risques",
@@ -801,5 +804,79 @@ public class RiskController {
                 return "Utilisateur inconnu";
             }
         }
+    }
+
+    // ==================== ENDPOINTS POUR L'AUTOMATISATION DES STATUTS ====================
+
+    @PostMapping("/{id}/trigger-assessment")
+    @Operation(summary = "Déclencher l'évaluation d'un risque",
+            description = "Change le statut du risque de IDENTIFIED vers IN_ASSESSMENT")
+    @ApiResponse(responseCode = "200", description = "Évaluation déclenchée avec succès")
+    @ApiResponse(responseCode = "404", description = "Risque non trouvé")
+    @ApiResponse(responseCode = "400", description = "Transition de statut invalide")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_RISK_MANAGER')")
+    public ResponseEntity<RiskResponse> triggerAssessment(
+            @Parameter(description = "ID du risque") 
+            @PathVariable Long id) {
+        Risk risk = riskStatusAutomationService.triggerAssessment(id);
+        return ResponseEntity.ok(riskService.getRiskById(risk.getId()));
+    }
+
+    @PostMapping("/{id}/mark-assessed")
+    @Operation(summary = "Marquer un risque comme évalué",
+            description = "Change le statut du risque de IN_ASSESSMENT vers MITIGATED")
+    @ApiResponse(responseCode = "200", description = "Risque marqué comme évalué avec succès")
+    @ApiResponse(responseCode = "404", description = "Risque non trouvé")
+    @ApiResponse(responseCode = "400", description = "Transition de statut invalide")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_RISK_MANAGER')")
+    public ResponseEntity<RiskResponse> markAsAssessed(
+            @Parameter(description = "ID du risque") 
+            @PathVariable Long id) {
+        Risk risk = riskStatusAutomationService.markAsAssessed(id);
+        return ResponseEntity.ok(riskService.getRiskById(risk.getId()));
+    }
+
+    @PostMapping("/{id}/mark-accepted")
+    @Operation(summary = "Marquer un risque comme accepté",
+            description = "Change le statut du risque de MITIGATED vers ACCEPTED")
+    @ApiResponse(responseCode = "200", description = "Risque marqué comme accepté avec succès")
+    @ApiResponse(responseCode = "404", description = "Risque non trouvé")
+    @ApiResponse(responseCode = "400", description = "Transition de statut invalide")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_RISK_MANAGER')")
+    public ResponseEntity<RiskResponse> markAsAccepted(
+            @Parameter(description = "ID du risque") 
+            @PathVariable Long id) {
+        Risk risk = riskStatusAutomationService.markAsAccepted(id);
+        return ResponseEntity.ok(riskService.getRiskById(risk.getId()));
+    }
+
+    @PostMapping("/{id}/close")
+    @Operation(summary = "Fermer un risque",
+            description = "Change le statut du risque vers CLOSED")
+    @ApiResponse(responseCode = "200", description = "Risque fermé avec succès")
+    @ApiResponse(responseCode = "404", description = "Risque non trouvé")
+    @ApiResponse(responseCode = "400", description = "Transition de statut invalide")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_RISK_MANAGER')")
+    public ResponseEntity<RiskResponse> closeRisk(
+            @Parameter(description = "ID du risque") 
+            @PathVariable Long id) {
+        Risk risk = riskStatusAutomationService.closeRisk(id);
+        return ResponseEntity.ok(riskService.getRiskById(risk.getId()));
+    }
+
+    @GetMapping("/{id}/status-history")
+    @Operation(summary = "Récupérer l'historique des statuts d'un risque",
+            description = "Retourne la liste des changements de statut pour un risque donné")
+    @ApiResponse(responseCode = "200", description = "Historique récupéré avec succès")
+    @ApiResponse(responseCode = "404", description = "Risque non trouvé")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_RISK_MANAGER', 'ROLE_COMPLIANCE_OFFICER', 'ROLE_AUDITOR', 'ROLE_USER')")
+    public ResponseEntity<List<RiskStatusHistoryResponse>> getStatusHistory(
+            @Parameter(description = "ID du risque") 
+            @PathVariable Long id) {
+        List<RiskStatusHistoryResponse> history = riskStatusAutomationService.getRiskStatusHistory(id)
+                .stream()
+                .map(RiskStatusHistoryResponse::fromEntity)
+                .toList();
+        return ResponseEntity.ok(history);
     }
 }

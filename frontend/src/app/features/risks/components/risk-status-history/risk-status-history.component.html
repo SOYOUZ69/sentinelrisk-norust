@@ -1,0 +1,89 @@
+<div class="risk-status-history">
+  <div class="header">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">
+      <i class="fas fa-history mr-2"></i>
+      Historique des statuts
+    </h3>
+  </div>
+
+  <div class="content">
+    <!-- Loading state -->
+    <div *ngIf="loading" class="flex justify-center items-center py-8">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <span class="ml-2 text-gray-600">Chargement de l'historique...</span>
+    </div>
+
+    <!-- Error state -->
+    <div *ngIf="error" class="bg-red-50 border border-red-200 rounded-md p-4 mb-4">
+      <div class="flex">
+        <i class="fas fa-exclamation-triangle text-red-400 mt-1"></i>
+        <div class="ml-3">
+          <p class="text-sm text-red-800">{{ error }}</p>
+          <button 
+            (click)="loadStatusHistory()" 
+            class="mt-2 text-sm text-red-600 hover:text-red-500 underline">
+            Réessayer
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div *ngIf="!loading && !error && statusHistory.length === 0" class="text-center py-8">
+      <i class="fas fa-info-circle text-gray-400 text-3xl mb-2"></i>
+      <p class="text-gray-500">Aucun historique de statut disponible pour ce risque.</p>
+    </div>
+
+    <!-- Status history timeline -->
+    <div *ngIf="!loading && !error && statusHistory.length > 0" class="space-y-4">
+      <div 
+        *ngFor="let entry of statusHistory; let i = index" 
+        class="relative pb-4"
+        [class.border-l-2]="i < statusHistory.length - 1"
+        [class.border-gray-200]="i < statusHistory.length - 1">
+        
+        <!-- Timeline dot -->
+        <div class="absolute left-0 top-0 w-3 h-3 rounded-full bg-blue-500 border-2 border-white shadow-sm"></div>
+        
+        <!-- Content -->
+        <div class="ml-6">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center space-x-2">
+              <!-- Status badges -->
+              <span 
+                *ngIf="entry.previousStatus"
+                [class]="getStatusBadgeClass(entry.previousStatus)"
+                class="px-2 py-1 text-xs font-medium rounded-full">
+                {{ getStatusLabel(entry.previousStatus) }}
+              </span>
+              
+              <!-- Arrow -->
+              <i *ngIf="entry.previousStatus" class="fas fa-arrow-right text-gray-400 text-sm"></i>
+              
+              <span 
+                [class]="getStatusBadgeClass(entry.newStatus)"
+                class="px-2 py-1 text-xs font-medium rounded-full">
+                {{ getStatusLabel(entry.newStatus) }}
+              </span>
+            </div>
+            
+            <span class="text-xs text-gray-500">
+              {{ formatDate(entry.changedAt) }}
+            </span>
+          </div>
+          
+          <!-- Transition reason -->
+          <div *ngIf="entry.transitionReason" class="mb-2">
+            <p class="text-sm text-gray-700">{{ entry.transitionReason }}</p>
+          </div>
+          
+          <!-- Changed by user -->
+          <div class="flex items-center text-xs text-gray-500">
+            <i class="fas fa-user mr-1"></i>
+            <span>Modifié par {{ entry.changedByUser }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

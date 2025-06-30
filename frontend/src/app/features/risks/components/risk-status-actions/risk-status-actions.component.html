@@ -1,0 +1,87 @@
+<div class="risk-status-actions">
+  <div class="header">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">
+      <i class="fas fa-cogs mr-2"></i>
+      Actions de statut
+    </h3>
+  </div>
+
+  <div class="content">
+    <!-- Current status display -->
+    <div class="mb-6">
+      <label class="block text-sm font-medium text-gray-700 mb-2">Statut actuel</label>
+      <span 
+        [class]="getStatusBadgeClass(currentStatus)"
+        class="px-3 py-2 text-sm font-medium rounded-full">
+        {{ getStatusLabel(currentStatus) }}
+      </span>
+    </div>
+
+    <!-- Error display -->
+    <div *ngIf="error" class="bg-red-50 border border-red-200 rounded-md p-4 mb-4">
+      <div class="flex">
+        <i class="fas fa-exclamation-triangle text-red-400 mt-1"></i>
+        <div class="ml-3">
+          <p class="text-sm text-red-800">{{ error }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Available actions -->
+    <div class="space-y-3">
+      <label class="block text-sm font-medium text-gray-700 mb-2">Actions disponibles</label>
+      
+      <!-- No actions available -->
+      <div *ngIf="availableActions.length === 0" class="text-center py-4">
+        <i class="fas fa-info-circle text-gray-400 text-2xl mb-2"></i>
+        <p class="text-gray-500 text-sm">Aucune action disponible pour ce statut.</p>
+      </div>
+
+      <!-- Action buttons -->
+      <div *ngFor="let action of availableActions" class="flex items-center">
+        <button
+          (click)="executeAction(action)"
+          [disabled]="loading"
+          [class]="getActionButtonClass(action)"
+          class="flex items-center px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+          
+          <i [class]="getActionIcon(action)" class="mr-2"></i>
+          {{ getActionLabel(action) }}
+          
+          <div *ngIf="loading" class="ml-2">
+            <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Status transition info -->
+    <div *ngIf="availableActions.length > 0" class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
+      <div class="flex">
+        <i class="fas fa-info-circle text-blue-400 mt-1"></i>
+        <div class="ml-3">
+          <h4 class="text-sm font-medium text-blue-800">Informations sur les transitions</h4>
+          <div class="mt-2 text-sm text-blue-700">
+            <ul class="list-disc list-inside space-y-1">
+              <li *ngIf="currentStatus === 'IDENTIFIED'">
+                <strong>Déclencher l'évaluation :</strong> Passe le statut de "Identifié" à "En évaluation"
+              </li>
+              <li *ngIf="currentStatus === 'IN_ASSESSMENT'">
+                <strong>Marquer comme évalué :</strong> Passe le statut de "En évaluation" à "Atténué"
+              </li>
+              <li *ngIf="currentStatus === 'MITIGATED'">
+                <strong>Marquer comme accepté :</strong> Passe le statut de "Atténué" à "Accepté"
+              </li>
+              <li *ngIf="currentStatus === 'MITIGATED'">
+                <strong>Fermer le risque :</strong> Passe le statut de "Atténué" à "Fermé"
+              </li>
+              <li *ngIf="currentStatus === 'ACCEPTED'">
+                <strong>Fermer le risque :</strong> Passe le statut de "Accepté" à "Fermé"
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
