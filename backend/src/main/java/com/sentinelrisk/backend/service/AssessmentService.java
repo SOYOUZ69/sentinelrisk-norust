@@ -6,7 +6,6 @@ import com.sentinelrisk.backend.model.User;
 import com.sentinelrisk.backend.repository.AssessmentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,13 +15,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
-@Slf4j
 public class AssessmentService {
 
     private final AssessmentRepository assessmentRepository;
     private final RiskServiceWrapper riskServiceWrapper;
     private final UserService userService;
-    private final RiskStatusAutomationService riskStatusAutomationService;
+    private final RiskStatusTransitionService riskStatusTransitionService;
 
     public List<Assessment> getAllAssessments() {
         return assessmentRepository.findAll();
@@ -67,21 +65,19 @@ public class AssessmentService {
             assessment.setAssignedTo(user);
         }
 
+        // Sauvegarder l'assessment
         Assessment savedAssessment = assessmentRepository.save(assessment);
+
+        // Déclencher la transition automatique de statut du risque
+        User currentUser = assessment.getAssignedTo() != null ? assessment.getAssignedTo() : 
+                          (assessment.getUser() != null ? assessment.getUser() : null);
         
-        // Automatiser le changement de statut du risque
-        try {
-            if (assessment.getStatus() == Assessment.Status.IN_PROGRESS) {
-                // Quand une évaluation commence, passer le risque en évaluation
-                riskStatusAutomationService.changeRiskStatus(
-                    risk.getId(), 
-                    Risk.Status.IN_ASSESSMENT, 
-                    "Évaluation démarrée"
-                );
-                log.info("Statut du risque {} automatiquement changé vers IN_ASSESSMENT suite à la création d'une évaluation", risk.getId());
-            }
-        } catch (Exception e) {
-            log.warn("Erreur lors de l'automatisation du statut du risque {}: {}", risk.getId(), e.getMessage());
+        if (currentUser != null) {
+            riskStatusTransitionService.handleAssessmentStatusTransition(
+                risk, savedAssessment, 
+                RiskStatusTransitionService.AssessmentAction.CREATE, 
+                currentUser
+            );
         }
 
         return savedAssessment;
@@ -106,33 +102,26 @@ public class AssessmentService {
         existingAssessment.setRecommendations(assessment.getRecommendations());
         existingAssessment.setNextReviewDate(assessment.getNextReviewDate());
 
+        // Sauvegarder l'assessment
         Assessment savedAssessment = assessmentRepository.save(existingAssessment);
+
+        // Déclencher la transition automatique de statut du risque
+        User currentUser = existingAssessment.getAssignedTo() != null ? existingAssessment.getAssignedTo() : 
+                          (existingAssessment.getUser() != null ? existingAssessment.getUser() : null);
         
-        // Automatiser le changement de statut du risque
-        try {
-            Risk risk = existingAssessment.getRisk();
-            
+        if (currentUser != null) {
+            // Déterminer l'action appropriée
+            RiskStatusTransitionService.AssessmentAction action;
             if (assessment.getStatus() == Assessment.Status.COMPLETED && 
                 previousStatus != Assessment.Status.COMPLETED) {
-                // Quand une évaluation est terminée, passer le risque en atténué
-                riskStatusAutomationService.changeRiskStatus(
-                    risk.getId(), 
-                    Risk.Status.MITIGATED, 
-                    "Évaluation terminée"
-                );
-                log.info("Statut du risque {} automatiquement changé vers MITIGATED suite à la finalisation de l'évaluation", risk.getId());
-            } else if (assessment.getStatus() == Assessment.Status.IN_PROGRESS && 
-                       previousStatus != Assessment.Status.IN_PROGRESS) {
-                // Quand une évaluation commence, passer le risque en évaluation
-                riskStatusAutomationService.changeRiskStatus(
-                    risk.getId(), 
-                    Risk.Status.IN_ASSESSMENT, 
-                    "Évaluation démarrée"
-                );
-                log.info("Statut du risque {} automatiquement changé vers IN_ASSESSMENT suite au démarrage de l'évaluation", risk.getId());
+                action = RiskStatusTransitionService.AssessmentAction.COMPLETE;
+            } else {
+                action = RiskStatusTransitionService.AssessmentAction.UPDATE;
             }
-        } catch (Exception e) {
-            log.warn("Erreur lors de l'automatisation du statut du risque {}: {}", existingAssessment.getRisk().getId(), e.getMessage());
+            
+            riskStatusTransitionService.handleAssessmentStatusTransition(
+                existingAssessment.getRisk(), savedAssessment, action, currentUser
+            );
         }
 
         return savedAssessment;

@@ -14,7 +14,6 @@ com/sentinelrisk/backend/controller/ControlController.class
 com/sentinelrisk/backend/model/RiskStatusHistory.class
 com/sentinelrisk/util/CreatedResponseUtil.class
 com/sentinelrisk/backend/service/SnmpZabbixAutomationService.class
-com/sentinelrisk/backend/service/RiskStatusAutomationService.class
 com/sentinelrisk/backend/controller/SnmpManualScanController.class
 com/sentinelrisk/backend/repository/UserRepository.class
 com/sentinelrisk/backend/controller/AuthTestController.class
@@ -29,7 +28,7 @@ com/sentinelrisk/backend/dto/BulkResponse$Error.class
 com/sentinelrisk/backend/service/dto/compliance/RemediationPlanDTO.class
 com/sentinelrisk/backend/service/OidInterpretationService$OidInfo.class
 com/sentinelrisk/service/SnmpScheduler.class
-com/sentinelrisk/backend/service/RiskStatusAutomationService$1.class
+com/sentinelrisk/backend/service/RiskStatusTransitionService$1.class
 com/sentinelrisk/backend/controller/DashboardController$1.class
 com/sentinelrisk/backend/model/Risk$ImpactLevel.class
 com/sentinelrisk/backend/service/ControlService.class
@@ -62,11 +61,13 @@ com/sentinelrisk/backend/dto/SnmpManualScanRequest.class
 com/sentinelrisk/backend/domain/compliance/RiskComplianceMapping$ComplianceStatus.class
 com/sentinelrisk/backend/dto/SnmpManualScanResponse$SnmpResult.class
 com/sentinelrisk/backend/dto/ControlResponse.class
+com/sentinelrisk/backend/service/RiskStatusTransitionService$AssessmentAction.class
 com/sentinelrisk/backend/model/SnmpScanHistory.class
 com/sentinelrisk/backend/controller/SnmpScanHistoryController.class
 com/sentinelrisk/backend/model/Risk.class
 com/sentinelrisk/backend/dto/AssessmentDTO$RiskDTO.class
 com/sentinelrisk/client/ZabbixClient.class
+com/sentinelrisk/backend/service/RiskStatusHistoryService.class
 com/sentinelrisk/backend/SentinelRiskApplication.class
 com/sentinelrisk/model/IncidentSeverity.class
 com/sentinelrisk/backend/dto/SnmpManualScanResponse.class
@@ -104,7 +105,6 @@ com/sentinelrisk/backend/dto/ImportResult.class
 com/sentinelrisk/backend/controller/SnmpZabbixSyncController.class
 com/sentinelrisk/backend/controller/SnmpAutomationConfigController.class
 com/sentinelrisk/repository/IncidentRepository.class
-com/sentinelrisk/backend/dto/RiskStatusHistoryResponse.class
 com/sentinelrisk/backend/web/rest/compliance/ComplianceFrameworkResource.class
 com/sentinelrisk/backend/repository/AppSettingsRepository.class
 com/sentinelrisk/backend/config/JacksonConfig.class
@@ -190,6 +190,7 @@ com/sentinelrisk/backend/controller/RiskController.class
 com/sentinelrisk/service/SnmpService$1.class
 com/sentinelrisk/backend/model/Control$Status.class
 com/sentinelrisk/backend/dto/SnmpScanHistoryResultDto.class
+com/sentinelrisk/backend/service/RiskStatusTransitionService.class
 com/sentinelrisk/service/SnmpScanService$1.class
 com/sentinelrisk/backend/model/User$UserBuilder.class
 com/sentinelrisk/backend/service/dto/compliance/ComplianceRequirementDTO.class
@@ -197,6 +198,7 @@ com/sentinelrisk/backend/service/compliance/RiskComplianceMappingService.class
 com/sentinelrisk/backend/repository/RiskRepository.class
 com/sentinelrisk/model/Asset.class
 com/sentinelrisk/backend/mapper/ControlMapper.class
+com/sentinelrisk/backend/dto/RiskStatusHistoryDTO.class
 com/sentinelrisk/dto/ComplianceControlDTO.class
 com/sentinelrisk/backend/model/Assessment$Status.class
 com/sentinelrisk/backend/service/dto/compliance/GapAnalysisResponse.class

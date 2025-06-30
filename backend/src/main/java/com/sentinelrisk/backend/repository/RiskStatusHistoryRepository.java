@@ -1,10 +1,7 @@
 package com.sentinelrisk.backend.repository;
 
 import com.sentinelrisk.backend.model.RiskStatusHistory;
-import com.sentinelrisk.backend.model.Risk;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,19 +10,17 @@ import java.util.List;
 public interface RiskStatusHistoryRepository extends JpaRepository<RiskStatusHistory, Long> {
     
     /**
-     * Récupère l'historique des statuts pour un risque donné, trié par date de changement décroissante
+     * Récupère l'historique des statuts pour un risque spécifique, trié par date de changement décroissante
      */
-    List<RiskStatusHistory> findByRiskOrderByChangedAtDesc(Risk risk);
+    List<RiskStatusHistory> findByRiskIdOrderByChangeDateDesc(Long riskId);
     
     /**
-     * Récupère l'historique des statuts pour un risque donné par son ID
+     * Récupère l'historique des statuts pour un risque spécifique, trié par date de changement croissante
      */
-    @Query("SELECT h FROM RiskStatusHistory h WHERE h.risk.id = :riskId ORDER BY h.changedAt DESC")
-    List<RiskStatusHistory> findByRiskIdOrderByChangedAtDesc(@Param("riskId") Long riskId);
+    List<RiskStatusHistory> findByRiskIdOrderByChangeDateAsc(Long riskId);
     
     /**
-     * Récupère le dernier changement de statut pour un risque donné
+     * Récupère le dernier changement de statut pour un risque spécifique
      */
-    @Query("SELECT h FROM RiskStatusHistory h WHERE h.risk.id = :riskId ORDER BY h.changedAt DESC LIMIT 1")
-    RiskStatusHistory findLatestByRiskId(@Param("riskId") Long riskId);
+    RiskStatusHistory findFirstByRiskIdOrderByChangeDateDesc(Long riskId);
 } 

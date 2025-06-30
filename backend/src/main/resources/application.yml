@@ -5,9 +5,9 @@ server:
 
 spring:
   application:
-    name: sentinelrisk
+    name: sentinel
   datasource:
-    url: jdbc:postgresql://localhost:5432/sentinelrisk
+    url: jdbc:postgresql://localhost:5432/sentinel
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
