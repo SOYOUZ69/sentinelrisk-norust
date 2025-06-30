@@ -6,6 +6,9 @@ import com.sentinelrisk.backend.dto.RiskResponse;
 import com.sentinelrisk.backend.model.Category;
 import com.sentinelrisk.backend.model.Control;
 import com.sentinelrisk.backend.model.Risk;
+import com.sentinelrisk.backend.model.User;
+import com.sentinelrisk.backend.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,7 +19,10 @@ import java.util.stream.Collectors;
  * Mapper pour convertir entre entités Risk et DTO RiskResponse
  */
 @Component
+@RequiredArgsConstructor
 public class RiskMapper {
+
+    private final UserService userService;
 
     public Risk toEntity(RiskRequest riskRequest, Category category) {
         Risk risk = new Risk();
@@ -27,6 +33,14 @@ public class RiskMapper {
         risk.setProbabilityLevel(riskRequest.getProbabilityLevel());
         risk.setStatus(riskRequest.getStatus());
         risk.setMitigationPlan(riskRequest.getMitigationPlan());
+        
+        // Récupérer et assigner le Risk Owner (si fourni)
+        if (riskRequest.getRiskOwnerId() != null && !riskRequest.getRiskOwnerId().trim().isEmpty()) {
+            User riskOwner = userService.getUserById(riskRequest.getRiskOwnerId());
+            risk.setRiskOwner(riskOwner);
+        }
+        
+        // Le DID sera généré automatiquement par le service
         return risk;
     }
 
@@ -38,6 +52,7 @@ public class RiskMapper {
         risk.setProbabilityLevel(riskRequest.getProbabilityLevel());
         risk.setStatus(riskRequest.getStatus());
         risk.setMitigationPlan(riskRequest.getMitigationPlan());
+        // Le DID n'est pas modifiable via les requêtes
     }
 
     /**
@@ -50,6 +65,7 @@ public class RiskMapper {
         
         RiskResponse response = new RiskResponse();
         response.setId(risk.getId());
+        response.setDid(risk.getDid());
         response.setName(risk.getName());
         response.setDescription(risk.getDescription());
         response.setImpactLevel(risk.getImpactLevel());
@@ -64,6 +80,13 @@ public class RiskMapper {
         if (risk.getCategory() != null) {
             response.setCategoryId(risk.getCategory().getId());
             response.setCategoryName(risk.getCategory().getName());
+        }
+        
+        // Ajouter les infos du Risk Owner
+        if (risk.getRiskOwner() != null) {
+            response.setRiskOwnerId(risk.getRiskOwner().getId());
+            response.setRiskOwnerName(risk.getRiskOwner().getFirstName() + " " + risk.getRiskOwner().getLastName());
+            response.setRiskOwnerEmail(risk.getRiskOwner().getEmail());
         }
         
         // Ajouter les IDs des contrôles

@@ -55,7 +55,7 @@ export class KeycloakService {
   }
 
   hasRole(role: string): boolean {
-    console.group(`🔒 [KeycloakService] Vérification du rôle: "${role}"`);
+    
     
     // Vérifier si on a un token valide
     const keycloakInstance = this.keycloakAngular.getKeycloakInstance();

@@ -41,6 +41,7 @@ export interface Control {
 
 export interface Risk {
   id: string;
+  did?: string;
   name: string;
   description: string;
   
@@ -63,4 +64,7 @@ export interface Risk {
   controlIds?: string[];
   createdAt: Date;
   updatedAt: Date;
+  // Ajout Risk Owner
+  riskOwnerId?: string;
+  riskOwner?: import('./user.model').User;
 } 

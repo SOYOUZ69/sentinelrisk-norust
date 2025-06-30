@@ -30,6 +30,19 @@
       </mat-select>
       <mat-error *ngIf="riskForm.get('categoryId')?.invalid">{{ getErrorMessage('categoryId') }}</mat-error>
     </mat-form-field>
+
+    <!-- Risk Owner -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Responsable du risque (Risk Owner)</mat-label>
+      <mat-select formControlName="riskOwnerId" required>
+        <mat-option *ngFor="let user of users" [value]="user.id">
+          {{ user.firstName || '' }} {{ user.lastName || '' }} <span *ngIf="!user.firstName && !user.lastName">{{ user.username }}</span> <span class="user-email">({{ user.email }})</span>
+        </mat-option>
+        <mat-option *ngIf="isLoadingUsers" disabled>Chargement des utilisateurs...</mat-option>
+        <mat-option *ngIf="!isLoadingUsers && users.length === 0" disabled>Aucun utilisateur disponible</mat-option>
+      </mat-select>
+      <mat-error *ngIf="riskForm.get('riskOwnerId')?.invalid">Le responsable du risque est obligatoire</mat-error>
+    </mat-form-field>
     
     <div class="form-row">
       <!-- Niveau d'impact -->
@@ -71,6 +84,15 @@
       <mat-label>Plan de mitigation</mat-label>
       <textarea matInput formControlName="mitigationPlan" placeholder="Détails des mesures à prendre pour atténuer ce risque" rows="3"></textarea>
     </mat-form-field>
+    
+    <!-- Affichage du seuil d'acceptation (lecture seule) -->
+    <div class="threshold-info" *ngIf="!isEdit">
+      <mat-icon>info</mat-icon>
+      <span>Seuil d'acceptation actuel : <strong>{{ acceptanceThreshold }}</strong></span>
+      <p class="threshold-description">
+        Les risques avec un score supérieur à {{ acceptanceThreshold }} seront automatiquement rejetés.
+      </p>
+    </div>
   </mat-dialog-content>
   
   <mat-dialog-actions align="end">

@@ -16,6 +16,9 @@
             <mat-chip [class]="getStatusClass(risk.status)" class="status-chip">
               {{ statusTranslations[risk.status] }}
             </mat-chip>
+            <mat-chip *ngIf="risk.did" class="did-chip" color="primary">
+              {{ risk.did }}
+            </mat-chip>
           </mat-chip-set>
         </mat-card-subtitle>
       </div>
@@ -145,6 +148,23 @@
           <div class="metadata-item">
             <span class="label mat-caption">ID</span>
             <span class="value mat-body-1">{{ risk.id }}</span>
+          </div>
+          
+          <div class="metadata-item" *ngIf="risk.did">
+            <span class="label mat-caption">Identifiant DID</span>
+            <span class="value mat-body-1 did-value">{{ risk.did }}</span>
+          </div>
+          
+          <div class="metadata-item">
+            <span class="label mat-caption">Responsable du risque</span>
+            <span class="value mat-body-1">
+              <ng-container *ngIf="risk.riskOwner">
+                {{ risk.riskOwner.firstName || '' }} {{ risk.riskOwner.lastName || '' }}
+                <span *ngIf="!risk.riskOwner.firstName && !risk.riskOwner.lastName">{{ risk.riskOwner.username }}</span>
+                <span class="user-email">({{ risk.riskOwner.email }})</span>
+              </ng-container>
+              <ng-container *ngIf="!risk.riskOwner">Non renseigné</ng-container>
+            </span>
           </div>
         </div>
       </mat-expansion-panel>

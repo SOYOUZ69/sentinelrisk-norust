@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Risk, ImpactLevel, ProbabilityLevel, RiskStatus } from '../../core/models/risk.model';
 import { RiskService } from './services/risk.service';
+import { SettingsService } from '../../core/services/settings.service';
 import { RiskFormDialogComponent, RiskFormDialogData } from './risk-form-dialog/risk-form-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../admin/shared/confirm-dialog/confirm-dialog.component';
 import { RiskImportDialogComponent } from './risk-import-dialog/risk-import-dialog.component';
@@ -18,6 +19,8 @@ export class RisksComponent implements OnInit {
   risks: Risk[] = [];
   displayedColumns: string[] = ['name', 'category', 'impactLevel', 'probabilityLevel', 'score', 'status', 'createdAt', 'actions'];
   isLoading = false;
+  acceptanceThreshold: number = 15; // Valeur par défaut
+  isUpdatingThreshold = false;
   
   // Mappage pour les traductions des statuts et niveaux
   statusTranslations: Record<string, string> = {
@@ -48,6 +51,7 @@ export class RisksComponent implements OnInit {
 
   constructor(
     private riskService: RiskService,
+    private settingsService: SettingsService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private router: Router,
@@ -56,6 +60,7 @@ export class RisksComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadRisks();
+    this.loadAcceptanceThreshold();
   }
 
   loadRisks(): void {
@@ -72,6 +77,45 @@ export class RisksComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  loadAcceptanceThreshold(): void {
+    this.settingsService.getRiskAcceptanceThreshold().subscribe({
+      next: (threshold) => {
+        this.acceptanceThreshold = threshold;
+        console.log('Seuil d\'acceptation chargé:', threshold);
+      },
+      error: (error) => {
+        console.error('Erreur lors du chargement du seuil d\'acceptation:', error);
+        this.showError('Erreur lors du chargement du seuil d\'acceptation');
+      }
+    });
+  }
+
+  updateAcceptanceThreshold(): void {
+    const newThreshold = prompt(`Seuil d'acceptation actuel: ${this.acceptanceThreshold}\nNouveau seuil:`, this.acceptanceThreshold.toString());
+    
+    if (newThreshold !== null) {
+      const threshold = parseInt(newThreshold, 10);
+      if (isNaN(threshold) || threshold < 0) {
+        this.showError('Veuillez entrer un nombre valide (≥ 0)');
+        return;
+      }
+      
+      this.isUpdatingThreshold = true;
+      this.settingsService.updateRiskAcceptanceThreshold(threshold).subscribe({
+        next: (response) => {
+          this.acceptanceThreshold = response.threshold;
+          this.showSuccess(`Seuil d'acceptation mis à jour: ${response.threshold}`);
+          this.isUpdatingThreshold = false;
+        },
+        error: (error) => {
+          console.error('Erreur lors de la mise à jour du seuil:', error);
+          this.showError('Erreur lors de la mise à jour du seuil d\'acceptation');
+          this.isUpdatingThreshold = false;
+        }
+      });
+    }
   }
 
   viewRisk(risk: Risk): void {
@@ -170,19 +214,11 @@ export class RisksComponent implements OnInit {
         this.showSuccess('Risque créé avec succès');
       },
       error: (error) => {
-        console.error('Erreur détaillée lors de la création du risque:', error);
-        let errorMessage = 'Erreur lors de la création du risque';
+        console.error('Erreur lors de la création du risque:', error);
         
-        // Tenter d'extraire un message d'erreur plus précis
-        if (error.error && typeof error.error === 'object') {
-          if (error.error.message) {
-            errorMessage += ': ' + error.error.message;
-          } else if (error.error.detail) {
-            errorMessage += ': ' + error.error.detail;
-          }
-          // Afficher les champs en erreur s'il y en a
-          console.log('Champs en erreur:', error.error);
-        }
+        // Le service retourne déjà le bon message pour les doublons
+        const errorMessage = error.message || 'Erreur lors de la création du risque';
+        console.log('Message d\'erreur à afficher:', errorMessage);
         
         this.showError(errorMessage);
         this.isLoading = false;

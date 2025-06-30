@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["angular:styles/component:css;a53d50a67239af9dcc4fd84f954c5946604878d8443a3accdd3145450028fb55;/Users/omar/Desktop/pfe2025/sentinelrisk-norust/frontend/src/app/features/auth/logout/logout.component.ts"],
+  "sourcesContent": ["\n    .logout-container {\n      display: flex;\n      justify-content: center;\n      align-items: center;\n      height: 100vh;\n    }\n    .logout-message {\n      text-align: center;\n    }\n    h2 {\n      margin-bottom: 16px;\n    }\n    mat-progress-spinner {\n      margin: 24px auto 0;\n    }\n  "],
+  "mappings": ";AACI,CAAC;AACC,WAAS;AACT,mBAAiB;AACjB,eAAa;AACb,UAAQ;AACV;AACA,CAAC;AACC,cAAY;AACd;AACA;AACE,iBAAe;AACjB;AACA;AACE,UAAQ,KAAK,KAAK;AACpB;",
+  "names": []
+}

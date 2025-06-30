@@ -25,6 +25,8 @@ public class RiskRequest {
     @NotNull(message = "La catégorie est obligatoire")
     private Long categoryId;
     
+    private String riskOwnerId;
+    
     @NotNull(message = "Le niveau d'impact est obligatoire")
     private ImpactLevel impactLevel;
     

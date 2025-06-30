@@ -9,6 +9,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
@@ -83,6 +84,26 @@ public class GlobalExceptionHandler {
         body.put("path", request.getDescription(false).replace("uri=", ""));
         
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(DuplicateRiskException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<Map<String, Object>> handleDuplicateRiskException(DuplicateRiskException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "duplicate_risk");
+        response.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
+    @ExceptionHandler(RiskAboveThresholdException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ResponseEntity<Map<String, Object>> handleRiskAboveThresholdException(RiskAboveThresholdException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "risk_above_threshold");
+        response.put("message", ex.getMessage());
+        response.put("riskScore", ex.getRiskScore());
+        response.put("threshold", ex.getThreshold());
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response);
     }
 
     // Structure de réponse d'erreur standard

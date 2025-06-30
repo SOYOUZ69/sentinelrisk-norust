@@ -3,7 +3,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { RiskService } from '../services/risk.service';
-import { Risk } from '../../../core/models/risk.model';
+import { Risk, ImpactLevel, ProbabilityLevel, RiskStatus } from '../../../core/models/risk.model';
 import { finalize } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -41,27 +41,27 @@ export class RiskDetailComponent implements OnInit {
 
   // Mappages pour les traductions
   impactLevelTranslations: Record<string, string> = {
-    'NEGLIGIBLE': 'Négligeable',
-    'LOW': 'Faible',
-    'MEDIUM': 'Moyen',
-    'HIGH': 'Élevé',
-    'SEVERE': 'Sévère'
+    [ImpactLevel.NEGLIGIBLE]: 'Négligeable',
+    [ImpactLevel.MINOR]: 'Mineur',
+    [ImpactLevel.MODERATE]: 'Modéré',
+    [ImpactLevel.SEVERE]: 'Sévère',
+    [ImpactLevel.MAJOR]: 'Majeur'
   };
 
   probabilityLevelTranslations: Record<string, string> = {
-    'RARE': 'Rare',
-    'UNLIKELY': 'Peu probable',
-    'POSSIBLE': 'Possible',
-    'LIKELY': 'Probable',
-    'ALMOST_CERTAIN': 'Quasi certain'
+    [ProbabilityLevel.RARE]: 'Rare',
+    [ProbabilityLevel.UNLIKELY]: 'Peu probable',
+    [ProbabilityLevel.POSSIBLE]: 'Possible',
+    [ProbabilityLevel.LIKELY]: 'Probable',
+    [ProbabilityLevel.ALMOST_CERTAIN]: 'Quasi certain'
   };
 
   statusTranslations: Record<string, string> = {
-    'IDENTIFIED': 'Identifié',
-    'IN_ASSESSMENT': 'En évaluation',
-    'MITIGATED': 'Atténué',
-    'ACCEPTED': 'Accepté',
-    'CLOSED': 'Clôturé'
+    [RiskStatus.IDENTIFIED]: 'Identifié',
+    [RiskStatus.IN_ASSESSMENT]: 'En évaluation',
+    [RiskStatus.MITIGATED]: 'Atténué',
+    [RiskStatus.ACCEPTED]: 'Accepté',
+    [RiskStatus.CLOSED]: 'Clôturé'
   };
 
   constructor(

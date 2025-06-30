@@ -1,5 +1,6 @@
 com/sentinelrisk/backend/config/WebMvcConfig.class
 com/sentinelrisk/backend/domain/compliance/ComplianceDataLoader.class
+com/sentinelrisk/backend/exception/DuplicateRiskException.class
 com/sentinelrisk/backend/dto/ControlResponse$RiskBasicResponse.class
 com/sentinelrisk/backend/dto/ControlRequest.class
 com/sentinelrisk/model/RiskCategory.class
@@ -32,6 +33,8 @@ com/sentinelrisk/backend/service/ControlService.class
 com/sentinelrisk/dto/ZabbixHistoryDto.class
 com/sentinelrisk/dto/AssetCreateRequest.class
 com/sentinelrisk/backend/util/JsonHelper.class
+com/sentinelrisk/backend/service/RiskMigrationService.class
+com/sentinelrisk/backend/controller/RiskMigrationController.class
 com/sentinelrisk/backend/dto/SnmpScanTargetDto.class
 com/sentinelrisk/backend/config/OpenApiConfig.class
 com/sentinelrisk/backend/repository/SnmpScanHistoryRepository.class
@@ -63,6 +66,7 @@ com/sentinelrisk/client/ZabbixClient.class
 com/sentinelrisk/backend/SentinelRiskApplication.class
 com/sentinelrisk/model/IncidentSeverity.class
 com/sentinelrisk/backend/dto/SnmpManualScanResponse.class
+com/sentinelrisk/backend/controller/AppSettingsController.class
 com/sentinelrisk/model/SnmpScanConfig$SeverityThreshold.class
 com/sentinelrisk/backend/domain/compliance/ComplianceRequirement.class
 com/sentinelrisk/dto/ZabbixHostDto.class
@@ -97,7 +101,9 @@ com/sentinelrisk/backend/controller/SnmpZabbixSyncController.class
 com/sentinelrisk/backend/controller/SnmpAutomationConfigController.class
 com/sentinelrisk/repository/IncidentRepository.class
 com/sentinelrisk/backend/web/rest/compliance/ComplianceFrameworkResource.class
+com/sentinelrisk/backend/repository/AppSettingsRepository.class
 com/sentinelrisk/backend/config/JacksonConfig.class
+com/sentinelrisk/backend/exception/RiskAboveThresholdException.class
 com/sentinelrisk/backend/repository/SnmpScanTargetRepository.class
 com/sentinelrisk/controller/ZabbixController.class
 com/sentinelrisk/backend/dto/BulkRiskRequest.class
@@ -106,6 +112,7 @@ com/sentinelrisk/backend/dto/AssessmentDTO$UserDTO.class
 com/sentinelrisk/backend/domain/compliance/ComplianceFramework.class
 com/sentinelrisk/service/SnmpScanService.class
 com/sentinelrisk/dto/ZabbixItemDto.class
+com/sentinelrisk/backend/service/AppSettingsService.class
 com/sentinelrisk/backend/repository/compliance/RemediationPlanRepository.class
 com/sentinelrisk/model/SnmpScanConfig.class
 com/sentinelrisk/repository/AssetRepository.class
@@ -125,6 +132,7 @@ com/sentinelrisk/model/User.class
 com/sentinelrisk/model/Asset$SnmpVersion.class
 com/sentinelrisk/backend/mapper/AssessmentMapper.class
 com/sentinelrisk/model/RiskLevel.class
+com/sentinelrisk/backend/model/AppSettings.class
 com/sentinelrisk/backend/service/compliance/RemediationPlanService.class
 com/sentinelrisk/backend/exception/GlobalExceptionHandler$ErrorResponse.class
 com/sentinelrisk/backend/controller/SnmpTestController.class
@@ -136,6 +144,7 @@ com/sentinelrisk/backend/repository/AssessmentRepository.class
 com/sentinelrisk/backend/service/RiskService.class
 com/sentinelrisk/backend/repository/compliance/RiskComplianceMappingRepository.class
 com/sentinelrisk/backend/config/jackson/HibernateProxySerializer.class
+com/sentinelrisk/backend/controller/RiskDidController.class
 com/sentinelrisk/model/IncidentStatus.class
 com/sentinelrisk/repository/SnmpScanResultRepository.class
 com/sentinelrisk/repository/ComplianceControlRepository.class
@@ -165,6 +174,7 @@ com/sentinelrisk/backend/repository/SnmpScanResultRepository.class
 com/sentinelrisk/controller/ComplianceControlController.class
 com/sentinelrisk/backend/dto/AssessmentResponse.class
 com/sentinelrisk/repository/UserRepository.class
+com/sentinelrisk/backend/service/DidGeneratorService.class
 com/sentinelrisk/backend/model/SnmpScanHistoryResult.class
 com/sentinelrisk/model/SnmpScanConfig$SeverityThreshold$SeverityLevel.class
 com/sentinelrisk/backend/dto/SnmpScanHistoryDto.class

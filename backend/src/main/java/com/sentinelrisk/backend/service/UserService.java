@@ -48,6 +48,12 @@ public class UserService {
         return userRepository.findActiveUsersWithPendingAssessments();
     }
 
+    public List<User> getActiveUsers() {
+        return userRepository.findAll().stream()
+                .filter(user -> user.isActive())
+                .collect(java.util.stream.Collectors.toList());
+    }
+
     public User createUser(User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new IllegalArgumentException("Username already exists: " + user.getUsername());

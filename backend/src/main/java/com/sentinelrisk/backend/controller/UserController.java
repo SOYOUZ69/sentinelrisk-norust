@@ -84,10 +84,25 @@ public class UserController {
 
     @GetMapping("/active")
     @Operation(summary = "Lister les utilisateurs actifs",
-            description = "Récupère la liste des utilisateurs actifs avec des évaluations en attente")
+            description = "Récupère la liste des utilisateurs actifs")
     @ApiResponse(responseCode = "200", description = "Liste des utilisateurs actifs récupérée avec succès")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_COMPLIANCE_OFFICER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_COMPLIANCE_OFFICER', 'ROLE_RISK_MANAGER')")
     public List<User> getActiveUsers() {
-        return userService.getActiveUsersWithPendingAssessments();
+        return userService.getActiveUsers();
+    }
+
+    @GetMapping("/test/all")
+    @Operation(summary = "Tester - Lister tous les utilisateurs",
+            description = "Endpoint temporaire pour tester la récupération des utilisateurs")
+    @PreAuthorize("permitAll()")
+    public List<User> getAllUsersTest() {
+        return userService.getAllUsers();
+    }
+
+    @GetMapping("/public/test")
+    @Operation(summary = "Test public - Lister tous les utilisateurs",
+            description = "Endpoint public temporaire pour tester")
+    public List<User> getPublicUsers() {
+        return userService.getAllUsers();
     }
 } 

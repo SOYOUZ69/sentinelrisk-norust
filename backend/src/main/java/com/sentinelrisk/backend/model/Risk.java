@@ -27,6 +27,9 @@ public class Risk {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "did", unique = true, length = 10)
+    private String did;
+
     @NotBlank
     @Size(max = 100)
     private String name;
@@ -39,6 +42,11 @@ public class Risk {
     @JoinColumn(name = "category_id")
     @JsonBackReference
     private Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "risk_owner_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private User riskOwner;
 
     @ManyToMany
     @JoinTable(

@@ -44,6 +44,18 @@
         <mat-icon>add</mat-icon>
         Nouveau risque
       </button>
+      <!-- Affichage et modification du seuil d'acceptation -->
+      <div class="threshold-container" *ngIf="keycloakService.hasRole('admin') || keycloakService.hasRole('ADMIN') || keycloakService.hasRole('risk_manager') || keycloakService.hasRole('RISK_MANAGER')">
+        <span class="threshold-label">
+          <mat-icon>warning</mat-icon>
+          Seuil d'acceptation: {{ acceptanceThreshold }}
+        </span>
+        <button mat-icon-button color="primary" (click)="updateAcceptanceThreshold()" 
+                [disabled]="isUpdatingThreshold" matTooltip="Modifier le seuil d'acceptation">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <mat-progress-spinner *ngIf="isUpdatingThreshold" mode="indeterminate" diameter="20"></mat-progress-spinner>
+      </div>
     </div>
   </div>
 

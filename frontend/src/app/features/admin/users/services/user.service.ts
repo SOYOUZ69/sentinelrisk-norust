@@ -70,6 +70,6 @@ export class UserService {
    * @returns Observable contenant un tableau d'utilisateurs
    */
   getActiveUsers(): Observable<User[]> {
-    return this.apiService.get<User[]>(`${this.basePath}/active`);
+    return this.apiService.get<User[]>('/users/test/all');
   }
 } 

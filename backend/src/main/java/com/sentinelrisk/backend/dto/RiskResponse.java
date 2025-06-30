@@ -19,12 +19,18 @@ import java.util.Set;
 @AllArgsConstructor
 public class RiskResponse {
     private Long id;
+    private String did;
     private String name;
     private String description;
     
     // Référence simplifiée à la catégorie
     private Long categoryId;
     private String categoryName;
+    
+    // Référence simplifiée au Risk Owner
+    private String riskOwnerId;
+    private String riskOwnerName;
+    private String riskOwnerEmail;
     
     // IDs des contrôles associés (pour compatibilité)
     private Set<Long> controlIds = new HashSet<>();

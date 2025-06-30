@@ -38,4 +38,6 @@ export interface Risk {
   controls?: Control[];
   createdAt: Date;
   updatedAt: Date;
+  riskOwnerId?: string;
+  riskOwner?: import('../../../core/models/user.model').User;
 } 

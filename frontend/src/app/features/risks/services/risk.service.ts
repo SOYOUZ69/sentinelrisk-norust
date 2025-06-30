@@ -63,6 +63,26 @@ export class RiskService {
         map(riskData => this.mapRiskResponse(riskData)),
         catchError(error => {
           console.error('Erreur lors de la création du risque', error);
+          
+          // Pour les erreurs de doublon (409), on retourne le message exact du backend
+          if (error.status === 409) {
+            let message = 'Un risque similaire existe déjà.';
+            if (error.error && error.error.message) {
+              message = error.error.message;
+            }
+            return throwError(() => new Error(message));
+          }
+          
+          // Pour les erreurs de seuil d'acceptation (422)
+          if (error.status === 422 && error.error && error.error.error === 'risk_above_threshold') {
+            let message = 'Le score de ce risque dépasse le seuil d\'acceptation.';
+            if (error.error && error.error.message) {
+              message = error.error.message;
+            }
+            return throwError(() => new Error(message));
+          }
+          
+          // Pour les autres erreurs, on utilise le message générique
           const message = this.getErrorMessage(error) || 'Impossible de créer le risque. Veuillez réessayer.';
           return throwError(() => new Error(message));
         })
@@ -143,6 +163,53 @@ export class RiskService {
   }
 
   /**
+   * Récupère un risque par son identifiant DID
+   * @param did Identifiant DID du risque
+   * @returns Observable contenant le risque
+   */
+  getRiskByDid(did: string): Observable<Risk> {
+    return this.apiService.get<any>(`${this.basePath}/did/${did}`)
+      .pipe(
+        map(riskData => this.mapRiskResponse(riskData)),
+        catchError(error => {
+          console.error(`Erreur lors de la récupération du risque avec DID ${did}`, error);
+          return throwError(() => new Error('Impossible de récupérer le risque avec cet identifiant DID. Veuillez réessayer.'));
+        })
+      );
+  }
+
+  /**
+   * Vérifie si un identifiant DID existe
+   * @param did Identifiant DID à vérifier
+   * @returns Observable contenant un booléen
+   */
+  checkDidExists(did: string): Observable<boolean> {
+    return this.apiService.get<any>(`${this.basePath}/did/${did}/exists`)
+      .pipe(
+        map(response => response.exists),
+        catchError(error => {
+          console.error(`Erreur lors de la vérification du DID ${did}`, error);
+          return throwError(() => new Error('Impossible de vérifier l\'existence de cet identifiant DID.'));
+        })
+      );
+  }
+
+  /**
+   * Attribue des identifiants DID aux risques qui n'en ont pas encore
+   * @returns Observable contenant le nombre de risques mis à jour
+   */
+  assignMissingDids(): Observable<number> {
+    return this.apiService.post<any>(`${this.basePath}/did/assign-missing`, {})
+      .pipe(
+        map(response => response.updatedCount),
+        catchError(error => {
+          console.error('Erreur lors de l\'attribution des identifiants DID', error);
+          return throwError(() => new Error('Impossible d\'attribuer les identifiants DID manquants. Veuillez réessayer.'));
+        })
+      );
+  }
+
+  /**
    * Récupère les risques avec un score élevé
    * @returns Observable contenant un tableau de risques
    */
@@ -169,6 +236,7 @@ export class RiskService {
       name: risk.name,
       description: risk.description,
       categoryId: categoryId,  // Utilise directement categoryId pour le backend
+      riskOwnerId: risk.riskOwnerId,  // Ajouter le Risk Owner ID
       impactLevel: risk.impactLevel,
       probabilityLevel: risk.probabilityLevel,
       status: risk.status,
@@ -182,6 +250,19 @@ export class RiskService {
    * @returns Message d'erreur lisible
    */
   private getErrorMessage(error: any): string {
+    console.log('Analyse de l\'erreur:', error);
+    
+    // Gestion spécifique de l'erreur de doublon (409)
+    if (error.status === 409) {
+      if (error.error && error.error.message) {
+        return error.error.message;
+      }
+      if (error.error && error.error.error === 'duplicate_risk') {
+        return 'Un risque avec ce titre et cette catégorie existe déjà.';
+      }
+      return 'Un risque similaire existe déjà.';
+    }
+    
     if (error.error) {
       if (typeof error.error === 'string') {
         return error.error;
@@ -251,6 +332,9 @@ export class RiskService {
       // Conversion de l'ID numérique en string si nécessaire
       id: riskData.id?.toString(),
       
+      // Inclure l'identifiant DID
+      did: riskData.did,
+      
       // Pour la rétrocompatibilité avec l'interface actuelle
       category: categoryObject,
       
@@ -259,6 +343,16 @@ export class RiskService {
       
       // Utiliser riskScore du backend comme score dans le frontend
       score: riskData.riskScore || 0,
+      
+      // Gérer les informations du Risk Owner
+      riskOwnerId: riskData.riskOwnerId,
+      riskOwner: riskData.riskOwnerId ? {
+        id: riskData.riskOwnerId,
+        firstName: riskData.riskOwnerName ? riskData.riskOwnerName.split(' ')[0] : '',
+        lastName: riskData.riskOwnerName ? riskData.riskOwnerName.split(' ').slice(1).join(' ') : '',
+        email: riskData.riskOwnerEmail || '',
+        username: riskData.riskOwnerId
+      } : undefined,
       
       // S'assurer que les dates sont correctement converties
       createdAt: riskData.createdAt ? new Date(riskData.createdAt) : new Date(),
