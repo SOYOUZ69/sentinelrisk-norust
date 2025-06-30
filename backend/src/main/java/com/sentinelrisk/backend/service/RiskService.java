@@ -75,8 +75,17 @@ public class RiskService {
         // Ensure risk owner exists (si fourni)
         User riskOwner = null;
         if (riskRequest.getRiskOwnerId() != null && !riskRequest.getRiskOwnerId().trim().isEmpty()) {
-            riskOwner = userService.getUserById(riskRequest.getRiskOwnerId());
-            System.out.println("Risk Owner trouvé: " + riskOwner.getFirstName() + " " + riskOwner.getLastName() + " (ID: " + riskOwner.getId() + ")");
+            // Vérifier si c'est le marqueur pour utiliser un utilisateur par défaut
+            if ("DEFAULT_RISK_MANAGER".equals(riskRequest.getRiskOwnerId())) {
+                System.out.println("Utilisation d'un Risk Owner par défaut avec le rôle risk_manager");
+                riskOwner = getDefaultRiskManager();
+                if (riskOwner == null) {
+                    throw new RuntimeException("Aucun utilisateur avec le rôle risk_manager trouvé pour assigner comme Risk Owner par défaut");
+                }
+            } else {
+                riskOwner = userService.getUserById(riskRequest.getRiskOwnerId());
+                System.out.println("Risk Owner trouvé: " + riskOwner.getFirstName() + " " + riskOwner.getLastName() + " (ID: " + riskOwner.getId() + ")");
+            }
         } else {
             System.out.println("Aucun Risk Owner fourni dans la requête");
         }
@@ -89,6 +98,12 @@ public class RiskService {
         
         // Convert to entity and save
         Risk risk = riskMapper.toEntity(riskRequest, category);
+        
+        // Si on a un Risk Owner par défaut, l'assigner manuellement
+        if (riskOwner != null && risk.getRiskOwner() == null) {
+            risk.setRiskOwner(riskOwner);
+            System.out.println("Risk Owner par défaut assigné: " + riskOwner.getFirstName() + " " + riskOwner.getLastName());
+        }
         
         // Vérifier si le Risk Owner a été assigné par le mapper
         System.out.println("Risk Owner après mapping: " + (risk.getRiskOwner() != null ? 
@@ -313,5 +328,26 @@ public class RiskService {
     private Risk findRiskById(Long id) {
         return riskRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Risk not found with id: " + id));
+    }
+
+    /**
+     * Récupère un utilisateur par défaut avec le rôle risk_manager
+     * @return L'utilisateur par défaut ou null si aucun trouvé
+     */
+    private User getDefaultRiskManager() {
+        try {
+            List<User> riskManagers = userService.getUsersByRole("risk_manager");
+            if (!riskManagers.isEmpty()) {
+                User defaultUser = riskManagers.get(0);
+                System.out.println("Utilisateur par défaut trouvé: " + defaultUser.getFirstName() + " " + defaultUser.getLastName());
+                return defaultUser;
+            } else {
+                System.out.println("Aucun utilisateur avec le rôle risk_manager trouvé");
+                return null;
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la recherche d'un utilisateur par défaut: " + e.getMessage());
+            return null;
+        }
     }
 } 

@@ -156,7 +156,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.setupResizeObserver();
+      this.setupResizeObserver();
   }
 
   ngOnDestroy(): void {
@@ -248,35 +248,35 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   private setupResizeObserver(): void {
     if (!window.ResizeObserver) {
       console.warn('ResizeObserver non supporté, les graphiques ne se redimensionneront pas automatiquement');
-      return;
-    }
+          return;
+        }
 
     this.resizeObserver = new ResizeObserver(entries => {
       if (this.isResizing) return;
       
-      this.isResizing = true;
-      setTimeout(() => {
+          this.isResizing = true;
+            setTimeout(() => {
         this.updateChartDimensions();
-        this.isResizing = false;
-      }, 100);
-    });
+              this.isResizing = false;
+            }, 100);
+      });
 
-    // Observer tous les containers de graphiques
-    const containers = [
-      this.riskLevelChartContainer,
-      this.riskCategoryChartContainer,
-      this.complianceStatusChartContainer,
-      this.complianceFrameworkChartContainer,
-      this.snmpTypeChartContainer,
-      this.snmpStatusChartContainer,
-      this.planStatusChartContainer
-    ];
+      // Observer tous les containers de graphiques
+      const containers = [
+        this.riskLevelChartContainer,
+        this.riskCategoryChartContainer,
+        this.complianceStatusChartContainer,
+        this.complianceFrameworkChartContainer,
+        this.snmpTypeChartContainer,
+        this.snmpStatusChartContainer,
+        this.planStatusChartContainer
+      ];
 
-    containers.forEach(container => {
-      if (container?.nativeElement) {
+      containers.forEach(container => {
+        if (container?.nativeElement) {
         this.resizeObserver?.observe(container.nativeElement);
-      }
-    });
+        }
+      });
   }
 
   /**

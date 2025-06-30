@@ -11,6 +11,8 @@ import com.sentinelrisk.backend.dto.ImportError;
 import com.sentinelrisk.backend.dto.BulkRiskRequest;
 import com.sentinelrisk.backend.dto.BulkResponse;
 import com.sentinelrisk.backend.model.Category;
+import com.sentinelrisk.backend.service.UserService;
+import com.sentinelrisk.backend.model.User;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -40,6 +42,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.lang.reflect.Field;
+
 @RestController
 @RequestMapping("/api/risks")
 @RequiredArgsConstructor
@@ -49,6 +53,7 @@ public class RiskController {
     private final RiskService riskService;
     private final CategoryService categoryService;
     private final ExcelService excelService;
+    private final UserService userService;
 
     @GetMapping
     @Operation(summary = "Lister tous les risques",
@@ -206,8 +211,40 @@ public class RiskController {
                     continue;
                 }
                 
+                // Rechercher le Risk Owner
+                User riskOwner = null;
+                try {
+                    String riskOwnerValue = request.getRiskOwner();
+                    
+                    // Si la valeur est null ou vide, utiliser un utilisateur par défaut avec le rôle risk_manager
+                    if (riskOwnerValue == null || riskOwnerValue.trim().isEmpty()) {
+                        System.out.println("DEBUG - Ligne " + (i + 1) + " - Utilisation d'un Risk Owner par défaut (bulkCreate)");
+                        List<User> riskManagers = userService.getUsersByRole("risk_manager");
+                        if (!riskManagers.isEmpty()) {
+                            riskOwner = riskManagers.get(0);
+                            System.out.println("DEBUG - Risk Owner par défaut trouvé: " + riskOwner.getFirstName() + " " + riskOwner.getLastName());
+                        } else {
+                            errors.add(new BulkResponse.Error(i, "Aucun utilisateur avec le rôle risk_manager trouvé pour assigner comme Risk Owner par défaut"));
+                            continue;
+                        }
+                    } else {
+                        riskOwner = findUserByDisplayName(riskOwnerValue);
+                    }
+                } catch (EntityNotFoundException e) {
+                    errors.add(new BulkResponse.Error(i, "Risk Owner non trouvé: " + request.getRiskOwner()));
+                    continue;
+                }
+                
                 // Créer un objet RiskRequest à partir du BulkRiskRequest
-                RiskRequest riskRequest = convertBulkToStandard(request, category.getId());
+                RiskRequest riskRequest = new RiskRequest();
+                riskRequest.setName(request.getName());
+                riskRequest.setDescription(request.getDescription());
+                riskRequest.setCategoryId(category.getId());
+                riskRequest.setImpactLevel(request.getImpactLevel());
+                riskRequest.setProbabilityLevel(request.getProbabilityLevel());
+                riskRequest.setStatus(Risk.Status.IDENTIFIED); // Valeur par défaut
+                riskRequest.setRiskOwnerId(riskOwner.getId());
+                riskRequest.setMitigationPlan(request.getMitigationPlan());
                 
                 // Créer le risque en utilisant le service existant
                 RiskResponse createdRisk = riskService.createRisk(riskRequest);
@@ -333,20 +370,32 @@ public class RiskController {
         
         // Mapper les colonnes aux indices
         Map<String, Integer> columnMap = new HashMap<>();
+        System.out.println("DEBUG - Nombre total de colonnes: " + headerRow.getLastCellNum());
+        
         for (int i = 0; i < headerRow.getLastCellNum(); i++) {
             Cell cell = headerRow.getCell(i);
             if (cell != null) {
-                columnMap.put(cell.getStringCellValue().trim(), i);
+                String headerValue = cell.getStringCellValue().trim();
+                columnMap.put(headerValue, i);
+                System.out.println("DEBUG - En-tête trouvé: '" + headerValue + "' à l'index " + i);
+            } else {
+                System.out.println("DEBUG - Cellule vide à l'index " + i);
             }
         }
         
+        System.out.println("DEBUG - Mapping des colonnes: " + columnMap);
+        System.out.println("DEBUG - Tous les en-têtes: " + columnMap.keySet());
+        
         // Vérifier que toutes les colonnes requises sont présentes
-        String[] requiredColumns = {"name", "categoryName", "impactLevel", "probabilityLevel"};
+        String[] requiredColumns = {"name", "categoryName", "impactLevel", "probabilityLevel", "riskOwner"};
         List<String> missingColumns = new ArrayList<>();
         
         for (String column : requiredColumns) {
             if (!columnMap.containsKey(column)) {
                 missingColumns.add(column);
+                System.out.println("DEBUG - Colonne manquante: '" + column + "'");
+            } else {
+                System.out.println("DEBUG - Colonne trouvée: '" + column + "' à l'index " + columnMap.get(column));
             }
         }
         
@@ -416,6 +465,47 @@ public class RiskController {
                     continue;
                 }
                 
+                // Validation du Risk Owner (obligatoire)
+                Cell riskOwnerCell = row.getCell(columnMap.get("riskOwner"));
+                System.out.println("DEBUG - Ligne " + (i + 1) + " - Cellule riskOwner: " + (riskOwnerCell != null ? "non-null" : "null"));
+                
+                String riskOwnerValue = null;
+                if (riskOwnerCell != null) {
+                    riskOwnerValue = getCellValueAsString(riskOwnerCell);
+                    System.out.println("DEBUG - Ligne " + (i + 1) + " - riskOwnerValue: '" + riskOwnerValue + "'");
+                    System.out.println("DEBUG - Ligne " + (i + 1) + " - riskOwnerValue.length(): " + (riskOwnerValue != null ? riskOwnerValue.length() : "null"));
+                }
+                
+                // Si la valeur est null ou vide, utiliser un utilisateur par défaut avec le rôle risk_manager
+                if (riskOwnerValue == null || riskOwnerValue.trim().isEmpty()) {
+                    System.out.println("DEBUG - Ligne " + (i + 1) + " - Utilisation d'un Risk Owner par défaut");
+                    riskOwnerValue = "DEFAULT_RISK_MANAGER"; // Marqueur pour identifier l'utilisation du défaut
+                }
+                
+                // Rechercher le Risk Owner
+                User riskOwner = null;
+                try {
+                    // Vérifier si c'est le marqueur pour utiliser un utilisateur par défaut
+                    if ("DEFAULT_RISK_MANAGER".equals(riskOwnerValue)) {
+                        System.out.println("DEBUG - Ligne " + (i + 1) + " - Utilisation d'un Risk Owner par défaut");
+                        List<User> riskManagers = userService.getUsersByRole("risk_manager");
+                        if (!riskManagers.isEmpty()) {
+                            riskOwner = riskManagers.get(0);
+                            System.out.println("DEBUG - Risk Owner par défaut trouvé: " + riskOwner.getFirstName() + " " + riskOwner.getLastName());
+                        } else {
+                            errors.add(new ImportError(i + 1, "riskOwner", "Aucun utilisateur avec le rôle risk_manager trouvé pour assigner comme Risk Owner par défaut"));
+                            continue;
+                        }
+                    } else {
+                        riskOwner = findUserByDisplayName(riskOwnerValue);
+                    }
+                } catch (EntityNotFoundException e) {
+                    errors.add(new ImportError(i + 1, "riskOwner", "Risk Owner non trouvé: " + riskOwnerValue));
+                    continue;
+                }
+                
+                request.setRiskOwner(riskOwnerValue);
+                
                 Cell mitigationCell = row.getCell(columnMap.get("mitigationPlan"));
                 if (mitigationCell != null) {
                     request.setMitigationPlan(getCellValueAsString(mitigationCell));
@@ -438,6 +528,7 @@ public class RiskController {
                 riskRequest.setImpactLevel(request.getImpactLevel());
                 riskRequest.setProbabilityLevel(request.getProbabilityLevel());
                 riskRequest.setStatus(Risk.Status.IDENTIFIED); // Valeur par défaut
+                riskRequest.setRiskOwnerId(riskOwner.getId());
                 riskRequest.setMitigationPlan(request.getMitigationPlan());
                 
                 // Créer le risque en utilisant le service existant
@@ -532,6 +623,9 @@ public class RiskController {
                                 errors.add(new ImportError(i + 1, "probabilityLevel", "Niveau de probabilité invalide: " + value));
                             }
                             break;
+                        case "riskOwner":
+                            request.setRiskOwner(value);
+                            break;
                         case "mitigationPlan":
                             request.setMitigationPlan(value);
                             break;
@@ -558,6 +652,30 @@ public class RiskController {
                     continue;
                 }
                 
+                // Rechercher le Risk Owner
+                User riskOwner = null;
+                try {
+                    String riskOwnerValue = request.getRiskOwner();
+                    
+                    // Si la valeur est null ou vide, utiliser un utilisateur par défaut avec le rôle risk_manager
+                    if (riskOwnerValue == null || riskOwnerValue.trim().isEmpty()) {
+                        System.out.println("DEBUG - Ligne " + (i + 1) + " - Utilisation d'un Risk Owner par défaut (CSV)");
+                        List<User> riskManagers = userService.getUsersByRole("risk_manager");
+                        if (!riskManagers.isEmpty()) {
+                            riskOwner = riskManagers.get(0);
+                            System.out.println("DEBUG - Risk Owner par défaut trouvé: " + riskOwner.getFirstName() + " " + riskOwner.getLastName());
+                        } else {
+                            errors.add(new ImportError(i + 1, "riskOwner", "Aucun utilisateur avec le rôle risk_manager trouvé pour assigner comme Risk Owner par défaut"));
+                            continue;
+                        }
+                    } else {
+                        riskOwner = findUserByDisplayName(riskOwnerValue);
+                    }
+                } catch (EntityNotFoundException e) {
+                    errors.add(new ImportError(i + 1, "riskOwner", "Risk Owner non trouvé: " + request.getRiskOwner()));
+                    continue;
+                }
+                
                 // Créer un objet RiskRequest à partir du BulkRiskRequest
                 RiskRequest riskRequest = new RiskRequest();
                 riskRequest.setName(request.getName());
@@ -566,6 +684,7 @@ public class RiskController {
                 riskRequest.setImpactLevel(request.getImpactLevel());
                 riskRequest.setProbabilityLevel(request.getProbabilityLevel());
                 riskRequest.setStatus(Risk.Status.IDENTIFIED); // Valeur par défaut
+                riskRequest.setRiskOwnerId(riskOwner.getId());
                 riskRequest.setMitigationPlan(request.getMitigationPlan());
                 
                 // Créer le risque en utilisant le service existant
@@ -628,6 +747,59 @@ public class RiskController {
                 }
             default:
                 return "";
+        }
+    }
+
+    private User findUserByDisplayName(String displayName) {
+        System.out.println("DEBUG - Recherche utilisateur avec displayName: '" + displayName + "'");
+        List<User> users = userService.getAllUsers();
+        System.out.println("DEBUG - Nombre d'utilisateurs trouvés: " + users.size());
+        
+        for (User user : users) {
+            // Construire le nom d'affichage comme dans le template Excel
+            String userDisplayName = getUserDisplayName(user);
+            System.out.println("DEBUG - Comparaison: '" + userDisplayName + "' vs '" + displayName + "'");
+            if (userDisplayName.equals(displayName)) {
+                System.out.println("DEBUG - Utilisateur trouvé: " + userDisplayName);
+                return user;
+            }
+        }
+        
+        System.out.println("DEBUG - Aucun utilisateur trouvé pour: '" + displayName + "'");
+        throw new EntityNotFoundException("Utilisateur non trouvé: " + displayName);
+    }
+    
+    private String getUserDisplayName(User user) {
+        try {
+            // Accès par réflexion aux champs
+            Field firstNameField = User.class.getDeclaredField("firstName");
+            Field lastNameField = User.class.getDeclaredField("lastName");
+            Field emailField = User.class.getDeclaredField("email");
+            
+            firstNameField.setAccessible(true);
+            lastNameField.setAccessible(true);
+            emailField.setAccessible(true);
+            
+            String firstName = (String) firstNameField.get(user);
+            String lastName = (String) lastNameField.get(user);
+            String email = (String) emailField.get(user);
+            
+            String fullName = (firstName != null ? firstName : "") + 
+                            " " + (lastName != null ? lastName : "").trim();
+            if (fullName.trim().isEmpty()) {
+                return email; // Utiliser l'email si pas de nom complet
+            }
+            return fullName + " (" + email + ")";
+        } catch (Exception e) {
+            // En cas d'erreur, retourner l'ID de l'utilisateur
+            try {
+                Field idField = User.class.getDeclaredField("id");
+                idField.setAccessible(true);
+                String id = (String) idField.get(user);
+                return "Utilisateur " + id;
+            } catch (Exception ex) {
+                return "Utilisateur inconnu";
+            }
         }
     }
 }

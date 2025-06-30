@@ -2,6 +2,7 @@ package com.sentinelrisk.backend.service;
 
 import com.sentinelrisk.backend.model.Category;
 import com.sentinelrisk.backend.model.Risk;
+import com.sentinelrisk.backend.model.User;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFDataValidation;
@@ -24,15 +25,17 @@ import java.lang.reflect.Field;
 public class ExcelService {
 
     private final CategoryService categoryService;
+    private final UserService userService;
 
     @Autowired
-    public ExcelService(CategoryService categoryService) {
+    public ExcelService(CategoryService categoryService, UserService userService) {
         this.categoryService = categoryService;
+        this.userService = userService;
     }
 
     /**
      * Génère un template Excel pour l'import de risques avec des listes déroulantes
-     * pour les colonnes categoryId, impactLevel et probabilityLevel
+     * pour les colonnes categoryId, impactLevel, probabilityLevel et riskOwner
      *
      * @return Le fichier Excel sous forme de tableau de bytes
      * @throws IOException En cas d'erreur lors de la génération du fichier
@@ -58,9 +61,9 @@ public class ExcelService {
             headerStyle.setBorderLeft(BorderStyle.THIN);
             headerStyle.setBorderRight(BorderStyle.THIN);
 
-            // Créer la ligne d'en-tête
+            // Créer la ligne d'en-tête avec la nouvelle colonne Risk Owner
             Row headerRow = sheet.createRow(0);
-            String[] headers = {"name", "description", "categoryName", "impactLevel", "probabilityLevel", "mitigationPlan"};
+            String[] headers = {"name", "description", "categoryName", "impactLevel", "probabilityLevel", "riskOwner", "mitigationPlan"};
             
             for (int i = 0; i < headers.length; i++) {
                 Cell cell = headerRow.createCell(i);
@@ -94,6 +97,19 @@ public class ExcelService {
             
             String[] categoryNames = categoryNamesList.toArray(new String[0]);
 
+            // Récupérer la liste des utilisateurs pour la validation Risk Owner
+            List<User> users = userService.getAllUsers();
+            List<String> userDisplayNames = users.stream()
+                .map(this::getUserDisplayName)
+                .collect(Collectors.toList());
+            
+            // Si aucun utilisateur n'existe, créer une liste par défaut
+            if (userDisplayNames.isEmpty()) {
+                userDisplayNames.add("Aucun utilisateur disponible");
+            }
+            
+            String[] userNames = userDisplayNames.toArray(new String[0]);
+
             // Utiliser Arrays.stream pour les valeurs des énumérations
             String[] impactLevels = Arrays.stream(Risk.ImpactLevel.values())
                                            .map(Enum::name)
@@ -112,6 +128,9 @@ public class ExcelService {
             
             // 3. Niveaux de probabilité
             createNamedRangeForValidation(workbook, hiddenSheet, probabilityLevels, "ProbabilityLevels", 2);
+            
+            // 4. Risk Owners (utilisateurs)
+            createNamedRangeForValidation(workbook, hiddenSheet, userNames, "RiskOwners", 3);
 
             // Ajouter les validations de données (listes déroulantes)
             XSSFDataValidationHelper dvHelper = new XSSFDataValidationHelper(sheet);
@@ -124,6 +143,9 @@ public class ExcelService {
             
             // 3. Validation pour probabilityLevel (colonne E = index 4)
             addValidationToColumn(sheet, dvHelper, "ProbabilityLevels", 1, 1000, 4);
+            
+            // 4. Validation pour riskOwner (colonne F = index 5)
+            addValidationToColumn(sheet, dvHelper, "RiskOwners", 1, 1000, 5);
 
             // Écrire le workbook dans un ByteArrayOutputStream
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -163,5 +185,39 @@ public class ExcelService {
                 dvHelper.createValidation(dvConstraint, addressList);
         validation.setShowErrorBox(true);
         sheet.addValidationData(validation);
+    }
+
+    private String getUserDisplayName(User user) {
+        try {
+            // Accès par réflexion aux champs
+            Field firstNameField = User.class.getDeclaredField("firstName");
+            Field lastNameField = User.class.getDeclaredField("lastName");
+            Field emailField = User.class.getDeclaredField("email");
+            
+            firstNameField.setAccessible(true);
+            lastNameField.setAccessible(true);
+            emailField.setAccessible(true);
+            
+            String firstName = (String) firstNameField.get(user);
+            String lastName = (String) lastNameField.get(user);
+            String email = (String) emailField.get(user);
+            
+            String fullName = (firstName != null ? firstName : "") + 
+                            " " + (lastName != null ? lastName : "").trim();
+            if (fullName.trim().isEmpty()) {
+                return email; // Utiliser l'email si pas de nom complet
+            }
+            return fullName + " (" + email + ")";
+        } catch (Exception e) {
+            // En cas d'erreur, retourner l'ID de l'utilisateur
+            try {
+                Field idField = User.class.getDeclaredField("id");
+                idField.setAccessible(true);
+                String id = (String) idField.get(user);
+                return "Utilisateur " + id;
+            } catch (Exception ex) {
+                return "Utilisateur inconnu";
+            }
+        }
     }
 } 

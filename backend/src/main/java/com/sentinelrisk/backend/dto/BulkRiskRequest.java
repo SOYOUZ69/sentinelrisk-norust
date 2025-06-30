@@ -33,4 +33,7 @@ public class BulkRiskRequest {
 
     @Size(max = 2000, message = "Le plan de mitigation ne peut pas dépasser 2000 caractères")
     private String mitigationPlan;
+    
+    // Risk Owner - peut être spécifié par nom d'affichage ou email
+    private String riskOwner;
 } 

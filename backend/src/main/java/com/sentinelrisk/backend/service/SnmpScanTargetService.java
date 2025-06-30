@@ -158,16 +158,16 @@ public class SnmpScanTargetService {
         
         if (existingTarget.isPresent()) {
             // Asset existe - mise à jour du statut
-            int updated = scanTargetRepository.updateEnabledStatus(zabbixHostId, enabled);
-            boolean success = updated > 0;
-            
-            if (success) {
-                log.info("✅ Statut de l'asset {} mis à jour", zabbixHostId);
-            } else {
-                log.warn("⚠️ Asset {} non trouvé pour mise à jour du statut", zabbixHostId);
-            }
-            
-            return success;
+        int updated = scanTargetRepository.updateEnabledStatus(zabbixHostId, enabled);
+        boolean success = updated > 0;
+        
+        if (success) {
+            log.info("✅ Statut de l'asset {} mis à jour", zabbixHostId);
+        } else {
+            log.warn("⚠️ Asset {} non trouvé pour mise à jour du statut", zabbixHostId);
+        }
+        
+        return success;
         } else {
             // Asset n'existe pas - le configurer automatiquement
             log.info("🆕 Asset {} non trouvé, configuration automatique avec statut: {}", zabbixHostId, enabled);
