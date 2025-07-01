@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/features/risks/risk-form-dialog/risk-form-dialog.component.scss"],
-  "sourcesContent": ["mat-dialog-content {\n  min-width: 500px;\n}\n\n.full-width {\n  width: 100%;\n}\n\n.form-row {\n  display: flex;\n  gap: 16px;\n  margin-bottom: 8px;\n  \n  mat-form-field {\n    flex: 1;\n  }\n}\n\n.threshold-info {\n  display: flex;\n  align-items: flex-start;\n  gap: 8px;\n  padding: 12px;\n  background-color: #e3f2fd;\n  border: 1px solid #2196f3;\n  border-radius: 4px;\n  margin-top: 16px;\n  \n  mat-icon {\n    color: #1976d2;\n    margin-top: 2px;\n  }\n  \n  span {\n    color: #1976d2;\n    font-weight: 500;\n  }\n  \n  .threshold-description {\n    margin: 8px 0 0 0;\n    color: #424242;\n    font-size: 14px;\n    line-height: 1.4;\n  }\n}\n\n@media (max-width: 600px) {\n  mat-dialog-content {\n    min-width: 320px;\n  }\n  \n  .form-row {\n    flex-direction: column;\n    gap: 0;\n  }\n} "],
-  "mappings": ";AAAA;AACE,aAAA;;AAGF,CAAA;AACE,SAAA;;AAGF,CAAA;AACE,WAAA;AACA,OAAA;AACA,iBAAA;;AAEA,CALF,SAKE;AACE,QAAA;;AAIJ,CAAA;AACE,WAAA;AACA,eAAA;AACA,OAAA;AACA,WAAA;AACA,oBAAA;AACA,UAAA,IAAA,MAAA;AACA,iBAAA;AACA,cAAA;;AAEA,CAVF,eAUE;AACE,SAAA;AACA,cAAA;;AAGF,CAfF,eAeE;AACE,SAAA;AACA,eAAA;;AAGF,CApBF,eAoBE,CAAA;AACE,UAAA,IAAA,EAAA,EAAA;AACA,SAAA;AACA,aAAA;AACA,eAAA;;AAIJ,OAAA,CAAA,SAAA,EAAA;AACE;AACE,eAAA;;AAGF,GA3CF;AA4CI,oBAAA;AACA,SAAA;;;",
-  "names": []
-}

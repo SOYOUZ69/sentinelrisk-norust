@@ -177,6 +177,7 @@ public class AssessmentController {
         map.put("assessmentDate", assessment.getAssessmentDate());
         map.put("findings", assessment.getFindings());
         map.put("recommendations", assessment.getRecommendations());
+        map.put("assessmentScore", assessment.getAssessmentScore());
         map.put("nextReviewDate", assessment.getNextReviewDate());
         map.put("createdAt", assessment.getCreatedAt());
         map.put("updatedAt", assessment.getUpdatedAt());

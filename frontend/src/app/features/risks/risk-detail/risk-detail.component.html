@@ -168,6 +168,199 @@
           </div>
         </div>
       </mat-expansion-panel>
+
+      <!-- Historique des statuts -->
+      <mat-expansion-panel class="section-panel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>history</mat-icon>
+            <span>Historique des statuts</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        
+        <div class="status-history-container">
+          <!-- Indicateur de chargement -->
+          <div *ngIf="isLoadingHistory" class="loading-container">
+            <mat-spinner diameter="30"></mat-spinner>
+            <span>Chargement de l'historique...</span>
+          </div>
+
+          <!-- État vide -->
+          <div *ngIf="!isLoadingHistory && statusHistory.length === 0" class="empty-history">
+            <mat-icon>history_toggle_off</mat-icon>
+            <p>Aucun historique de statut disponible</p>
+            <span class="empty-message">L'historique des changements de statut apparaîtra ici</span>
+          </div>
+
+          <!-- Liste de l'historique -->
+          <div *ngIf="!isLoadingHistory && statusHistory.length > 0" class="history-list">
+            <div *ngFor="let entry of statusHistory; let i = index" class="history-entry">
+              <div class="history-timeline">
+                <div class="timeline-dot" [class]="getStatusClass(entry.newStatus)"></div>
+                <div *ngIf="i < statusHistory.length - 1" class="timeline-line"></div>
+              </div>
+              
+              <div class="history-content">
+                <div class="history-header">
+                  <div class="history-date">{{ formatDate(entry.changeDate) }}</div>
+                  <div class="history-user">{{ entry.changedByUserName }}</div>
+                </div>
+                
+                <div class="history-status-change">
+                  <span class="status-badge old-status" [class]="getStatusClass(entry.previousStatus)">
+                    {{ getStatusLabel(entry.previousStatus) }}
+                  </span>
+                  <mat-icon class="status-arrow">arrow_forward</mat-icon>
+                  <span class="status-badge new-status" [class]="getStatusClass(entry.newStatus)">
+                    {{ getStatusLabel(entry.newStatus) }}
+                  </span>
+                </div>
+                
+                <div class="history-reason" *ngIf="entry.changeReason">
+                  {{ entry.changeReason }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-expansion-panel>
+
+      <!-- Historique des scores -->
+      <mat-expansion-panel class="section-panel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>trending_up</mat-icon>
+            <span>Historique des scores</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        
+        <div class="score-history-container">
+          <!-- Indicateur de chargement -->
+          <div *ngIf="isLoadingScoreHistory" class="loading-container">
+            <mat-spinner diameter="30"></mat-spinner>
+            <span>Chargement de l'historique...</span>
+          </div>
+
+          <!-- État vide -->
+          <div *ngIf="!isLoadingScoreHistory && scoreHistory.length === 0" class="empty-history">
+            <mat-icon>trending_flat</mat-icon>
+            <p>Aucun historique de score disponible</p>
+            <span class="empty-message">L'historique des changements de score apparaîtra ici</span>
+          </div>
+
+          <!-- Liste de l'historique -->
+          <div *ngIf="!isLoadingScoreHistory && scoreHistory.length > 0" class="history-list">
+            <div *ngFor="let entry of scoreHistory; let i = index" class="history-entry">
+              <div class="history-timeline">
+                <div class="timeline-dot score-change"></div>
+                <div *ngIf="i < scoreHistory.length - 1" class="timeline-line"></div>
+              </div>
+              
+              <div class="history-content">
+                <div class="history-header">
+                  <div class="history-date">{{ formatDate(entry.changedAt) }}</div>
+                  <div class="history-user">{{ entry.changedByUserName }}</div>
+                </div>
+                
+                <div class="history-score-change">
+                  <span class="score-badge old-score" *ngIf="entry.oldScore !== null && entry.oldScore !== undefined">
+                    {{ entry.oldScore }}
+                  </span>
+                  <span class="score-badge no-score" *ngIf="entry.oldScore === null || entry.oldScore === undefined">
+                    -
+                  </span>
+                  <mat-icon class="score-arrow">arrow_forward</mat-icon>
+                  <span class="score-badge new-score" [class]="getScoreClass(entry.newScore)">
+                    {{ entry.newScore }}
+                  </span>
+                </div>
+                
+                <div class="history-assessment" *ngIf="entry.assessmentTitle">
+                  <mat-icon class="assessment-icon">assessment</mat-icon>
+                  <span>{{ entry.assessmentTitle }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-expansion-panel>
+
+      <!-- Historique d'efficacité des contrôles -->
+      <mat-expansion-panel class="section-panel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>verified</mat-icon>
+            <span>Historique d'efficacité des contrôles</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        
+        <div class="effectiveness-history-container">
+          <!-- Indicateur de chargement -->
+          <div *ngIf="isLoadingEffectivenessHistory" class="loading-container">
+            <mat-spinner diameter="30"></mat-spinner>
+            <span>Chargement de l'historique...</span>
+          </div>
+
+          <!-- État vide -->
+          <div *ngIf="!isLoadingEffectivenessHistory && effectivenessHistory.length === 0" class="empty-history">
+            <mat-icon>verified_outlined</mat-icon>
+            <p>Aucun historique d'efficacité disponible</p>
+            <span class="empty-message">L'historique des changements d'efficacité des contrôles apparaîtra ici</span>
+          </div>
+
+          <!-- Liste de l'historique -->
+          <div *ngIf="!isLoadingEffectivenessHistory && effectivenessHistory.length > 0" class="history-list">
+            <div *ngFor="let entry of effectivenessHistory; let i = index" class="history-entry">
+              <div class="history-timeline">
+                <div class="timeline-dot effectiveness-change"></div>
+                <div *ngIf="i < effectivenessHistory.length - 1" class="timeline-line"></div>
+              </div>
+              
+              <div class="history-content">
+                <div class="history-header">
+                  <div class="history-date">{{ formatDate(entry.changedAt) }}</div>
+                  <div class="history-user">{{ entry.changedByUserName || 'Système' }}</div>
+                </div>
+                
+                <div class="history-control-info">
+                  <mat-icon class="control-icon">verified</mat-icon>
+                  <span class="control-name">{{ entry.controlName }}</span>
+                  <span class="control-type">({{ entry.controlType }})</span>
+                </div>
+                
+                <div class="history-effectiveness-change" *ngIf="entry.oldScore !== undefined || entry.newScore !== undefined">
+                  <span class="effectiveness-badge old-score" *ngIf="entry.oldScore !== undefined">
+                    {{ entry.oldScore }}%
+                  </span>
+                  <span class="effectiveness-badge no-score" *ngIf="entry.oldScore === undefined">
+                    -
+                  </span>
+                  <mat-icon class="effectiveness-arrow">arrow_forward</mat-icon>
+                  <span class="effectiveness-badge new-score" *ngIf="entry.newScore !== undefined">
+                    {{ entry.newScore }}%
+                  </span>
+                </div>
+                
+                <div class="history-impact-changes">
+                  <div class="impact-change" *ngIf="entry.oldProbabilityLevel || entry.newProbabilityLevel">
+                    <span class="impact-label">Probabilité:</span>
+                    <span class="impact-badge old-value" *ngIf="entry.oldProbabilityLevel">{{ entry.oldProbabilityLevel }}</span>
+                    <mat-icon class="impact-arrow">arrow_forward</mat-icon>
+                    <span class="impact-badge new-value" *ngIf="entry.newProbabilityLevel">{{ entry.newProbabilityLevel }}</span>
+                  </div>
+                  
+                  <div class="impact-change" *ngIf="entry.oldImpactLevel || entry.newImpactLevel">
+                    <span class="impact-label">Impact:</span>
+                    <span class="impact-badge old-value" *ngIf="entry.oldImpactLevel">{{ entry.oldImpactLevel }}</span>
+                    <mat-icon class="impact-arrow">arrow_forward</mat-icon>
+                    <span class="impact-badge new-value" *ngIf="entry.newImpactLevel">{{ entry.newImpactLevel }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-expansion-panel>
     </mat-card-content>
   </mat-card>
 

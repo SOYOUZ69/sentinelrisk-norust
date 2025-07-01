@@ -116,6 +116,101 @@
             </ng-template>
           </div>
         </mat-tab>
+        
+        <mat-tab label="Historique d'efficacité">
+          <div class="tab-content">
+            <div class="effectiveness-history-section">
+              <div *ngIf="isLoadingHistory" class="loading-container">
+                <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner>
+                <span>Chargement de l'historique...</span>
+              </div>
+              
+              <div *ngIf="!isLoadingHistory && effectivenessHistory && effectivenessHistory.length > 0; else noHistory">
+                <h2>Historique des changements d'efficacité</h2>
+                <p class="history-description">
+                  Cet historique montre comment les changements du score d'efficacité de ce contrôle ont impacté les risques associés.
+                </p>
+                
+                <div class="history-timeline">
+                  <div *ngFor="let entry of effectivenessHistory" class="history-entry">
+                    <div class="history-header">
+                      <div class="history-date">
+                        <mat-icon>schedule</mat-icon>
+                        {{ entry.changedAt | date:'dd/MM/yyyy HH:mm' }}
+                      </div>
+                      <div class="history-risk">
+                        <mat-icon>warning</mat-icon>
+                        Risque: {{ entry.riskName }}
+                      </div>
+                    </div>
+                    
+                    <div class="history-content">
+                      <div class="score-change" *ngIf="entry.oldScore !== undefined || entry.newScore !== undefined">
+                        <div class="change-label">
+                          <mat-icon>trending_up</mat-icon>
+                          Score d'efficacité
+                        </div>
+                        <div class="change-values">
+                          <span class="old-value" *ngIf="entry.oldScore !== undefined">{{ entry.oldScore }}%</span>
+                          <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+                          <span class="new-value" *ngIf="entry.newScore !== undefined">{{ entry.newScore }}%</span>
+                        </div>
+                      </div>
+                      
+                      <div class="probability-change" *ngIf="entry.oldProbabilityLevel || entry.newProbabilityLevel">
+                        <div class="change-label">
+                          <mat-icon>probability</mat-icon>
+                          Niveau de probabilité
+                        </div>
+                        <div class="change-values">
+                          <span class="old-value" *ngIf="entry.oldProbabilityLevel">{{ entry.oldProbabilityLevel }}</span>
+                          <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+                          <span class="new-value" *ngIf="entry.newProbabilityLevel">{{ entry.newProbabilityLevel }}</span>
+                        </div>
+                      </div>
+                      
+                      <div class="impact-change" *ngIf="entry.oldImpactLevel || entry.newImpactLevel">
+                        <div class="change-label">
+                          <mat-icon>impact</mat-icon>
+                          Niveau d'impact
+                        </div>
+                        <div class="change-values">
+                          <span class="old-value" *ngIf="entry.oldImpactLevel">{{ entry.oldImpactLevel }}</span>
+                          <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+                          <span class="new-value" *ngIf="entry.newImpactLevel">{{ entry.newImpactLevel }}</span>
+                        </div>
+                      </div>
+                      
+                      <div class="control-type">
+                        <div class="change-label">
+                          <mat-icon>category</mat-icon>
+                          Type de contrôle
+                        </div>
+                        <span class="type-value">{{ entry.controlType }}</span>
+                      </div>
+                      
+                      <div class="changed-by" *ngIf="entry.changedByUserName">
+                        <div class="change-label">
+                          <mat-icon>person</mat-icon>
+                          Modifié par
+                        </div>
+                        <span class="user-value">{{ entry.changedByUserName }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <ng-template #noHistory>
+                <div class="no-history">
+                  <mat-icon>history</mat-icon>
+                  <h3>Aucun historique disponible</h3>
+                  <p>L'historique des changements d'efficacité apparaîtra ici lorsque vous modifierez le score d'efficacité de ce contrôle.</p>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </mat-tab>
       </mat-tab-group>
     </mat-card-content>
   </mat-card>

@@ -292,4 +292,209 @@
       }
     }
   }
+}
+
+// Styles pour l'historique d'efficacité
+.effectiveness-history-section {
+  .loading-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+    color: #666;
+  }
+
+  .history-description {
+    color: #666;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  .history-timeline {
+    .history-entry {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      .history-header {
+        background-color: #f5f5f5;
+        padding: 12px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e0e0e0;
+
+        .history-date {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-weight: 500;
+          color: #333;
+
+          mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+            color: #666;
+          }
+        }
+
+        .history-risk {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #d32f2f;
+          font-weight: 500;
+
+          mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+          }
+        }
+      }
+
+      .history-content {
+        padding: 16px;
+
+        .score-change,
+        .probability-change,
+        .impact-change,
+        .control-type,
+        .changed-by {
+          margin-bottom: 12px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+
+          .change-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 140px;
+            font-weight: 500;
+            color: #555;
+
+            mat-icon {
+              font-size: 16px;
+              width: 16px;
+              height: 16px;
+              color: #666;
+            }
+          }
+
+          .change-values {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            .old-value {
+              background-color: #ffebee;
+              color: #c62828;
+              padding: 2px 8px;
+              border-radius: 4px;
+              font-size: 12px;
+              font-weight: 500;
+            }
+
+            .arrow-icon {
+              font-size: 16px;
+              width: 16px;
+              height: 16px;
+              color: #666;
+            }
+
+            .new-value {
+              background-color: #e8f5e9;
+              color: #2e7d32;
+              padding: 2px 8px;
+              border-radius: 4px;
+              font-size: 12px;
+              font-weight: 500;
+            }
+          }
+
+          .type-value,
+          .user-value {
+            color: #333;
+            font-weight: 500;
+          }
+        }
+
+        .control-type,
+        .changed-by {
+          .change-label {
+            min-width: 120px;
+          }
+        }
+      }
+    }
+  }
+
+  .no-history {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: #ccc;
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      margin: 0 0 8px 0;
+      color: #333;
+    }
+
+    p {
+      margin: 0;
+      line-height: 1.5;
+    }
+  }
+}
+
+// Responsive pour l'historique
+@media (max-width: 768px) {
+  .effectiveness-history-section {
+    .history-timeline {
+      .history-entry {
+        .history-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+
+          .history-risk {
+            font-size: 14px;
+          }
+        }
+
+        .history-content {
+          .score-change,
+          .probability-change,
+          .impact-change,
+          .control-type,
+          .changed-by {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+
+            .change-label {
+              min-width: auto;
+            }
+
+            .change-values {
+              width: 100%;
+              justify-content: flex-start;
+            }
+          }
+        }
+      }
+    }
+  }
 } 

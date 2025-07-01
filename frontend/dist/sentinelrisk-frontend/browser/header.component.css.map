@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["angular:styles/component:css;799613d6493beb2a5e601d71105385a06583d7a6afa5dd618104e5c430310165;/Users/omar/Desktop/pfe2025/sentinelrisk-norust/frontend/src/app/layout/header/header.component.ts"],
-  "sourcesContent": ["\n    .spacer {\n      flex: 1 1 auto;\n    }\n    .app-title {\n      margin-left: 16px;\n      font-size: 1.2em;\n    }\n    .user-info {\n      display: flex;\n      align-items: center;\n      gap: 8px;\n    }\n    .user-name {\n      font-size: 0.9em;\n    }\n  "],
-  "mappings": ";AACI,CAAC;AACC,QAAM,EAAE,EAAE;AACZ;AACA,CAAC;AACC,eAAa;AACb,aAAW;AACb;AACA,CAAC;AACC,WAAS;AACT,eAAa;AACb,OAAK;AACP;AACA,CAAC;AACC,aAAW;AACb;",
-  "names": []
-}

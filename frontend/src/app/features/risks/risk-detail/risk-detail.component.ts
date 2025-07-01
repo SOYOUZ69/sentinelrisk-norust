@@ -4,6 +4,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { RiskService } from '../services/risk.service';
 import { Risk, ImpactLevel, ProbabilityLevel, RiskStatus } from '../../../core/models/risk.model';
+import { RiskStatusHistory } from '../../../core/models/risk-status-history.model';
+import { RiskScoreHistory } from '../../../core/models/risk-score-history.model';
 import { finalize } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -16,6 +18,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
 import { RiskFormDialogComponent } from '../risk-form-dialog/risk-form-dialog.component';
 import { RiskControlMappingDialogComponent } from '../risk-control-mapping-dialog/risk-control-mapping-dialog.component';
+import { ControlEffectivenessHistoryService } from '../../controls/services/control-effectiveness-history.service';
+import { ControlEffectivenessHistory } from '../../../core/models/control-effectiveness-history.model';
 
 @Component({
   selector: 'app-risk-detail',
@@ -38,6 +42,12 @@ import { RiskControlMappingDialogComponent } from '../risk-control-mapping-dialo
 export class RiskDetailComponent implements OnInit {
   risk: Risk | null = null;
   isLoading = false;
+  statusHistory: RiskStatusHistory[] = [];
+  scoreHistory: RiskScoreHistory[] = [];
+  effectivenessHistory: ControlEffectivenessHistory[] = [];
+  isLoadingHistory = false;
+  isLoadingScoreHistory = false;
+  isLoadingEffectivenessHistory = false;
 
   // Mappages pour les traductions
   impactLevelTranslations: Record<string, string> = {
@@ -68,8 +78,9 @@ export class RiskDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private riskService: RiskService,
-    private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private controlEffectivenessHistoryService: ControlEffectivenessHistoryService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -79,7 +90,7 @@ export class RiskDetailComponent implements OnInit {
   loadRiskDetails(): void {
     this.isLoading = true;
     const riskId = this.route.snapshot.paramMap.get('id');
-
+    
     if (!riskId) {
       this.showError('Identifiant de risque non valide');
       this.router.navigate(['/risks']);
@@ -91,12 +102,62 @@ export class RiskDetailComponent implements OnInit {
       .subscribe({
         next: (risk) => {
           this.risk = risk;
-          console.log('Risque chargé:', risk);
+          // Charger les historiques
+          this.loadStatusHistory(riskId);
+          this.loadScoreHistory(riskId);
+          this.loadEffectivenessHistory(riskId);
         },
         error: (error) => {
           console.error(`Erreur lors du chargement du risque ${riskId}:`, error);
           this.showError('Impossible de charger les détails du risque');
           this.router.navigate(['/risks']);
+        }
+      });
+  }
+
+  loadStatusHistory(riskId: string): void {
+    this.isLoadingHistory = true;
+    this.riskService.getRiskStatusHistory(riskId)
+      .pipe(finalize(() => this.isLoadingHistory = false))
+      .subscribe({
+        next: (history) => {
+          this.statusHistory = history;
+          console.log('Historique des statuts chargé:', history);
+        },
+        error: (error) => {
+          console.error(`Erreur lors du chargement de l'historique des statuts:`, error);
+          // Ne pas afficher d'erreur à l'utilisateur car l'historique n'est pas critique
+        }
+      });
+  }
+
+  loadScoreHistory(riskId: string): void {
+    this.isLoadingScoreHistory = true;
+    this.riskService.getRiskScoreHistory(riskId)
+      .pipe(finalize(() => this.isLoadingScoreHistory = false))
+      .subscribe({
+        next: (history) => {
+          this.scoreHistory = history;
+          console.log('Historique des scores chargé:', history);
+        },
+        error: (error) => {
+          console.error(`Erreur lors du chargement de l'historique des scores:`, error);
+          // Ne pas afficher d'erreur à l'utilisateur car l'historique n'est pas critique
+        }
+      });
+  }
+
+  loadEffectivenessHistory(riskId: string): void {
+    this.isLoadingEffectivenessHistory = true;
+    this.controlEffectivenessHistoryService.getRiskEffectivenessHistory(parseInt(riskId))
+      .pipe(finalize(() => this.isLoadingEffectivenessHistory = false))
+      .subscribe({
+        next: (history) => {
+          this.effectivenessHistory = history;
+        },
+        error: (error) => {
+          console.error('Erreur lors du chargement de l\'historique d\'efficacité:', error);
+          this.showError('Impossible de charger l\'historique d\'efficacité des contrôles');
         }
       });
   }
@@ -137,7 +198,7 @@ export class RiskDetailComponent implements OnInit {
     return level.toLowerCase();
   }
 
-  getScoreClass(score: number): string {
+  getScoreClass(score: number | undefined): string {
     if (!score && score !== 0) return '';
     if (score >= 16) return 'severe';
     if (score >= 10) return 'high';
@@ -145,7 +206,7 @@ export class RiskDetailComponent implements OnInit {
     return 'low';
   }
 
-  getStatusClass(status: string): string {
+  getStatusClass(status: string | null): string {
     if (!status) return '';
     return status.toLowerCase();
   }
@@ -162,5 +223,20 @@ export class RiskDetailComponent implements OnInit {
       duration: 3000,
       panelClass: ['success-snackbar']
     });
+  }
+
+  formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+
+  getStatusLabel(status: RiskStatus | null): string {
+    if (!status) return 'Création';
+    return this.statusTranslations[status] || status;
   }
 }

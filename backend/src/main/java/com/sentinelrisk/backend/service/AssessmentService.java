@@ -21,6 +21,7 @@ public class AssessmentService {
     private final RiskServiceWrapper riskServiceWrapper;
     private final UserService userService;
     private final RiskStatusTransitionService riskStatusTransitionService;
+    private final RiskImpactAdjustmentService riskImpactAdjustmentService;
 
     public List<Assessment> getAllAssessments() {
         return assessmentRepository.findAll();
@@ -78,6 +79,9 @@ public class AssessmentService {
                 RiskStatusTransitionService.AssessmentAction.CREATE, 
                 currentUser
             );
+            
+            // Appliquer l'ajustement automatique d'impact basé sur le score d'assessment
+            riskImpactAdjustmentService.handleAssessmentScoreImpact(risk, savedAssessment, currentUser);
         }
 
         return savedAssessment;
@@ -98,8 +102,10 @@ public class AssessmentService {
         }
 
         existingAssessment.setStatus(assessment.getStatus());
+        existingAssessment.setAssessmentDate(assessment.getAssessmentDate());
         existingAssessment.setFindings(assessment.getFindings());
         existingAssessment.setRecommendations(assessment.getRecommendations());
+        existingAssessment.setAssessmentScore(assessment.getAssessmentScore());
         existingAssessment.setNextReviewDate(assessment.getNextReviewDate());
 
         // Sauvegarder l'assessment
@@ -122,6 +128,9 @@ public class AssessmentService {
             riskStatusTransitionService.handleAssessmentStatusTransition(
                 existingAssessment.getRisk(), savedAssessment, action, currentUser
             );
+            
+            // Appliquer l'ajustement automatique d'impact basé sur le score d'assessment
+            riskImpactAdjustmentService.handleAssessmentScoreImpact(existingAssessment.getRisk(), savedAssessment, currentUser);
         }
 
         return savedAssessment;

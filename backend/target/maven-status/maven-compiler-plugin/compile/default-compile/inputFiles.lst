@@ -24,11 +24,14 @@
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/dto/AssessmentResponse.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/repository/AssetRepository.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/dto/ConfigCreateRequest.java
+/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/dto/RiskScoreHistoryDTO.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/service/SnmpManualScanService.java
+/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/service/RiskScoreHistoryService.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/service/RiskMigrationService.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/service/compliance/ComplianceRequirementService.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/controller/SnmpZabbixSyncController.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/service/SnmpScanConfigService.java
+/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/dto/ControlEffectivenessHistoryDTO.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/controller/RiskController.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/controller/DashboardController.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/service/dto/compliance/RiskComplianceMappingDTO.java
@@ -46,6 +49,7 @@
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/model/ComplianceControl.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/repository/SnmpScanResultRepository.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/dto/ImportError.java
+/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/service/ControlImpactService.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/controller/AssessmentController.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/model/SnmpScanTarget.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/repository/RiskRepository.java
@@ -67,6 +71,7 @@
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/repository/SnmpAssetRepository.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/util/CreatedResponseUtil.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/exception/GlobalExceptionHandler.java
+/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/repository/RiskScoreHistoryRepository.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/repository/AppSettingsRepository.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/service/RiskStatusTransitionService.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/controller/JwtDebugController.java
@@ -105,6 +110,7 @@
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/mapper/CategoryMapper.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/dto/RiskRequest.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/mapper/ControlMapper.java
+/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/service/RiskImpactAdjustmentService.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/model/RiskStatusHistory.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/mapper/AssessmentMapper.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/service/compliance/ComplianceFrameworkService.java
@@ -137,6 +143,7 @@
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/dto/SnmpScanTargetDto.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/service/OidInterpretationService.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/repository/SnmpScanTargetRepository.java
+/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/repository/ControlEffectivenessHistoryRepository.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/dto/SnmpManualScanRequest.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/controller/ControlController.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/dto/UserDTO.java
@@ -148,6 +155,7 @@
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/controller/ComplianceControlController.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/controller/SnmpAssetCrudController.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/domain/compliance/ComplianceDataLoader.java
+/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/controller/ControlEffectivenessHistoryController.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/repository/SnmpScanHistoryRepository.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/repository/CategoryRepository.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/controller/SnmpScanHistoryController.java
@@ -160,6 +168,7 @@
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/dto/RiskDTO.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/model/Category.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/service/AssessmentService.java
+/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/model/RiskScoreHistory.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/service/DidGeneratorService.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/controller/SnmpAssetController.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/exception/DuplicateRiskException.java
@@ -169,6 +178,7 @@
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/controller/SnmpManualScanController.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/controller/DebugController.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/web/rest/compliance/RiskComplianceMappingResource.java
+/Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/model/ControlEffectivenessHistory.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/web/rest/errors/BadRequestAlertException.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/backend/domain/compliance/RemediationPlan.java
 /Users/omar/Desktop/pfe2025/sentinelrisk-norust/backend/src/main/java/com/sentinelrisk/repository/ComplianceControlRepository.java

@@ -57,7 +57,8 @@ export class AssessmentFormComponent implements OnInit {
       assessmentDate: [new Date(), Validators.required],
       findings: [''],
       recommendations: [''],
-      nextReviewDate: [null]
+      nextReviewDate: [null],
+      assessmentScore: [null, [Validators.required, Validators.min(0), Validators.max(100)]]
     });
   }
 
@@ -106,7 +107,8 @@ export class AssessmentFormComponent implements OnInit {
       assessmentDate: assessment.assessmentDate ? new Date(assessment.assessmentDate) : null,
       findings: assessment.conclusions,
       recommendations: assessment.recommendations,
-      nextReviewDate: assessment.nextReviewDate ? new Date(assessment.nextReviewDate) : null
+      nextReviewDate: assessment.nextReviewDate ? new Date(assessment.nextReviewDate) : null,
+      assessmentScore: assessment.assessmentScore ?? null
     });
   }
 
@@ -123,7 +125,8 @@ export class AssessmentFormComponent implements OnInit {
       assessmentDate: formValue.assessmentDate,
       conclusions: formValue.findings,
       recommendations: formValue.recommendations,
-      nextReviewDate: formValue.nextReviewDate
+      nextReviewDate: formValue.nextReviewDate,
+      assessmentScore: formValue.assessmentScore
     };
 
     this.isLoading = true;

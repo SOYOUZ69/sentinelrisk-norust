@@ -47,6 +47,11 @@ public class Assessment {
     @Size(max = 1000)
     private String recommendations;
 
+    @Column(name = "assessment_score")
+    @jakarta.validation.constraints.Min(0)
+    @jakarta.validation.constraints.Max(100)
+    private Integer assessmentScore;
+
     @Column(name = "next_review_date")
     private java.time.LocalDateTime nextReviewDate;
 

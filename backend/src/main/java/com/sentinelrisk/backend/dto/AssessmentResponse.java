@@ -31,6 +31,8 @@ public class AssessmentResponse {
     private String findings;
     private String recommendations;
     
+    private Integer assessmentScore; // Score de l'évaluation (0-100)
+    
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime nextReviewDate;
     
@@ -69,6 +71,7 @@ public class AssessmentResponse {
         response.setAssessmentDate(assessment.getAssessmentDate());
         response.setFindings(assessment.getFindings());
         response.setRecommendations(assessment.getRecommendations());
+        response.setAssessmentScore(assessment.getAssessmentScore());
         response.setNextReviewDate(assessment.getNextReviewDate());
         response.setCreatedAt(assessment.getCreatedAt());
         response.setUpdatedAt(assessment.getUpdatedAt());

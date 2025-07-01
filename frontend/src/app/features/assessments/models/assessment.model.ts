@@ -19,6 +19,7 @@ export interface Assessment {
   user?: User;
   createdAt: Date;
   updatedAt: Date;
+  assessmentScore?: number;
 }
 
 export interface AssessmentRequest {
@@ -29,4 +30,5 @@ export interface AssessmentRequest {
   conclusions?: string;
   recommendations?: string;
   nextReviewDate?: Date;
+  assessmentScore?: number;
 } 

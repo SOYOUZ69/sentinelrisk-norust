@@ -3,11 +3,13 @@ package com.sentinelrisk.backend.controller;
 import com.sentinelrisk.backend.dto.RiskRequest;
 import com.sentinelrisk.backend.dto.RiskResponse;
 import com.sentinelrisk.backend.dto.RiskStatusHistoryDTO;
+import com.sentinelrisk.backend.dto.RiskScoreHistoryDTO;
 import com.sentinelrisk.backend.model.Risk;
 import com.sentinelrisk.backend.service.RiskService;
 import com.sentinelrisk.backend.service.CategoryService;
 import com.sentinelrisk.backend.service.ExcelService;
 import com.sentinelrisk.backend.service.RiskStatusHistoryService;
+import com.sentinelrisk.backend.service.RiskScoreHistoryService;
 import com.sentinelrisk.backend.dto.ImportResult;
 import com.sentinelrisk.backend.dto.ImportError;
 import com.sentinelrisk.backend.dto.BulkRiskRequest;
@@ -58,6 +60,7 @@ public class RiskController {
     private final ExcelService excelService;
     private final UserService userService;
     private final RiskStatusHistoryService riskStatusHistoryService;
+    private final RiskScoreHistoryService riskScoreHistoryService;
 
     @GetMapping
     @Operation(summary = "Lister tous les risques",
@@ -820,6 +823,24 @@ public class RiskController {
         List<RiskStatusHistoryDTO> history = riskStatusHistoryService.getStatusHistoryForRisk(id)
             .stream()
             .map(RiskStatusHistoryDTO::fromEntity)
+            .collect(Collectors.toList());
+        
+        return ResponseEntity.ok(history);
+    }
+
+    @GetMapping("/{id}/score-history")
+    @Operation(summary = "Obtenir l'historique des scores de risque",
+            description = "Récupère l'historique des scores d'un risque spécifique via son ID")
+    @ApiResponse(responseCode = "200", description = "Historique des scores de risque récupéré")
+    @ApiResponse(responseCode = "404", description = "Risque non trouvé")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_RISK_MANAGER', 'ROLE_COMPLIANCE_OFFICER', 'ROLE_AUDITOR', 'ROLE_USER')")
+    public ResponseEntity<List<RiskScoreHistoryDTO>> getRiskScoreHistory(
+            @Parameter(description = "ID du risque") 
+            @PathVariable Long id) {
+        
+        List<RiskScoreHistoryDTO> history = riskScoreHistoryService.getScoreHistoryForRisk(id)
+            .stream()
+            .map(RiskScoreHistoryDTO::fromEntity)
             .collect(Collectors.toList());
         
         return ResponseEntity.ok(history);

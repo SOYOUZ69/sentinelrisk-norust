@@ -10,6 +10,7 @@ interface AssessmentPayload {
   assessmentDate: Date;
   findings?: string;
   recommendations?: string;
+  assessmentScore?: number; // Score de l'évaluation (0-100)
   nextReviewDate?: Date;
   assignedTo?: { id: string };
 }
@@ -52,6 +53,7 @@ export class AssessmentService {
       assessmentDate: assessmentRequest.assessmentDate,
       findings: assessmentRequest.conclusions,
       recommendations: assessmentRequest.recommendations,
+      assessmentScore: assessmentRequest.assessmentScore,
       nextReviewDate: assessmentRequest.nextReviewDate
     };
 
@@ -77,6 +79,7 @@ export class AssessmentService {
       assessmentDate: assessmentRequest.assessmentDate,
       findings: assessmentRequest.conclusions,
       recommendations: assessmentRequest.recommendations,
+      assessmentScore: assessmentRequest.assessmentScore,
       nextReviewDate: assessmentRequest.nextReviewDate
     };
 

@@ -16,6 +16,7 @@ export interface Assessment {
   assessmentDate?: Date;
   conclusions?: string;
   recommendations?: string;
+  assessmentScore?: number; // Score de l'évaluation (0-100)
   nextReviewDate?: Date;
   createdAt?: Date;
   updatedAt?: Date;

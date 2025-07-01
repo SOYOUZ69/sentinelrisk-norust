@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/features/compliance/mappings/mapping-form-dialog/mapping-form-dialog.component.css"],
-  "sourcesContent": [".form-fields {\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n  min-width: 500px;\n}\n\n.full-width {\n  width: 100%;\n}\n\n.spinner-button {\n  display: inline-block;\n  margin-right: 8px;\n  vertical-align: middle;\n}\n\n::ng-deep .mat-mdc-progress-spinner circle {\n  stroke: #fff !important;\n}\n\n/* Pour forcer une hauteur minimale du contenu */\nmat-dialog-content {\n  max-height: 70vh;\n  min-height: 300px;\n}\n\n/* Pour augmenter l'espace entre les champs */\nmat-form-field {\n  margin-bottom: 8px;\n}\n"],
-  "mappings": ";AAAA,CAAC;AACC,WAAS;AACT,kBAAgB;AAChB,OAAK;AACL,aAAW;AACb;AAEA,CAAC;AACC,SAAO;AACT;AAEA,CAAC;AACC,WAAS;AACT,gBAAc;AACd,kBAAgB;AAClB;AAEA,UAAU,CAAC,yBAAyB;AAClC,UAAQ;AACV;AAGA;AACE,cAAY;AACZ,cAAY;AACd;AAGA;AACE,iBAAe;AACjB;",
-  "names": []
-}

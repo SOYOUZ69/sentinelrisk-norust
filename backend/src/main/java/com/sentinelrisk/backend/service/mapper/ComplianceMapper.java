@@ -108,10 +108,11 @@ public class ComplianceMapper {
         RiskComplianceMappingDTO dto = new RiskComplianceMappingDTO();
         dto.setId(entity.getId());
         
-        // Définir les IDs
+        // Définir les IDs et informations du risque
         if (entity.getRisk() != null) {
             dto.setRiskId(entity.getRisk().getId());
-            dto.setRisk(entity.getRisk()); // Objet Risk complet
+            dto.setRiskName(entity.getRisk().getName());
+            dto.setRiskDescription(entity.getRisk().getDescription());
         }
         
         if (entity.getRequirement() != null) {

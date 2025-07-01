@@ -3,6 +3,8 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ApiService } from '../../../core/services/api.service';
 import { Risk, Category, Control } from '../../../core/models/risk.model';
+import { RiskStatusHistory } from '../../../core/models/risk-status-history.model';
+import { RiskScoreHistory } from '../../../core/models/risk-score-history.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { ImportResult } from '../../../core/models/import-result.model';
@@ -198,16 +200,46 @@ export class RiskService {
    * Attribue des identifiants DID aux risques qui n'en ont pas encore
    * @returns Observable contenant le nombre de risques mis à jour
    */
-  assignMissingDids(): Observable<number> {
-    return this.apiService.post<any>(`${this.basePath}/did/assign-missing`, {})
+  assignMissingDids(): Observable<{ updatedCount: number }> {
+    return this.apiService.post<any>(`${this.basePath}/assign-dids`, {})
       .pipe(
-        map(response => response.updatedCount),
         catchError(error => {
           console.error('Erreur lors de l\'attribution des identifiants DID', error);
-          return throwError(() => new Error('Impossible d\'attribuer les identifiants DID manquants. Veuillez réessayer.'));
+          return throwError(() => new Error('Impossible d\'attribuer les identifiants DID. Veuillez réessayer.'));
         })
       );
   }
+
+  /**
+   * Récupère l'historique des statuts d'un risque
+   * @param riskId Identifiant du risque
+   * @returns Observable contenant l'historique des statuts
+   */
+  getRiskStatusHistory(riskId: string): Observable<RiskStatusHistory[]> {
+    return this.apiService.get<RiskStatusHistory[]>(`${this.basePath}/${riskId}/status-history`)
+      .pipe(
+        catchError(error => {
+          console.error(`Erreur lors de la récupération de l'historique des statuts du risque ${riskId}`, error);
+          return throwError(() => new Error('Impossible de récupérer l\'historique des statuts. Veuillez réessayer.'));
+        })
+      );
+  }
+
+  /**
+   * Récupère l'historique des scores d'un risque
+   * @param riskId Identifiant du risque
+   * @returns Observable contenant l'historique des scores
+   */
+  getRiskScoreHistory(riskId: string): Observable<RiskScoreHistory[]> {
+    return this.apiService.get<RiskScoreHistory[]>(`${this.basePath}/${riskId}/score-history`)
+      .pipe(
+        catchError(error => {
+          console.error(`Erreur lors de la récupération de l'historique des scores du risque ${riskId}`, error);
+          return throwError(() => new Error('Impossible de récupérer l\'historique des scores. Veuillez réessayer.'));
+        })
+      );
+  }
+
 
   /**
    * Récupère les risques avec un score élevé

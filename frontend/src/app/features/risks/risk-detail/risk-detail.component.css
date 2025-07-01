@@ -198,6 +198,286 @@ mat-card-title {
   justify-content: center;
 }
 
+/* Status History Styling */
+.status-history-container {
+  padding: 16px;
+}
+
+.loading-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  justify-content: center;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.empty-history {
+  text-align: center;
+  padding: 40px 20px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.empty-history mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-history p {
+  font-size: 18px;
+  margin: 0 0 8px 0;
+  font-weight: 500;
+}
+
+.empty-message {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.history-entry {
+  display: flex;
+  gap: 16px;
+  position: relative;
+}
+
+.history-timeline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 24px;
+}
+
+.timeline-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #3f51b5;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+.timeline-line {
+  width: 2px;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.12);
+  margin-top: 4px;
+}
+
+.history-content {
+  flex: 1;
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 16px;
+  border-left: 4px solid #3f51b5;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.history-date {
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 14px;
+}
+
+.history-user {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.04);
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+
+.history-status-change {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 80px;
+  text-align: center;
+}
+
+.status-badge.old-status {
+  background-color: rgba(0, 0, 0, 0.08);
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.status-badge.new-status {
+  background-color: #3f51b5;
+  color: white;
+}
+
+.status-arrow {
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.history-reason {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.87);
+  line-height: 1.4;
+  margin-top: 8px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 4px;
+  border-left: 3px solid #3f51b5;
+}
+
+/* Status-specific timeline dot colors */
+.timeline-dot.identified {
+  background-color: #0d47a1;
+}
+
+.timeline-dot.in_assessment {
+  background-color: #ff6f00;
+}
+
+.timeline-dot.mitigated {
+  background-color: #2e7d32;
+}
+
+.timeline-dot.accepted {
+  background-color: #7b1fa2;
+}
+
+.timeline-dot.closed {
+  background-color: #616161;
+}
+
+/* Responsive design for history */
+@media (max-width: 600px) {
+  .history-entry {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .history-timeline {
+    flex-direction: row;
+    min-width: auto;
+    justify-content: center;
+  }
+  
+  .timeline-line {
+    width: 40px;
+    height: 2px;
+    margin-top: 0;
+    margin-left: 4px;
+  }
+  
+  .history-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .history-status-change,
+  .history-score-change {
+    flex-wrap: wrap;
+  }
+}
+
+/* Score History Styling */
+.score-history-container {
+  padding: 16px;
+}
+
+.history-score-change {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.score-badge {
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  min-width: 40px;
+  text-align: center;
+}
+
+.score-badge.old-score {
+  background-color: rgba(0, 0, 0, 0.08);
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.score-badge.no-score {
+  background-color: rgba(0, 0, 0, 0.04);
+  color: rgba(0, 0, 0, 0.4);
+  font-style: italic;
+}
+
+.score-badge.new-score {
+  background-color: #4caf50;
+  color: white;
+}
+
+.score-badge.new-score.severe {
+  background-color: #f44336;
+}
+
+.score-badge.new-score.high {
+  background-color: #ff9800;
+}
+
+.score-badge.new-score.medium {
+  background-color: #ffc107;
+}
+
+.score-badge.new-score.low {
+  background-color: #4caf50;
+}
+
+.score-arrow {
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.history-assessment {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.6);
+  margin-top: 8px;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 4px;
+}
+
+.assessment-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+}
+
+/* Timeline dot for score changes */
+.timeline-dot.score-change {
+  background-color: #4caf50;
+}
+
 /* Not found state */
 .not-found {
   display: flex;
@@ -229,5 +509,252 @@ mat-card-title {
   
   .actions-container {
     justify-content: center;
+  }
+}
+
+/* Styles pour l'historique d'efficacité des contrôles */
+.effectiveness-history-container {
+  .loading-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+    color: #666;
+  }
+
+  .empty-history {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: #ccc;
+      margin-bottom: 16px;
+    }
+
+    p {
+      margin: 0 0 8px 0;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .empty-message {
+      font-size: 14px;
+      color: #999;
+    }
+  }
+
+  .history-list {
+    .history-entry {
+      display: flex;
+      margin-bottom: 20px;
+      position: relative;
+
+      .history-timeline {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-right: 16px;
+        min-width: 24px;
+
+        .timeline-dot {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background-color: #3f51b5;
+          border: 2px solid #fff;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          z-index: 2;
+
+          &.effectiveness-change {
+            background-color: #4caf50;
+          }
+        }
+
+        .timeline-line {
+          width: 2px;
+          height: 40px;
+          background-color: #e0e0e0;
+          margin-top: 4px;
+        }
+      }
+
+      .history-content {
+        flex: 1;
+        background-color: #fafafa;
+        border-radius: 8px;
+        padding: 16px;
+        border-left: 4px solid #4caf50;
+
+        .history-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 12px;
+
+          .history-date {
+            font-weight: 500;
+            color: #333;
+            font-size: 14px;
+          }
+
+          .history-user {
+            color: #666;
+            font-size: 12px;
+            font-style: italic;
+          }
+        }
+
+        .history-control-info {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 12px;
+          padding: 8px 12px;
+          background-color: #e8f5e9;
+          border-radius: 6px;
+
+          .control-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+            color: #4caf50;
+          }
+
+          .control-name {
+            font-weight: 500;
+            color: #2e7d32;
+          }
+
+          .control-type {
+            color: #666;
+            font-size: 12px;
+            text-transform: uppercase;
+          }
+        }
+
+        .history-effectiveness-change {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 12px;
+
+          .effectiveness-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+
+            &.old-score {
+              background-color: #ffebee;
+              color: #c62828;
+            }
+
+            &.new-score {
+              background-color: #e8f5e9;
+              color: #2e7d32;
+            }
+
+            &.no-score {
+              background-color: #f5f5f5;
+              color: #999;
+            }
+          }
+
+          .effectiveness-arrow {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+            color: #666;
+          }
+        }
+
+        .history-impact-changes {
+          .impact-change {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+
+            .impact-label {
+              font-weight: 500;
+              color: #555;
+              min-width: 80px;
+              font-size: 12px;
+            }
+
+            .impact-badge {
+              padding: 2px 6px;
+              border-radius: 3px;
+              font-size: 11px;
+              font-weight: 500;
+
+              &.old-value {
+                background-color: #ffebee;
+                color: #c62828;
+              }
+
+              &.new-value {
+                background-color: #e8f5e9;
+                color: #2e7d32;
+              }
+            }
+
+            .impact-arrow {
+              font-size: 14px;
+              width: 14px;
+              height: 14px;
+              color: #666;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Responsive pour l'historique d'efficacité */
+@media (max-width: 768px) {
+  .effectiveness-history-container {
+    .history-list {
+      .history-entry {
+        .history-content {
+          .history-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+
+            .history-user {
+              font-size: 11px;
+            }
+          }
+
+          .history-control-info {
+            flex-wrap: wrap;
+            gap: 6px;
+
+            .control-type {
+              font-size: 11px;
+            }
+          }
+
+          .history-impact-changes {
+            .impact-change {
+              flex-wrap: wrap;
+              gap: 6px;
+
+              .impact-label {
+                min-width: auto;
+                font-size: 11px;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

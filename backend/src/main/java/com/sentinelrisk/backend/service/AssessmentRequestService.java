@@ -106,6 +106,7 @@ public class AssessmentRequestService {
             dto.setAssessmentDate(assessment.getAssessmentDate());
             dto.setFindings(assessment.getFindings());
             dto.setRecommendations(assessment.getRecommendations());
+            dto.setAssessmentScore(assessment.getAssessmentScore());
             dto.setNextReviewDate(assessment.getNextReviewDate());
             dto.setCreatedAt(assessment.getCreatedAt());
             dto.setUpdatedAt(assessment.getUpdatedAt());

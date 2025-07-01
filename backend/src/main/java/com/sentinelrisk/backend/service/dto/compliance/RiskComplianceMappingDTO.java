@@ -25,7 +25,10 @@ public class RiskComplianceMappingDTO {
     private String remediationPlan;
     private String comment;
     
-    // Objets complets pour l'affichage dans le frontend
-    private Risk risk;
+    // Informations du risque pour l'affichage (sans l'objet complet)
+    private String riskName;
+    private String riskDescription;
+    
+    // Objet requirement pour l'affichage dans le frontend
     private ComplianceRequirementDTO requirement;
 } 

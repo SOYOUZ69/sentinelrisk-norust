@@ -10,6 +10,8 @@ import { finalize } from 'rxjs/operators';
 import { RiskService } from '../../risks/services/risk.service';
 import { Risk } from '../../../core/models/risk.model';
 import { Observable, of, forkJoin } from 'rxjs';
+import { ControlEffectivenessHistoryService } from '../services/control-effectiveness-history.service';
+import { ControlEffectivenessHistory } from '../../../core/models/control-effectiveness-history.model';
 
 @Component({
   selector: 'app-control-detail',
@@ -20,6 +22,8 @@ export class ControlDetailComponent implements OnInit {
   control: Control | null = null;
   isLoading = false;
   associatedRisks: Risk[] = [];
+  effectivenessHistory: ControlEffectivenessHistory[] = [];
+  isLoadingHistory = false;
   
   // Mappage pour les traductions
   typeTranslations: Record<string, string> = {
@@ -53,6 +57,7 @@ export class ControlDetailComponent implements OnInit {
     private router: Router,
     private controlService: ControlService,
     private riskService: RiskService,
+    private controlEffectivenessHistoryService: ControlEffectivenessHistoryService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
   ) {}
@@ -79,6 +84,8 @@ export class ControlDetailComponent implements OnInit {
           if (control.riskIds && control.riskIds.length > 0) {
             this.loadAssociatedRisks(control.riskIds);
           }
+          // Charger l'historique d'efficacité
+          this.loadEffectivenessHistory(controlId);
         },
         error: (error) => {
           console.error(`Erreur lors du chargement du contrôle ${controlId}:`, error);
@@ -110,6 +117,21 @@ export class ControlDetailComponent implements OnInit {
         error: (error: any) => {
           console.error('Erreur lors du chargement des risques associés:', error);
           this.showError('Impossible de charger les détails des risques associés');
+        }
+      });
+  }
+
+  loadEffectivenessHistory(controlId: string): void {
+    this.isLoadingHistory = true;
+    this.controlEffectivenessHistoryService.getControlEffectivenessHistory(parseInt(controlId))
+      .pipe(finalize(() => this.isLoadingHistory = false))
+      .subscribe({
+        next: (history) => {
+          this.effectivenessHistory = history;
+        },
+        error: (error) => {
+          console.error('Erreur lors du chargement de l\'historique d\'efficacité:', error);
+          this.showError('Impossible de charger l\'historique d\'efficacité');
         }
       });
   }

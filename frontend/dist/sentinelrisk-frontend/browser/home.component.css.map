@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["angular:styles/component:css;843b8a8cc8d5f31e6f7457fca877f6370d19d56cb2ff9efbf74a36ec6f0aae34;/Users/omar/Desktop/pfe2025/sentinelrisk-norust/frontend/src/app/features/auth/home/home.component.ts"],
-  "sourcesContent": ["\n    .home-container {\n      padding: 20px;\n    }\n    mat-card {\n      max-width: 600px;\n      margin: 0 auto;\n    }\n    button {\n      margin-top: 20px;\n    }\n  "],
-  "mappings": ";AACI,CAAC;AACC,WAAS;AACX;AACA;AACE,aAAW;AACX,UAAQ,EAAE;AACZ;AACA;AACE,cAAY;AACd;",
-  "names": []
-}

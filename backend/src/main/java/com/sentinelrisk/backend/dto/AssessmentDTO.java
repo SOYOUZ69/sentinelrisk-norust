@@ -21,6 +21,7 @@ public class AssessmentDTO {
     private LocalDateTime assessmentDate;
     private String findings;
     private String recommendations;
+    private Integer assessmentScore; // Score de l'évaluation (0-100)
     private LocalDateTime nextReviewDate;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
