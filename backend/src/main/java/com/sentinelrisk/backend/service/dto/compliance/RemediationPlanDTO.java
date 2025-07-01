@@ -3,6 +3,8 @@ package com.sentinelrisk.backend.service.dto.compliance;
 import com.sentinelrisk.backend.domain.compliance.RemediationPlan;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -70,6 +72,13 @@ public class RemediationPlanDTO {
      * Date de dernière mise à jour
      */
     private LocalDateTime updatedAt;
+
+    /**
+     * Taux d'efficacité ou de réalisation du plan (0 à 100 %)
+     */
+    @Min(value = 0, message = "L'efficacité ne peut pas être négative")
+    @Max(value = 100, message = "L'efficacité ne peut pas dépasser 100%")
+    private Integer efficacite = 0;
 
     /**
      * Informations résumées sur le mapping (lecture seule)

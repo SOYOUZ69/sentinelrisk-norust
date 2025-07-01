@@ -20,6 +20,7 @@ import { RiskFormDialogComponent } from '../risk-form-dialog/risk-form-dialog.co
 import { RiskControlMappingDialogComponent } from '../risk-control-mapping-dialog/risk-control-mapping-dialog.component';
 import { ControlEffectivenessHistoryService } from '../../controls/services/control-effectiveness-history.service';
 import { ControlEffectivenessHistory } from '../../../core/models/control-effectiveness-history.model';
+import { RiskImpactHistory } from '../../../core/models/risk-impact-history.model';
 
 @Component({
   selector: 'app-risk-detail',
@@ -48,6 +49,8 @@ export class RiskDetailComponent implements OnInit {
   isLoadingHistory = false;
   isLoadingScoreHistory = false;
   isLoadingEffectivenessHistory = false;
+  riskImpactHistory: RiskImpactHistory[] = [];
+  isLoadingImpactHistory = false;
 
   // Mappages pour les traductions
   impactLevelTranslations: Record<string, string> = {
@@ -106,6 +109,7 @@ export class RiskDetailComponent implements OnInit {
           this.loadStatusHistory(riskId);
           this.loadScoreHistory(riskId);
           this.loadEffectivenessHistory(riskId);
+          this.loadImpactHistory(riskId);
         },
         error: (error) => {
           console.error(`Erreur lors du chargement du risque ${riskId}:`, error);
@@ -158,6 +162,20 @@ export class RiskDetailComponent implements OnInit {
         error: (error) => {
           console.error('Erreur lors du chargement de l\'historique d\'efficacité:', error);
           this.showError('Impossible de charger l\'historique d\'efficacité des contrôles');
+        }
+      });
+  }
+
+  loadImpactHistory(riskId: string): void {
+    this.isLoadingImpactHistory = true;
+    this.riskService.getRiskImpactHistory(riskId)
+      .pipe(finalize(() => this.isLoadingImpactHistory = false))
+      .subscribe({
+        next: (history) => {
+          this.riskImpactHistory = history;
+        },
+        error: (error) => {
+          console.error('Erreur lors du chargement de l\'historique d\'impact:', error);
         }
       });
   }

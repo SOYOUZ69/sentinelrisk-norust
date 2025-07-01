@@ -4,11 +4,13 @@ import com.sentinelrisk.backend.model.Risk;
 import com.sentinelrisk.backend.model.RiskStatusHistory;
 import com.sentinelrisk.backend.model.User;
 import com.sentinelrisk.backend.repository.RiskStatusHistoryRepository;
+import com.sentinelrisk.backend.dto.RiskStatusHistoryDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -64,5 +66,11 @@ public class RiskStatusHistoryService {
      */
     public List<RiskStatusHistory> getStatusHistoryForRiskChronological(Long riskId) {
         return riskStatusHistoryRepository.findByRiskIdOrderByChangeDateAsc(riskId);
+    }
+
+    public List<RiskStatusHistoryDTO> getAllStatusHistory() {
+        return riskStatusHistoryRepository.findAll().stream()
+            .map(RiskStatusHistoryDTO::fromEntity)
+            .collect(Collectors.toList());
     }
 } 

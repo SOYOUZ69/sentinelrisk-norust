@@ -8,6 +8,31 @@
       <mat-chip class="demo-chip" color="primary">DONNÉES RÉELLES</mat-chip>
     </h1>
     
+    <!-- Export Buttons -->
+    <div class="export-buttons">
+      <button 
+        mat-raised-button 
+        color="accent" 
+        class="export-btn"
+        [disabled]="isLoading || !realData"
+        (click)="exportDashboard('pdf')"
+        matTooltip="Exporter en PDF">
+        <mat-icon>picture_as_pdf</mat-icon>
+        PDF
+      </button>
+      
+      <button 
+        mat-raised-button 
+        color="accent" 
+        class="export-btn"
+        [disabled]="isLoading || !realData"
+        (click)="exportDashboard('excel')"
+        matTooltip="Exporter en Excel">
+        <mat-icon>table_chart</mat-icon>
+        Excel
+      </button>
+    </div>
+    
     <!-- Refresh Button -->
     <button 
       mat-fab 
@@ -171,6 +196,56 @@
                 </ngx-charts-bar-vertical>
               </div>
             </div>
+
+            <!-- Risk Evolution Section -->
+            <div class="evolution-section" *ngIf="realData">
+              <h3 class="section-subtitle">📈 Évolution et Historique</h3>
+              <div class="evolution-grid">
+                <div class="evolution-card">
+                  <div class="evolution-header">
+                    <mat-icon>trending_up</mat-icon>
+                    <span>Score Moyen des Risques</span>
+                  </div>
+                  <div class="evolution-value">{{realData.risks.averageScore}}/10</div>
+                  <div class="evolution-description">
+                    Basé sur {{realData.risks.totalRisks}} risques évalués
+                  </div>
+                </div>
+
+                <div class="evolution-card">
+                  <div class="evolution-header">
+                    <mat-icon>assessment</mat-icon>
+                    <span>Score Moyen des Évaluations</span>
+                  </div>
+                  <div class="evolution-value">{{realData.assessments.averageScore}}/10</div>
+                  <div class="evolution-description">
+                    Basé sur {{realData.assessments.totalAssessments}} évaluations
+                  </div>
+                </div>
+
+                <div class="evolution-card">
+                  <div class="evolution-header">
+                    <mat-icon>verified_user</mat-icon>
+                    <span>Efficacité Moyenne des Contrôles</span>
+                  </div>
+                  <div class="evolution-value">{{realData.controls.averageEffectiveness}}%</div>
+                  <div class="evolution-description">
+                    Basé sur {{realData.controls.totalControls}} contrôles actifs
+                  </div>
+                </div>
+
+                <div class="evolution-card">
+                  <div class="evolution-header">
+                    <mat-icon>task_alt</mat-icon>
+                    <span>Taux de Complétion des Plans</span>
+                  </div>
+                  <div class="evolution-value">{{realData.remediationPlans.completionRate}}%</div>
+                  <div class="evolution-description">
+                    Basé sur {{realData.remediationPlans.totalPlans}} plans de remédiation
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </mat-card-content>
       </mat-card>
@@ -248,6 +323,92 @@
       </mat-card>
     </div>
 
+    <!-- Recent Changes Section -->
+    <div class="dashboard-section" *ngIf="realData && (realData.history.riskStatusHistory.length > 0 || realData.history.assessmentScoreHistory.length > 0 || realData.history.riskImpactHistory.length > 0)">
+      <mat-card class="section-card">
+        <mat-card-header>
+          <div mat-card-avatar class="section-avatar history-avatar">
+            <mat-icon>history</mat-icon>
+          </div>
+          <mat-card-title>Changements Récents</mat-card-title>
+          <mat-card-subtitle>Dernières modifications des risques, évaluations et impacts</mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div class="history-content">
+            <!-- Recent Status Changes -->
+            <div class="history-section" *ngIf="realData.history.riskStatusHistory.length > 0">
+              <h4 class="history-title">
+                <mat-icon>swap_horiz</mat-icon>
+                Changements de Statut des Risques
+              </h4>
+              <div class="history-list">
+                <div class="history-item" *ngFor="let change of realData.history.riskStatusHistory.slice(0, 5)">
+                  <div class="history-icon">
+                    <mat-icon>warning</mat-icon>
+                  </div>
+                  <div class="history-details">
+                    <div class="history-main">
+                      Risque #{{change.riskId}}: {{change.oldStatus}} → {{change.newStatus}}
+                    </div>
+                    <div class="history-meta">
+                      {{change.changedAt | date:'dd/MM/yyyy HH:mm'}} par {{change.changedBy}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Score Changes -->
+            <div class="history-section" *ngIf="realData.history.assessmentScoreHistory.length > 0">
+              <h4 class="history-title">
+                <mat-icon>score</mat-icon>
+                Changements de Score d'Évaluation
+              </h4>
+              <div class="history-list">
+                <div class="history-item" *ngFor="let change of realData.history.assessmentScoreHistory.slice(0, 5)">
+                  <div class="history-icon">
+                    <mat-icon>assessment</mat-icon>
+                  </div>
+                  <div class="history-details">
+                    <div class="history-main">
+                      Évaluation #{{change.assessmentId}}: {{change.oldScore}} → {{change.newScore}}
+                    </div>
+                    <div class="history-meta">
+                      {{change.changedAt | date:'dd/MM/yyyy HH:mm'}} par {{change.changedBy}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Impact Changes -->
+            <div class="history-section" *ngIf="realData.history.riskImpactHistory.length > 0">
+              <h4 class="history-title">
+                <mat-icon>trending_up</mat-icon>
+                Changements d'Impact des Risques
+              </h4>
+              <div class="history-list">
+                <div class="history-item" *ngFor="let change of realData.history.riskImpactHistory.slice(0, 5)">
+                  <div class="history-icon">
+                    <mat-icon>impact</mat-icon>
+                  </div>
+                  <div class="history-details">
+                    <div class="history-main">
+                      Risque #{{change.riskId}}: {{change.oldImpact}} → {{change.newImpact}} ({{change.oldScore}} → {{change.newScore}})
+                    </div>
+                    <div class="history-meta">
+                      {{change.changedAt | date:'dd/MM/yyyy HH:mm'}} par {{change.changedBy}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
     <!-- SNMP Section -->
     <div class="dashboard-section">
       <mat-card class="section-card">
@@ -268,12 +429,12 @@
                 <div class="stat-label">Total des actifs</div>
               </div>
               <div class="stat-item">
-                <div class="stat-value active-assets">{{snmpSummary.activeAssets}}</div>
-                <div class="stat-label">Actifs actifs</div>
+                <div class="stat-value">{{snmpSummary.recentScans}}</div>
+                <div class="stat-label">Nombre de scans</div>
               </div>
               <div class="stat-item">
-                <div class="stat-value inactive-assets">{{snmpSummary.inactiveAssets}}</div>
-                <div class="stat-label">Actifs inactifs</div>
+                <div class="stat-value">{{snmpSummary.averageDurationMs ? (snmpSummary.averageDurationMs / 1000 | number:'1.0-1') : '0'}}</div>
+                <div class="stat-label">Durée moyenne (s)</div>
               </div>
               <div class="stat-item">
                 <div class="stat-value success-rate">{{snmpSummary.successRate}}%</div>

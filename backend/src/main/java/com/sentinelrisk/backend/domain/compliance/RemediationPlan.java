@@ -3,6 +3,8 @@ package com.sentinelrisk.backend.domain.compliance;
 import com.sentinelrisk.backend.model.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -73,6 +75,14 @@ public class RemediationPlan {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status = Status.TODO;
+
+    /**
+     * Taux d'efficacité ou de réalisation du plan (0 à 100 %)
+     */
+    @Min(0)
+    @Max(100)
+    @Column(name = "efficacite", nullable = false)
+    private Integer efficacite = 0;
 
     /**
      * Date de création du plan

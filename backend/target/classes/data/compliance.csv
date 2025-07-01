@@ -1,11 +1,34 @@
 framework_name,framework_version,framework_description,requirement_code,requirement_description,requirement_type
-ISO 27001,2022,Framework international pour la sécurité de l'information,A.5.1,Politiques de sécurité de l'information - Les politiques doivent être définies et approuvées par la direction,PREVENTIVE
-ISO 27001,2022,Framework international pour la sécurité de l'information,A.5.2,Revue des politiques de sécurité - Les politiques doivent être revues à intervalles planifiés,DETECTIVE
-ISO 27001,2022,Framework international pour la sécurité de l'information,A.6.1,Organisation interne - Attribution des responsabilités pour la sécurité de l'information,PREVENTIVE
-ISO 27001,2022,Framework international pour la sécurité de l'information,A.6.2,Appareils mobiles et télétravail - Sécurisation des équipements nomades,PREVENTIVE
-ISO 27001,2022,Framework international pour la sécurité de l'information,A.7.1,Avant l'embauche - Vérifications préalables à l'embauche,PREVENTIVE
-ISO 27001,2022,Framework international pour la sécurité de l'information,A.7.2,Pendant l'embauche - Sensibilisation à la sécurité,PREVENTIVE
-ISO 27001,2022,Framework international pour la sécurité de l'information,A.7.3,Fin ou changement d'emploi - Restitution des actifs et révocation des droits d'accès,CORRECTIVE
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.1,Politiques de sécurité de l'information,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.2,Révision des politiques de sécurité de l'information,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.3,Rôles et responsabilités en matière de sécurité de l'information,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.4,Ségrégation des tâches,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.5,Contact avec les autorités,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.6,Contact avec des groupes spécialisés,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.7,Menaces liées aux technologies de l'information,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.8,Sécurité dans la gestion de projets,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.9,Inventaire des actifs d'information,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.10,Acceptation de l'utilisation des actifs,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.11,Classification de l'information,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.12,Étiquetage de l'information,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.13,Transfert de l'information,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.14,Enregistrement des activités,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.15,Contrôle d'accès,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.16,Utilisation des identifiants secrets,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.17,Authentification de l'utilisateur,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.18,Accès aux informations et à l'information source,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.19,Sécurité des équipements,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.20,Sécurité dans les environnements de travail,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.21,Contrôles de logiciels malveillants,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.22,Sauvegarde de l'information,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.23,Journalisation et surveillance,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.24,Synchronisation de l'horloge système,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.25,Sécurité des réseaux,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.26,Utilisation sécurisée des services en ligne,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.27,Filtrage de contenu Web,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.28,Sécurité dans les processus opérationnels,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.29,Gestion des vulnérabilités techniques,Exigence de contrôle
+ISO/IEC 27001,2022,Systèmes de gestion de la sécurité de l'information,A.5.30,Protection des informations dans les services cloud,Exigence de contrôle
 GDPR,2016,Règlement Général sur la Protection des Données de l'UE,Art.5,Principes relatifs au traitement des données (licéité, finalité, minimisation),PREVENTIVE
 GDPR,2016,Règlement Général sur la Protection des Données de l'UE,Art.6,Licéité du traitement - Base légale requise pour tout traitement,PREVENTIVE
 GDPR,2016,Règlement Général sur la Protection des Données de l'UE,Art.7,Conditions applicables au consentement - Démontrable et révocable,PREVENTIVE

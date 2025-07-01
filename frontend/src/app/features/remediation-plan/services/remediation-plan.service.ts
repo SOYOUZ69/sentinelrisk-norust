@@ -106,6 +106,72 @@ export class RemediationPlanService {
   }
 
   /**
+   * Met à jour l'efficacité d'un plan avec automatisation
+   * @param id ID du plan
+   * @param efficacite Nouvelle efficacité (0-100)
+   * @param changeReason Raison du changement
+   * @returns Observable contenant le plan mis à jour
+   */
+  updatePlanEfficacite(id: string, efficacite: number, changeReason: string): Observable<RemediationPlan> {
+    const automationUrl = `${environment.apiUrl}/api/remediation-plans/automation/${id}/efficacite`;
+    const payload = { efficacite, changeReason };
+    
+    console.log('AUTOMATISATION: Mise à jour efficacité via endpoint automation', { id, efficacite, changeReason });
+    
+    return this.http.put<RemediationPlan>(automationUrl, payload)
+      .pipe(
+        catchError(error => {
+          console.error(`Erreur lors de la mise à jour de l'efficacité du plan ${id}`, error);
+          return throwError(() => new Error('Impossible de mettre à jour l\'efficacité du plan. Veuillez réessayer.'));
+        })
+      );
+  }
+
+  /**
+   * Met à jour le statut d'un plan avec automatisation
+   * @param id ID du plan
+   * @param status Nouveau statut
+   * @param changeReason Raison du changement
+   * @returns Observable contenant le plan mis à jour
+   */
+  updatePlanStatus(id: string, status: string, changeReason: string): Observable<RemediationPlan> {
+    const automationUrl = `${environment.apiUrl}/api/remediation-plans/automation/${id}/status`;
+    const payload = { status, changeReason };
+    
+    console.log('AUTOMATISATION: Mise à jour statut via endpoint automation', { id, status, changeReason });
+    
+    return this.http.put<RemediationPlan>(automationUrl, payload)
+      .pipe(
+        catchError(error => {
+          console.error(`Erreur lors de la mise à jour du statut du plan ${id}`, error);
+          return throwError(() => new Error('Impossible de mettre à jour le statut du plan. Veuillez réessayer.'));
+        })
+      );
+  }
+
+  /**
+   * Termine un plan avec une efficacité donnée et automatisation
+   * @param id ID du plan
+   * @param efficacite Efficacité finale (0-100)
+   * @param changeReason Raison du changement
+   * @returns Observable contenant le plan mis à jour
+   */
+  completePlan(id: string, efficacite: number, changeReason: string): Observable<RemediationPlan> {
+    const automationUrl = `${environment.apiUrl}/api/remediation-plans/automation/${id}/complete`;
+    const payload = { efficacite, changeReason };
+    
+    console.log('AUTOMATISATION: Finalisation du plan via endpoint automation', { id, efficacite, changeReason });
+    
+    return this.http.post<RemediationPlan>(automationUrl, payload)
+      .pipe(
+        catchError(error => {
+          console.error(`Erreur lors de la finalisation du plan ${id}`, error);
+          return throwError(() => new Error('Impossible de finaliser le plan. Veuillez réessayer.'));
+        })
+      );
+  }
+
+  /**
    * Supprime un plan
    * @param id ID du plan à supprimer
    * @returns Observable vide

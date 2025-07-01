@@ -24,6 +24,7 @@ export interface RemediationPlan {
   status: RemediationPlanStatus;
   createdAt?: Date;
   updatedAt?: Date;
+  efficacite?: number;
 }
 
 /**
@@ -37,4 +38,5 @@ export interface RemediationPlanDTO {
   ownerId?: string;
   dueDate?: string; // Format ISO pour les dates
   status: RemediationPlanStatus;
+  efficacite?: number;
 } 

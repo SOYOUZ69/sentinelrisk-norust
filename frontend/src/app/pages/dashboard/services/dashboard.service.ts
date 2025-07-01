@@ -11,6 +11,7 @@ import {
   DashboardFilter 
 } from '../../../core/models/dashboard.model';
 import { environment } from '../../../../environments/environment';
+import { ApiService } from '../../../core/services/api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,53 +20,70 @@ export class DashboardService {
   private readonly apiUrl = `${environment.apiUrl}/dashboard`;
   private readonly snmpApiUrl = `${environment.apiUrl}/snmp`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private apiService: ApiService) {}
 
   /**
    * Récupère le résumé des risques avec les vraies données
    */
   getRiskSummary(filter?: DashboardFilter): Observable<RiskSummary> {
-    // Données réelles basées sur les 5 risques de la base de données
-    // Calculées à partir de la requête SQL précédente
-    return of({
-      totalRisks: 5,
-      risksByLevel: {
-        'NÉGLIGEABLE': 1,  // Vulnérabilité XSS
-        'MODÉRÉ': 2,       // Perte SNMP + ttt
-        'MAJEUR': 1,       // Panne serveur DB
-        'SÉVÈRE': 1        // Non-conformité RGPD
-      },
-      risksByCategory: {
-        'TECHNIQUE': 3,    // Panne serveur, Perte SNMP, Vulnérabilité XSS
-        'CONFORMITÉ': 1,   // Non-conformité RGPD
-        'OPÉRATIONNEL': 1  // ttt
-      },
-      openRisks: 5,        // Tous les risques sont ouverts (IDENTIFIED ou IN_ASSESSMENT)
-      closedRisks: 0       // Aucun risque fermé
-    });
+    // Appel avec path sans slash initial pour forcer le double /api
+    return this.apiService.get<any[]>('risks')
+      .pipe(
+        map(risksData => {
+          const totalRisks = risksData.length;
+          const risksByLevel = this.groupBy(risksData, 'level');
+          const risksByCategory = this.groupBy(risksData, 'category');
+          const openRisks = risksData.filter(r => ['IDENTIFIED', 'IN_ASSESSMENT', 'MITIGATED'].includes(r.status)).length;
+          const closedRisks = risksData.filter(r => ['CLOSED', 'ACCEPTED'].includes(r.status)).length;
+          return {
+            totalRisks,
+            risksByLevel,
+            risksByCategory,
+            openRisks,
+            closedRisks
+          };
+        }),
+        catchError(() => of({
+          totalRisks: 0,
+          risksByLevel: {},
+          risksByCategory: {},
+          openRisks: 0,
+          closedRisks: 0
+        }))
+      );
   }
 
   /**
-   * Récupère le résumé de conformité (données simulées en attendant la correction backend)
+   * Récupère le résumé de conformité (vraies données)
    */
   getComplianceSummary(filter?: DashboardFilter): Observable<ComplianceSummary> {
-    // Données simulées en attendant que l'API backend soit corrigée
-    return of({
-      totalControls: 60,
-      compliantControls: 40,
-      nonCompliantControls: 15,
-      complianceRate: 66.7,
-      controlsByFramework: {
-        'ISO 27001': 25,
-        'NIST': 20,
-        'SOC 2': 15
-      },
-      controlsByStatus: {
-        'CONFORME': 40,
-        'NON CONFORME': 15,
-        'EN COURS': 5
-      }
-    });
+    return this.http.get<any[]>(`${environment.apiUrl}/controls`).pipe(
+      map((controls: any[]) => {
+        const totalControls = controls.length;
+        const compliantControls = controls.filter(c => c.effectiveness >= 70).length;
+        const nonCompliantControls = controls.filter(c => c.effectiveness < 70).length;
+        const complianceRate = totalControls > 0 ? (compliantControls / totalControls) * 100 : 0;
+        // Grouper par framework et statut si besoin
+        const controlsByFramework = this.groupBy(controls, 'framework');
+        const controlsByStatus = this.groupBy(controls, 'status');
+        return {
+          totalControls,
+          compliantControls,
+          nonCompliantControls,
+          complianceRate: Math.round(complianceRate * 10) / 10,
+          controlsByFramework,
+          controlsByStatus
+        };
+      }),
+      catchError(() => of({
+        totalControls: 0,
+        compliantControls: 0,
+        nonCompliantControls: 0,
+        complianceRate: 0,
+        controlsByFramework: {},
+        controlsByStatus: {}
+      }))
+    );
   }
 
   /**
@@ -140,22 +158,35 @@ export class DashboardService {
   }
 
   /**
-   * Récupère le résumé des plans d'action (données simulées en attendant la correction backend)
+   * Récupère le résumé des plans d'action (vraies données)
    */
   getActionPlansSummary(filter?: DashboardFilter): Observable<ActionPlansSummary> {
-    // Données simulées en attendant que l'API backend soit corrigée
-    return of({
-      totalPlans: 23,
-      activePlans: 8,
-      completedPlans: 12,
-      overduePlans: 3,
-      plansByStatus: {
-        'ACTIF': 8,
-        'TERMINÉ': 12,
-        'EN RETARD': 3
-      },
-      completionRate: 52.2
-    });
+    return this.http.get<any[]>(`${environment.apiUrl}/remediation-plans`).pipe(
+      map((plans: any[]) => {
+        const totalPlans = plans.length;
+        const activePlans = plans.filter(p => p.status === 'IN_PROGRESS').length;
+        const completedPlans = plans.filter(p => p.status === 'DONE').length;
+        const overduePlans = plans.filter(p => p.status === 'OVERDUE').length;
+        const plansByStatus = this.groupBy(plans, 'status');
+        const completionRate = totalPlans > 0 ? (completedPlans / totalPlans) * 100 : 0;
+        return {
+          totalPlans,
+          activePlans,
+          completedPlans,
+          overduePlans,
+          plansByStatus,
+          completionRate: Math.round(completionRate * 10) / 10
+        };
+      }),
+      catchError(() => of({
+        totalPlans: 0,
+        activePlans: 0,
+        completedPlans: 0,
+        overduePlans: 0,
+        plansByStatus: {},
+        completionRate: 0
+      }))
+    );
   }
 
   /**
@@ -189,5 +220,17 @@ export class DashboardService {
     }
     
     return params;
+  }
+
+  /**
+   * Groupe les données par propriété (retourne un objet clé:valeur)
+   */
+  private groupBy(array: any[], key: string): any {
+    const groups: any = {};
+    array.forEach(item => {
+      const value = item[key] || 'N/A';
+      groups[value] = (groups[value] || 0) + 1;
+    });
+    return groups;
   }
 } 

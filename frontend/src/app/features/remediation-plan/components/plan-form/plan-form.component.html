@@ -42,6 +42,18 @@
               </mat-error>
             </mat-form-field>
 
+            <!-- Efficacité -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Efficacité du plan (%)</mat-label>
+              <input matInput type="number" formControlName="efficacite" min="0" max="100" step="1" placeholder="0 à 100">
+              <mat-error *ngIf="planForm.get('efficacite')?.hasError('required')">
+                L'efficacité est obligatoire
+              </mat-error>
+              <mat-error *ngIf="planForm.get('efficacite')?.hasError('min') || planForm.get('efficacite')?.hasError('max')">
+                L'efficacité doit être comprise entre 0 et 100
+              </mat-error>
+            </mat-form-field>
+
             <div class="form-row">
               <!-- Responsable -->
               <mat-form-field appearance="outline" class="form-field">

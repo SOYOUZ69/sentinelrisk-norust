@@ -361,6 +361,47 @@
           </div>
         </div>
       </mat-expansion-panel>
+
+      <!-- Historique des impacts par plans d'action -->
+      <mat-expansion-panel class="section-panel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>history_edu</mat-icon>
+            <span>Historique des impacts par plans d'action</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="status-history-container">
+          <div *ngIf="isLoadingImpactHistory" class="loading-container">
+            <mat-spinner diameter="30"></mat-spinner>
+            <span>Chargement de l'historique d'impact...</span>
+          </div>
+          <div *ngIf="!isLoadingImpactHistory && riskImpactHistory.length === 0" class="empty-history">
+            <mat-icon>history_toggle_off</mat-icon>
+            <p>Aucun historique d'impact disponible</p>
+            <span class="empty-message">Les changements d'impact liés aux plans d'action apparaîtront ici</span>
+          </div>
+          <div *ngIf="!isLoadingImpactHistory && riskImpactHistory.length > 0" class="history-list">
+            <div *ngFor="let entry of riskImpactHistory" class="history-entry">
+              <div class="history-content">
+                <div class="history-header">
+                  <div class="history-date">{{ entry.changedAt | date:'dd/MM/yyyy HH:mm' }}</div>
+                  <div class="history-user">{{ entry.changedByUserName || entry.changedByUserId || 'Système' }}</div>
+                </div>
+                <div class="history-status-change">
+                  <span class="status-badge old-status">{{ entry.oldImpactLevel || '—' }}</span>
+                  <mat-icon class="status-arrow">arrow_forward</mat-icon>
+                  <span class="status-badge new-status">{{ entry.newImpactLevel }}</span>
+                  <span class="plan-title">Plan: {{ entry.planTitle || entry.planId }}</span>
+                  <span class="plan-efficacite" *ngIf="entry.planEfficacite != null">({{ entry.planEfficacite }}%)</span>
+                </div>
+                <div class="history-reason" *ngIf="entry.changeReason">
+                  {{ entry.changeReason }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-expansion-panel>
     </mat-card-content>
   </mat-card>
 

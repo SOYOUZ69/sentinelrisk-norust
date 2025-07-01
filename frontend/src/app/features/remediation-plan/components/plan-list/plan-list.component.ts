@@ -14,7 +14,7 @@ import { RemediationPlan, RemediationPlanStatus } from '../../../../core/models/
   styleUrls: ['./plan-list.component.css']
 })
 export class PlanListComponent implements OnInit {
-  displayedColumns: string[] = ['title', 'mappingSummary', 'ownerName', 'dueDate', 'status', 'actions'];
+  displayedColumns: string[] = ['title', 'mappingSummary', 'ownerName', 'dueDate', 'efficacite', 'status', 'actions'];
   dataSource = new MatTableDataSource<RemediationPlan>([]);
   isLoading = false;
   error: string | null = null;

@@ -4,12 +4,14 @@ import com.sentinelrisk.backend.dto.RiskRequest;
 import com.sentinelrisk.backend.dto.RiskResponse;
 import com.sentinelrisk.backend.dto.RiskStatusHistoryDTO;
 import com.sentinelrisk.backend.dto.RiskScoreHistoryDTO;
+import com.sentinelrisk.backend.dto.RiskImpactHistoryDTO;
 import com.sentinelrisk.backend.model.Risk;
 import com.sentinelrisk.backend.service.RiskService;
 import com.sentinelrisk.backend.service.CategoryService;
 import com.sentinelrisk.backend.service.ExcelService;
 import com.sentinelrisk.backend.service.RiskStatusHistoryService;
 import com.sentinelrisk.backend.service.RiskScoreHistoryService;
+import com.sentinelrisk.backend.service.RiskImpactHistoryService;
 import com.sentinelrisk.backend.dto.ImportResult;
 import com.sentinelrisk.backend.dto.ImportError;
 import com.sentinelrisk.backend.dto.BulkRiskRequest;
@@ -61,6 +63,7 @@ public class RiskController {
     private final UserService userService;
     private final RiskStatusHistoryService riskStatusHistoryService;
     private final RiskScoreHistoryService riskScoreHistoryService;
+    private final RiskImpactHistoryService riskImpactHistoryService;
 
     @GetMapping
     @Operation(summary = "Lister tous les risques",
@@ -844,5 +847,62 @@ public class RiskController {
             .collect(Collectors.toList());
         
         return ResponseEntity.ok(history);
+    }
+
+    @GetMapping("/{id}/impact-history")
+    @Operation(summary = "Obtenir l'historique d'impact du risque",
+            description = "Récupère l'historique des changements d'impact d'un risque causés par les plans de remédiation")
+    @ApiResponse(responseCode = "200", description = "Historique d'impact du risque récupéré")
+    @ApiResponse(responseCode = "404", description = "Risque non trouvé")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_RISK_MANAGER', 'ROLE_COMPLIANCE_OFFICER', 'ROLE_AUDITOR', 'ROLE_USER')")
+    public ResponseEntity<List<RiskImpactHistoryDTO>> getRiskImpactHistory(
+            @Parameter(description = "ID du risque") 
+            @PathVariable Long id) {
+        
+        List<RiskImpactHistoryDTO> history = riskImpactHistoryService.getImpactHistoryForRisk(id)
+            .stream()
+            .map(this::convertToDTO)
+            .collect(Collectors.toList());
+        
+        return ResponseEntity.ok(history);
+    }
+
+    /**
+     * Convertit une entité RiskImpactHistory en DTO
+     */
+    private RiskImpactHistoryDTO convertToDTO(com.sentinelrisk.backend.model.RiskImpactHistory entity) {
+        RiskImpactHistoryDTO dto = new RiskImpactHistoryDTO();
+        dto.setId(entity.getId());
+        dto.setRiskId(entity.getRisk().getId());
+        dto.setRiskTitle(entity.getRisk().getName());
+        dto.setPlanId(entity.getPlan().getId());
+        dto.setPlanTitle(entity.getPlan().getTitle());
+        dto.setOldImpactLevel(entity.getOldImpactLevel());
+        dto.setNewImpactLevel(entity.getNewImpactLevel());
+        dto.setPlanEfficacite(entity.getPlanEfficacite());
+        dto.setPlanStatus(entity.getPlanStatus());
+        dto.setChangedByUserId(entity.getChangedByUser().getId());
+        dto.setChangedByUserName(entity.getChangedByUser().getFirstName() + " " + entity.getChangedByUser().getLastName());
+        dto.setChangeReason(entity.getChangeReason());
+        dto.setChangedAt(entity.getChangedAt());
+        return dto;
+    }
+
+    // Endpoint global pour l'historique des statuts de tous les risques
+    @GetMapping("/status-history")
+    @Operation(summary = "Obtenir l'historique des statuts de tous les risques",
+            description = "Récupère l'historique des statuts pour tous les risques")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_RISK_MANAGER', 'ROLE_COMPLIANCE_OFFICER', 'ROLE_AUDITOR', 'ROLE_USER')")
+    public ResponseEntity<List<RiskStatusHistoryDTO>> getAllRiskStatusHistory() {
+        return ResponseEntity.ok(riskStatusHistoryService.getAllStatusHistory());
+    }
+
+    // Endpoint global pour l'historique des impacts de tous les risques
+    @GetMapping("/impact-history")
+    @Operation(summary = "Obtenir l'historique des impacts de tous les risques",
+            description = "Récupère l'historique des impacts pour tous les risques")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_RISK_MANAGER', 'ROLE_COMPLIANCE_OFFICER', 'ROLE_AUDITOR', 'ROLE_USER')")
+    public ResponseEntity<List<RiskImpactHistoryDTO>> getAllRiskImpactHistory() {
+        return ResponseEntity.ok(riskImpactHistoryService.getAllImpactHistory());
     }
 }

@@ -34,6 +34,7 @@ export interface SnmpSummary {
   recentScans: number;
   failedScans: number;
   successRate: number;
+  averageDurationMs?: number;
 }
 
 export interface ActionPlansSummary {

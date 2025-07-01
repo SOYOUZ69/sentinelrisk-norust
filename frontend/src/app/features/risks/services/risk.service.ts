@@ -8,6 +8,7 @@ import { RiskScoreHistory } from '../../../core/models/risk-score-history.model'
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { ImportResult } from '../../../core/models/import-result.model';
+import { RiskImpactHistory } from '../../../core/models/risk-impact-history.model';
 
 @Injectable({
   providedIn: 'root'
@@ -441,5 +442,12 @@ export class RiskService {
           return throwError(() => new Error(message));
         })
       );
+  }
+
+  /**
+   * Récupère l'historique d'impact du risque (lié aux plans d'action)
+   */
+  getRiskImpactHistory(riskId: string | number) {
+    return this.http.get<RiskImpactHistory[]>(`${environment.apiUrl}/risk-impact-history?riskId=${riskId}`);
   }
 } 

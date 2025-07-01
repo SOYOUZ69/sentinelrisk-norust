@@ -53,6 +53,7 @@ public class RemediationPlanMapper {
         
         dto.setDueDate(entity.getDueDate());
         dto.setStatus(entity.getStatus());
+        dto.setEfficacite(entity.getEfficacite());
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setUpdatedAt(entity.getUpdatedAt());
         
@@ -93,6 +94,7 @@ public class RemediationPlanMapper {
         
         entity.setDueDate(dto.getDueDate());
         entity.setStatus(dto.getStatus());
+        entity.setEfficacite(dto.getEfficacite() != null ? dto.getEfficacite() : 0);
         
         // Les dates sont gérées par les callbacks @PrePersist et @PreUpdate
         

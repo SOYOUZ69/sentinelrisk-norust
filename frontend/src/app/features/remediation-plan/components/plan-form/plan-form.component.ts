@@ -50,7 +50,8 @@ export class PlanFormComponent implements OnInit {
       ownerId: [null],
       dueDate: [null],
       status: [RemediationPlanStatus.TODO, Validators.required],
-      mappingId: ['', Validators.required]
+      mappingId: ['', Validators.required],
+      efficacite: [0, [Validators.required, Validators.min(0), Validators.max(100)]]
     });
   }
 
@@ -116,7 +117,10 @@ export class PlanFormComponent implements OnInit {
             if (plan.dueDate) {
               plan.dueDate = new Date(plan.dueDate);
             }
-            
+            // S'assurer que l'efficacité est bien injectée (sinon 0)
+            if (plan.efficacite === undefined || plan.efficacite === null) {
+              plan.efficacite = 0;
+            }
             this.planForm.patchValue(plan);
           }
           
@@ -163,31 +167,63 @@ export class PlanFormComponent implements OnInit {
     
     this.submitting = true;
     
-    const request = this.isEditMode && this.planId
-      ? this.planService.updatePlan(this.planId, planDTO)
-      : this.planService.createPlan(planDTO);
-    
-    request.subscribe({
-      next: (result) => {
-        this.submitting = false;
-        const message = this.isEditMode ? 'Plan mis à jour avec succès' : 'Plan créé avec succès';
-        this.showSuccessSnackbar(message);
-        
-        // Rediriger vers la liste des plans pour ce mapping
-        this.router.navigate(['/remediation-plans', planDTO.mappingId]);
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Erreur lors de la soumission du formulaire', error);
-        this.submitting = false;
-        
-        // Gestion spécifique pour l'erreur "Mapping non trouvé"
-        if (error.status === 404 && error.error && error.error.message && error.error.message.includes('Mapping non trouvé')) {
-          this.showErrorSnackbar('Mapping non trouvé. Vérifiez que vous venez bien d\'une analyse d\'écarts valide.');
-        } else {
-          this.showErrorSnackbar('Impossible de sauvegarder le plan. Veuillez réessayer.');
+    if (this.isEditMode && this.planId) {
+      // Mode édition : utiliser les endpoints d'automatisation pour déclencher la logique métier
+      console.log('AUTOMATISATION: Mode édition - utilisation des endpoints d\'automatisation');
+      
+      // Mettre à jour l'efficacité d'abord
+      this.planService.updatePlanEfficacite(
+        this.planId, 
+        formData.efficacite, 
+        'Modification via formulaire'
+      ).subscribe({
+        next: (result) => {
+          console.log('AUTOMATISATION: Efficacité mise à jour avec succès', result);
+          
+          // Puis mettre à jour le statut
+          this.planService.updatePlanStatus(
+            this.planId!, 
+            formData.status, 
+            'Modification via formulaire'
+          ).subscribe({
+            next: (finalResult) => {
+              this.submitting = false;
+              this.showSuccessSnackbar('Plan mis à jour avec succès et logique d\'automatisation appliquée');
+              this.router.navigate(['/remediation-plans', planDTO.mappingId]);
+            },
+            error: (error: HttpErrorResponse) => {
+              console.error('AUTOMATISATION: Erreur lors de la mise à jour du statut', error);
+              this.submitting = false;
+              this.showErrorSnackbar('Erreur lors de la mise à jour du statut. Veuillez réessayer.');
+            }
+          });
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('AUTOMATISATION: Erreur lors de la mise à jour de l\'efficacité', error);
+          this.submitting = false;
+          this.showErrorSnackbar('Erreur lors de la mise à jour de l\'efficacité. Veuillez réessayer.');
         }
-      }
-    });
+      });
+    } else {
+      // Mode création : utiliser l'endpoint standard
+      this.planService.createPlan(planDTO).subscribe({
+        next: (result) => {
+          this.submitting = false;
+          this.showSuccessSnackbar('Plan créé avec succès');
+          this.router.navigate(['/remediation-plans', planDTO.mappingId]);
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Erreur lors de la création du plan', error);
+          this.submitting = false;
+          
+          if (error.status === 404 && error.error && error.error.message && error.error.message.includes('Mapping non trouvé')) {
+            this.showErrorSnackbar('Mapping non trouvé. Vérifiez que vous venez bien d\'une analyse d\'écarts valide.');
+          } else {
+            this.showErrorSnackbar('Impossible de créer le plan. Veuillez réessayer.');
+          }
+        }
+      });
+    }
   }
 
   cancel(): void {
